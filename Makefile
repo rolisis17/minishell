@@ -18,7 +18,7 @@ all : $(NAME)
 
 $(NAME): $(OBJ)
 # @make $(LIBFT)
-	@$(CC) $(OBJ) -fsanitize=address -Llibft -lft -g -o $(NAME)
+	@$(CC) $(OBJ) -fsanitize=address -Llibft -lft -lreadline -g -o $(NAME)
 	@echo "$(GREEN)>>>> Compiled <<<<$(END)"
 
 clean :

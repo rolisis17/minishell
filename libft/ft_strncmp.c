@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 11:11:06 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/04 15:12:02 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/12 13:11:17 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n)
 	unsigned int	i;
 
 	i = 0;
+	if (!s1 || !s2)
+		return (1);
 	while (s1[i] != '\0' && s2[i] != '\0' && i < n)
 	{
 		if (s1[i] != s2[i])
