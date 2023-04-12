@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 14:52:24 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/12 19:40:10 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ int main(void)
 	line = NULL;
     while (1)
 	{
+		sig_handler();
 		line = readline("> ");
+		if (line == NULL)
+			quit(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
-		{
-        	free(line);
-			break;
-		}
+			quit(line);
         rl_on_new_line();
         rl_replace_line("", 0);
         rl_redisplay();
@@ -39,6 +39,7 @@ void handle_input(char *line)
 {
 	char	**cmd;
 	char	*path;
+	
     // printf("You entered: %s\n", line);
 	// here we need to parse.
 	cmd = ft_split(line, 32);
@@ -46,9 +47,9 @@ void handle_input(char *line)
 	if (!path)
 		bad_cmd(path, cmd);
 	else
-		execute(path, cmd); // forks to execute and frees everyhting 
+		execute(path, cmd); // forks to execute and frees everything 
     add_history(line);
-	// so far this is on;y good for single commands.
+	// so far this is only good for single commands.
 }
 
 int	searchforquots(char *str, int quote)
