@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 13:17:21 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/12 13:18:46 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int main(void)
     char *line;
 
 	ft_printf("\033[2J\033[1;1H");
-    // Loop to read user input
 	line = NULL;
     while (ft_strncmp(line, "exit", 4) != 0)
 	{
