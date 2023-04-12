@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 14:52:24 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/12 15:51:24 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,18 @@ int main(void)
         	free(line);
 			break;
 		}
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
         handle_input(line);
 		free(line);
     }
     return 0;
+}
+
+void make_history(char *line)
+{
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	add_history(line);
 }
 
 void handle_input(char *line)
@@ -47,7 +52,7 @@ void handle_input(char *line)
 		bad_cmd(path, cmd);
 	else
 		execute(path, cmd); // forks to execute and frees everyhting 
-    add_history(line);
+	make_history(line);
 	// so far this is on;y good for single commands.
 }
 

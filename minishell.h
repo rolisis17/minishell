@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 14:24:23 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/12 15:51:14 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-int	searchforquots(char *str, int quote);
-int	whatsinside(char *str);
-void handle_input(char *line);
+int		searchforquots(char *str, int quote);
+void	handle_input(char *line);
 void	freesplit(char **splited);
+void	make_history(char *line);
 //cmds
 char	*find_path(char *cmd);
 void    execute(char *path, char **cmd);
