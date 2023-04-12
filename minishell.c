@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 13:18:46 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/12 14:52:24 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,37 @@ int main(void)
 
 	ft_printf("\033[2J\033[1;1H");
 	line = NULL;
-    while (ft_strncmp(line, "exit", 4) != 0)
+    while (1)
 	{
-		if (line)
-        	free(line);
 		line = readline("> ");
+		if (ft_strncmp(line, "exit", 4) == 0)
+		{
+        	free(line);
+			break;
+		}
         rl_on_new_line();
-        rl_replace_line("prev command", 0);
+        rl_replace_line("", 0);
         rl_redisplay();
         handle_input(line);
+		free(line);
     }
     return 0;
 }
 
 void handle_input(char *line)
 {
-    printf("You entered: %s\n", line);
+	char	**cmd;
+	char	*path;
+    // printf("You entered: %s\n", line);
+	// here we need to parse.
+	cmd = ft_split(line, 32);
+	path = find_path(cmd[0]); // finds the path to the cmd
+	if (!path)
+		bad_cmd(path, cmd);
+	else
+		execute(path, cmd); // forks to execute and frees everyhting 
     add_history(line);
+	// so far this is on;y good for single commands.
 }
 
 int	searchforquots(char *str, int quote)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 13:07:17 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/12 14:24:23 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,10 @@
 int	searchforquots(char *str, int quote);
 int	whatsinside(char *str);
 void handle_input(char *line);
+void	freesplit(char **splited);
+//cmds
+char	*find_path(char *cmd);
+void    execute(char *path, char **cmd);
+void	bad_cmd(char *path, char **cmd);
 
 #endif
