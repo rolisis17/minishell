@@ -1,4 +1,4 @@
-SRC = minishell.c cmds.c signals.c
+SRC = minishell.c cmds.c parse.c signals.c
 OBJ = $(SRC:.c=.o)
 NAME = minishell
 FLAGS = -Wall -Werror -Wextra -g
