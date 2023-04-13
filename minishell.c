@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 21:03:56 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/13 13:49:19 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void handle_input(char *line)
 	// here we need to parse.
 	if (!(check_empty_line(line)))
 		return;
-	quotes = to_trim_quotes(line, 39);
+	quotes = to_trim_quotes(line, 34);
 	if (quotes)
 	{
 		printf("%s\n", quotes);
@@ -59,8 +59,8 @@ void handle_input(char *line)
 	cmd = ft_split(line, 32);
 	if (ft_strncmp(line, "pwd", 3) == 0)
 		this_folder_is(0);
-	if (ft_strncmp(line, "cd", 2) == 0)
-		cd_command(line);
+	// if (ft_strncmp(line, "cd", 2) == 0)
+	// 	cd_command(line);
 	path = find_path(cmd[0]); // finds the path to the cmd
 	if (!path)
 		bad_cmd(path, cmd);

@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/12 21:06:08 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/13 13:55:46 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	check_empty_line(char *line)
 	f = -1;
 	while (line[++f])
 	{
-		if (line[f] != '\n' && line[f] != 32)
+		if (line[f] != '\n' && line[f] != 32 && line[f] != '.')
 			return (1);
 	}
 	return (0);
@@ -50,22 +50,22 @@ char	*prev_folder(char *path)
 	return (path);
 }
 
-void	cd_command(char *str)
-{
-	char **splited;
+// void	cd_command(char *str)
+// {
+// 	char **splited;
 
-	splited = ft_split(str, 32);
-	if (splited[2])
-		error_func2("cd: too many arguments");
-	if (ft_strncmp(splited[1], "..", 2) == 0)
-		path = prev_folder(this_folder_is(1));
-	if (chdir(path) == -1)
-	{
-        perror("chdir");
-        exit(EXIT_FAILURE);
-    }
-    printf("Current working directory changed.\n");
-}
+// 	splited = ft_split(str, 32);
+// 	if (splited[2])
+// 		error_func2("cd: too many arguments");
+// 	if (ft_strncmp(splited[1], "..", 2) == 0)
+// 		path = prev_folder(this_folder_is(1));
+// 	if (chdir(path) == -1)
+// 	{
+//         perror("chdir");
+//         exit(EXIT_FAILURE);
+//     }
+//     printf("Current working directory changed.\n");
+// }
 
 void	error_func2(char *msg)
 {
