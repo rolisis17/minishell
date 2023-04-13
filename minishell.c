@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/13 13:49:19 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/13 14:22:56 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ int main(void)
 	line = NULL;
     while (1)
 	{
+		sig_handler();
 		line = readline("> ");
+		if (line == NULL)
+			quit(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
-		{
-			free(line);
-			break;
-		}
-		handle_input(line);
+			quit(line);
+        handle_input(line);
 		free(line);
     }
     return 0;
@@ -65,9 +65,9 @@ void handle_input(char *line)
 	if (!path)
 		bad_cmd(path, cmd);
 	else
-		execute(path, cmd); // forks to execute and frees everyhting 
-	make_history(line);
-	// so far this is on;y good for single commands.
+		execute(path, cmd); // forks to execute and frees everything 
+    add_history(line);
+	// so far this is only good for single commands.
 }
 
 void	freesplit(char **splited)

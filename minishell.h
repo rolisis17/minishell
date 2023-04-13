@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/12 21:03:46 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/13 14:23:00 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 
 int		searchforquotes(char *str, int quote, int start);
 void	handle_input(char *line);
@@ -35,5 +36,9 @@ char	*this_folder_is(int	check);
 char	*find_path(char *cmd);
 void    execute(char *path, char **cmd);
 void	bad_cmd(char *path, char **cmd);
+//signals
+void    sig_handler(void);
+void    ctrlc(int signum);
+void    quit(char *str);
 
 #endif
