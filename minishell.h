@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/13 14:23:00 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/13 17:38:05 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,10 @@ void	bad_cmd(char *path, char **cmd);
 void    sig_handler(void);
 void    ctrlc(int signum);
 void    quit(char *str);
+//builtins
+char	*this_folder_is(int	check);
+char	*prev_folder(char *path);
+void	cd_command(char *str);
+void    env_cmd(void);
 
 #endif

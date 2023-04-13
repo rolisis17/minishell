@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/13 15:09:15 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/13 17:37:20 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,3 +64,13 @@ void	cd_command(char *str)
 		free(prev);
     // printf("Current working directory changed.\n");
 }
+
+void    env_cmd(void)
+{
+    extern char **environ;
+    int         i;
+
+    i = -1;
+    while (environ[++i])
+        printf("%s\n", environ[i]);
+} // env command!
