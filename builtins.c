@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/13 17:37:20 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/13 17:44:31 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*prev_folder(char *path)
 	f = ft_strlen(path);
 	while (path[--f] != '/');
 	path[f + 1] = 0;
-	ft_strjoin("/", path, 0) //need to free path
+	ft_strjoin("/", path, 0); //need to free path
 	return (ft_strjoin("/", path, 0));
 }
 

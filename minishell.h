@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/13 17:38:05 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/13 18:52:21 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@
 # include <readline/history.h>
 # include <signal.h>
 
+typedef struct  s_tree
+{
+    int     id;
+    char    *data;
+    s_tree  *right;
+    s_tree  *left;
+}               t_tree;
+
 int		searchforquotes(char *str, int quote, int start);
 void	handle_input(char *line);
 void	freesplit(char **splited);
@@ -29,9 +37,6 @@ void	make_history(char *line);
 char	*to_trim_quotes(char *str, int quote);
 int		check_empty_line(char *line);
 void	error_func2(char *msg);
-void	cd_command(char *str);
-char	*prev_folder(char *path);
-char	*this_folder_is(int	check);
 //cmds
 char	*find_path(char *cmd);
 void    execute(char *path, char **cmd);

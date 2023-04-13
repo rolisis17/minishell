@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/13 14:43:40 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/13 20:48:08 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,56 @@ void	error_func2(char *msg)
 {
 	ft_putendl_fd(msg, 2);
 	exit(-1);
+}
+
+char **parse_tree(char *input)
+{
+	t_tree	*tree;
+	
+	tree = (t_tree *)malloc(sizeof(t_tree));
+	tree->data = input; // does this shit work??
+	check_all(tree);
+}
+
+void	check_all(t_tree *trunk)
+{
+	char	*finder;
+
+	finder = ft_strchr(trunk->data, 39);
+	if (finder != NULL)
+	{
+		finder = ft_strchr(finder, 39);
+		if (finder != NULL)
+		{
+			trunk->right = make_right(trunk->data, finder); // with new tree
+			trunk->left = make_left(finder);// make branch, check if its not the end of the string
+			return ;
+		}
+		
+	}
+}
+
+t_tree	*make_right(char *str, char *spliter)
+{
+	t_tree	*res;
+	int		len;
+
+	res = (t_tree *)malloc(sizeof(t_tree));
+	len = spliter - str;
+	// res->data = ft_calloc(len + 1, sizeof(char));
+	ft_strlcpy(res->data, str, len);
+}
+
+t_tree	*make_left(char *str)
+{
+	t_tree	*res;
+	
+	if (str[1] == NULL)
+		return (NULL);
+	else
+	{
+		res = (t_tree *)malloc(sizeof(t_tree));
+		res->data = str;
+	}
+	return (res);
 }
