@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/15 10:09:26 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/15 15:28:50 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,16 @@ void	parse_input(char *input)
 		}
 		if (input[i] == '|')
 			pipex(data, input + i + 1);
-			// data->start = input + i + 1;
-		// this might be fucked
-		// if (input[i] == 39) // single quote
-		// 	data->start = single_q(data->start, &data->cmd, &data->fd);
-		// else if (input[i] == 34) // double quote
-		// if (input[i] == '<')
-		// 	data->start = file_in(data->start, data->fd);
-		// else if (input[i] == '>')
-		// 	file_out();
-		else if (input[i] == 36) // $
-			envar();
+		else if (input[i] == '<')
+			i += file_in(data, input + i + 1);
+		else if (input[i] == '>')
+			i += file_out(data, input + i + 1);
 		// else if (input[i] == "$?") // what even is this
 		i++;
 		if (!input[i] && !data->cmd) // will need to fix this, function to check end to execute or is a file or someshit
 		{
 			data->cmd = ft_split(data->start, 32);
-			do_cmd(data->cmd, data->fd);
+			do_cmd(data->cmd, data->fd); // really need to fix this shit!! otherwise files are working too
 		}
 		else if (!input[i] && data->cmd)
 		{
@@ -107,6 +100,7 @@ void	space(t_shell *data, char *new_start)
 		end = ft_strchr(data->start, 32);
 		len = end - data->start;
 		res = ft_substr(data->start, 0, len);
+		// res	= parse_work() // check quotes and $ 
 		data->cmd = ft_split(res, 32); // some leak here ... 
 		free (res);
 	}
@@ -120,6 +114,95 @@ void	space(t_shell *data, char *new_start)
 	}
 	data->start = new_start;
 }
+
+void	pipex(t_shell *data, char *new_start)
+{
+	char	*res;
+	char	*end;
+	int		len;
+	// need to take care of sitution like || maybe sytax error message?
+	if (data->cmd)
+	{
+		do_cmd(data->cmd, data->fd);
+		freesplit(data->cmd);
+	}
+	else
+	{
+		end = ft_strchr(data->start, '|');
+		len = end - data->start;
+		res = ft_substr(data->start, 0, len);
+		data->cmd = ft_split(res, 32);
+		do_cmd(data->cmd, data->fd);
+		freesplit(data->cmd);
+		free(res);
+	}
+	data->cmd = NULL;
+	data->start = new_start;
+}
+
+int	file_in(t_shell *data, char *new_start)
+{
+	int		len;
+	char	*end;
+	char	*res;
+
+	len = 0;
+	if (!data->cmd) // cat< infile
+	{
+		end = ft_strchr(data->start, '<');
+		len = end - data->start;
+		res = ft_substr(data->start, 0, len);
+		data->cmd = ft_split(res, 32);
+		free(res);
+		len = 0;
+	}
+	while(new_start[len] == 32)
+		len++;
+	while(new_start[len] && new_start[len] != 32 && new_start[len] != '|') // these will probs be &&
+		len++;
+	res = ft_substr(new_start, 0, len);
+	end = ft_strtrim(res, " ");
+	printf("HERE:%s", end);
+	data->fd[0] = open(end, O_RDONLY);
+	if (data->fd[0] < 0)
+		perror("Error");
+	else
+		do_cmd(data->cmd, data->fd);
+	data->cmd = freedom(data->cmd, res, end);
+	data->start = new_start + len;
+	return (len);
+}
+
+int	file_out(t_shell *data, char *new_start)
+{
+	int		len;
+	char	*end;
+	char	*res;
+
+	len = 0;
+	if (!data->cmd) // cat< infile
+	{
+		end = ft_strchr(data->start, '>');
+		len = end - data->start;
+		res = ft_substr(data->start, 0, len);
+		data->cmd = ft_split(res, 32);
+		free(res);
+		len = 0;
+	}
+	while(data->start[len] == 32)
+		len++;
+	while(data->start[len] && data->start[len] != 32 && data->start[len] != '|') // these will probs be &&
+		len++;
+	res = ft_substr(data->start, 0, len);
+	data->fd[0] = open(res, O_RDWR, O_CREAT, O_TRUNC);
+	if (data->fd[0] < 0)
+		perror("Error");
+	else
+		do_cmd(data->cmd, data->fd);
+	data->cmd = freedom(data->cmd, res, end);
+	data->start = new_start + len;
+	return (len);
+} // need to check if this func is the same as infile!
 
 void	do_cmd(char **cmd, int *fd)
 {
@@ -158,46 +241,8 @@ void	output(int *fd)
 	close(fd[0]);
 	close(fd[1]);
 }
-void	pipex(t_shell *data, char *new_start)
-{
-	char	*res;
-	char	*end;
-	int		len;
-	// need to take care of sitution like || maybe sytax error message?
-	if (data->cmd)
-	{
-		do_cmd(data->cmd, data->fd);
-		freesplit(data->cmd);
-	}
-	else
-	{
-		end = ft_strchr(data->start, '|');
-		len = end - data->start;
-		res = ft_substr(data->start, 0, len);
-		data->cmd = ft_split(res, 32);
-		do_cmd(data->cmd, data->fd);
-		freesplit(data->cmd);
-		free(res);
-	}
-	data->cmd = NULL;
-	data->start = new_start;
-}
 
 void	envar(void)
 {
 	printf("MAKE ENVIRONMENT VARIABLE WORK\n");
 }
-
-// char	*file_in(char *start, int *fd)
-// {
-// 	if (start[0] != '<')
-// 	{
-		
-// 	}
-// 	printf("MAKE < this shit WORK\n");
-// }
-
-// char	*file_out(char *start, int *fd)
-// {
-// 	printf("MAKE > this shit WORK\n");
-// }

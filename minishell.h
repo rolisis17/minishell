@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/15 09:39:30 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/15 15:28:36 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,11 @@ void	do_cmd(char **cmd, int *fd);
 void	output(int *fd);
 void	pipex(t_shell *data, char *new_start);
 void	envar(void);
-char	*file_in(char *start, int *fd);
-char    *file_out(char *start, int *fd);
-//spltting
+int     file_in(t_shell *data, char *new_start);
+int     file_out(t_shell *data, char *new_start);
+//splitting
 char    **add_split(char **split, char *new);
 void	freesplit(char **splited);
+//tools
+char    **freedom(char **split, char *ze, char *dom);
 #endif
