@@ -6,24 +6,25 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/14 17:12:22 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/15 10:09:26 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//failed test =  ls      -la | uniq| wc     -l
+
 void	parse_input(char *input)
 {
 	int		i;
-	int		fd[2];
-	char	*current;
-	char	*start;
+	t_shell	*data;
 	
-	fd[0] = dup(STDIN_FILENO); // start with the normal and deppending on < > and shit will change and send to output func
-	fd[1] = dup(STDOUT_FILENO);
+	data = (t_shell *)malloc(sizeof(t_shell));
+	data->fd[0] = dup(STDIN_FILENO); // start with the normal and deppending on < > and shit will change and send to output func
+	data->fd[1] = dup(STDOUT_FILENO);
 	i = 0;
-	current = NULL;
-	start = input;
+	data->cmd = NULL;
+	data->start = input;
 	if (!(check_empty_line(input)))
 		return;
 	while (input[i])
@@ -32,44 +33,38 @@ void	parse_input(char *input)
 		{
 			while (input[i] == 32)
 				i++;
-			current = space(start, current, fd);
-			start = input + i; // this might be fucked
+			space(data, input + i);
 		}
+		if (input[i] == '|')
+			pipex(data, input + i + 1);
+			// data->start = input + i + 1;
 		// this might be fucked
 		// if (input[i] == 39) // single quote
-		// 	start = single_q(start, &current, &fd);
+		// 	data->start = single_q(data->start, &data->cmd, &data->fd);
 		// else if (input[i] == 34) // double quote
-		if (input[i] == '<')
-			file_in();
-		else if (input[i] == '>')
-			file_out();
-		else if (input[i] == '|')
-		{
-			current = pipex(current, fd);
-			start = input + i + 1;
-			printf(" NEW current: %s\n", current);
-			printf(" HERE start:%s\n", start + 1);
-		}
+		// if (input[i] == '<')
+		// 	data->start = file_in(data->start, data->fd);
+		// else if (input[i] == '>')
+		// 	file_out();
 		else if (input[i] == 36) // $
 			envar();
 		// else if (input[i] == "$?") // what even is this
 		i++;
-		if (!input[i] && !current)
+		if (!input[i] && !data->cmd) // will need to fix this, function to check end to execute or is a file or someshit
 		{
-			do_cmd(start, NULL, fd);
-			printf("WHY!!!!!\n"); // solve leak... should enter here but no
-			
+			data->cmd = ft_split(data->start, 32);
+			do_cmd(data->cmd, data->fd);
 		}
-		else if (!input[i] && current)
+		else if (!input[i] && data->cmd)
 		{
-			do_cmd(current, start, fd);
-			printf("HERE!!!!!\n");
+			data->cmd = add_split(data->cmd, data->start);
+			do_cmd(data->cmd, data->fd);
 		}
-		
 	}
-	if (current)
-		free (current);
-	output(fd);
+	if (data->cmd)
+		freesplit(data->cmd);
+	output(data->fd);
+	free(data);
 }
 
 // char	*single_q(char *input, char *current, int fd)
@@ -100,45 +95,37 @@ void	parse_input(char *input)
 //the whole thing so theres only a need ot parse that shit if theres a $ in the middle..
 
 
-char	*space(char *start, char *current, int *fd)
+void	space(t_shell *data, char *new_start)
 {
 	char	*res;
 	char	*end;
 	int		len;
-	int		i;
-	
-	i = 0;
+
 	res = NULL;
-	if (!current)
+	if (!data->cmd)
 	{
-		end = ft_strchr(start, 32);
-		len = end - start; // maybe also - i!! need to test
-		current = ft_calloc(len + 1, sizeof(char));
-		ft_strlcpy(current, start, len + 1);
-		return (current);
+		end = ft_strchr(data->start, 32);
+		len = end - data->start;
+		res = ft_substr(data->start, 0, len);
+		data->cmd = ft_split(res, 32); // some leak here ... 
+		free (res);
 	}
 	else
 	{
-		end = ft_strchr(start, 32);
-		len = (end + i) - start;
-		res = ft_calloc(len + 1, sizeof(char));
-		ft_strlcpy(res, end + i, len);
-		do_cmd(current, res, fd);
-		free (current);
-		free (res);
-	}	
-	return (NULL);	// check this null valid after changes
+		end = ft_strchr(data->start, 32);
+		len = end - data->start;
+		res = ft_substr(data->start, 0, len);
+		data->cmd = add_split(data->cmd, res);
+		free(res);
+	}
+	data->start = new_start;
 }
 
-void	do_cmd(char *cmd, char *option, int *fd)
+void	do_cmd(char **cmd, int *fd)
 {
-	char	*full[3];
 	pid_t	pid;
 	int		pipe_fd[2];
 	
-	full[0] = cmd;
-	full[1] = option;
-	full[2] = NULL;
 	if (pipe(pipe_fd) == -1)
 		error("Error (pipe)", 0);
 	pid = fork();
@@ -149,7 +136,7 @@ void	do_cmd(char *cmd, char *option, int *fd)
 		dup2(fd[0], STDIN_FILENO);
 		dup2(pipe_fd[1], STDOUT_FILENO);
 		close(pipe_fd[0]);
-		execute(full);
+		execute(cmd);
 	}
 	else
 	{
@@ -171,15 +158,29 @@ void	output(int *fd)
 	close(fd[0]);
 	close(fd[1]);
 }
-
-char	*pipex(char *current, int *fd)
+void	pipex(t_shell *data, char *new_start)
 {
-	if (current)
+	char	*res;
+	char	*end;
+	int		len;
+	// need to take care of sitution like || maybe sytax error message?
+	if (data->cmd)
 	{
-		do_cmd(current, NULL, fd);
-		free (current);
+		do_cmd(data->cmd, data->fd);
+		freesplit(data->cmd);
 	}
-	return (NULL);
+	else
+	{
+		end = ft_strchr(data->start, '|');
+		len = end - data->start;
+		res = ft_substr(data->start, 0, len);
+		data->cmd = ft_split(res, 32);
+		do_cmd(data->cmd, data->fd);
+		freesplit(data->cmd);
+		free(res);
+	}
+	data->cmd = NULL;
+	data->start = new_start;
 }
 
 void	envar(void)
@@ -187,12 +188,16 @@ void	envar(void)
 	printf("MAKE ENVIRONMENT VARIABLE WORK\n");
 }
 
-void	file_in(void)
-{
-	printf("MAKE PIPES WORK\n");
-}
+// char	*file_in(char *start, int *fd)
+// {
+// 	if (start[0] != '<')
+// 	{
+		
+// 	}
+// 	printf("MAKE < this shit WORK\n");
+// }
 
-void	file_out(void)
-{
-	printf("MAKE PIPES WORK\n");
-}
+// char	*file_out(char *start, int *fd)
+// {
+// 	printf("MAKE > this shit WORK\n");
+// }

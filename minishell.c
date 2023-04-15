@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/14 13:41:53 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/15 07:36:46 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,15 +70,3 @@ void make_history(char *line)
 // 	// so far this is only good for single commands.
 // }
 
-void	freesplit(char **splited)
-{
-	int	counter;
-
-	counter = 0;
-	while (splited[counter])
-	{
-		free(splited[counter]);
-		counter++;
-	}
-	free (splited);
-}

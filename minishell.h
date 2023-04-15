@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/14 17:03:37 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/15 09:39:30 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,15 @@
 //     s_tree  *left;
 // }               t_tree;
 
+typedef struct  s_shell
+{
+    int     fd[2];
+    char    **cmd;
+    char    *start;
+}               t_shell;
+
 int		searchforquotes(char *str, int quote, int start);
 void	handle_input(char *line);
-void	freesplit(char **splited);
 void	make_history(char *line);
 char	*to_trim_quotes(char *str, int quote);
 int		check_empty_line(char *line);
@@ -52,12 +58,14 @@ void	cd_command(char *str);
 void    env_cmd(void);
 // parse 2
 void	parse_input(char *input);
-char	*space(char *start, char *current, int *fd);
-void	do_cmd(char *cmd, char *option, int *fd);
+void    space(t_shell *data, char *new_start);
+void	do_cmd(char **cmd, int *fd);
 void	output(int *fd);
-char	*pipex(char *current, int *fd);
+void	pipex(t_shell *data, char *new_start);
 void	envar(void);
-void	file_in(void);
-void	file_out(void);
-
+char	*file_in(char *start, int *fd);
+char    *file_out(char *start, int *fd);
+//spltting
+char    **add_split(char **split, char *new);
+void	freesplit(char **splited);
 #endif
