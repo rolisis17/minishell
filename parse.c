@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/15 14:48:44 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/17 10:05:44 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,54 +85,29 @@ void	error(char *msg, int arg)
 	ft_putendl_fd(msg, 2);
 }
 
-// char **parse_tree(char *input)
+// char	*single_q(char *input, char *current, int fd)
 // {
-// 	t_tree	*tree;
-	
-// 	tree = (t_tree *)malloc(sizeof(t_tree));
-// 	tree->data = input; // does this shit work??
-// 	check_all(tree);
-// }
-
-// void	check_all(t_tree *trunk)
-// {
-// 	char	*finder;
-
-// 	finder = ft_strchr(trunk->data, 39);
-// 	if (finder != NULL)
-// 	{
-// 		finder = ft_strchr(finder, 39);
-// 		if (finder != NULL)
-// 		{
-// 			trunk->right = make_right(trunk->data, finder); // with new tree
-// 			trunk->left = make_left(finder);// make branch, check if its not the end of the string
-// 			return ;
-// 		}
-		
-// 	}
-// }
-
-// t_tree	*make_right(char *str, char *spliter)
-// {
-// 	t_tree	*res;
+// 	char	*res;
+// 	char	*end;
 // 	int		len;
-
-// 	res = (t_tree *)malloc(sizeof(t_tree));
-// 	len = spliter - str;
-// 	// res->data = ft_calloc(len + 1, sizeof(char));
-// 	ft_strlcpy(res->data, str, len);
-// }
-
-// t_tree	*make_left(char *str)
-// {
-// 	t_tree	*res;
 	
-// 	if (str[1] == NULL)
-// 		return (NULL);
-// 	else
+// 	if (current == NULL)
 // 	{
-// 		res = (t_tree *)malloc(sizeof(t_tree));
-// 		res->data = str;
+// 		if (input[0] != 39)
+// 		{
+// 			end = ft_strchr(input, 32);
+// 			len = end - input;
+// 			res = ft_strlcpy(res, input, len);
+// 			if (find_path(res) == NULL)
+// 			{
+// 				error(res, 1);
+// 				return (NULL);
+// 			}
+// 			return (res);
+// 		}
+// 		end = ft_strchr(input[1], 39);	
 // 	}
-// 	return (res);
-// }
+// 	else
+// 		return ()
+// }// okay this shit is fucked!!! echo still print shit like fuck"some"yes... 
+//the whole thing so theres only a need ot parse that shit if theres a $ in the middle..

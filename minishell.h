@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/15 15:28:36 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/17 16:00:18 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,12 @@
 # include <readline/history.h>
 # include <signal.h>
 
-// typedef struct  s_tree
-// {
-//     int     id;
-//     char    *data;
-//     s_tree  *right;
-//     s_tree  *left;
-// }               t_tree;
-
 typedef struct  s_shell
 {
     int     fd[2];
+	int		len;
     char    **cmd;
-    char    *start;
+    char    *res;
 }               t_shell;
 
 int		searchforquotes(char *str, int quote, int start);
@@ -58,16 +51,18 @@ void	cd_command(char *str);
 void    env_cmd(void);
 // parse 2
 void	parse_input(char *input);
-void    space(t_shell *data, char *new_start);
+int		space(t_shell *data, char *new);
 void	do_cmd(char **cmd, int *fd);
 void	output(int *fd);
-void	pipex(t_shell *data, char *new_start);
-void	envar(void);
-int     file_in(t_shell *data, char *new_start);
-int     file_out(t_shell *data, char *new_start);
+void	pipex(t_shell *data);
+char	*env_var(t_shell *data, char *new);
+int     file_in(t_shell *data, char *new);
+int     file_out(t_shell *data, char *new);
+int		search_another(t_shell *data, char *str, int sp, int c);
 //splitting
 char    **add_split(char **split, char *new);
 void	freesplit(char **splited);
 //tools
 char    **freedom(char **split, char *ze, char *dom);
+int		get_cmd(char *str);
 #endif

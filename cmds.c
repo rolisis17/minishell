@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/14 16:50:18 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/17 15:52:59 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,6 @@ char	*find_path(char *cmd)
 	return (NULL);
 }
 
-// void    execute(char *path, char **cmd)
-// {
-//     pid_t	pid;
-    
-//     pid = fork();
-// 	if (pid == -1)
-// 		perror("Error (fork): "); // fix error handling!
-// 	else if (pid == 0)
-//         execve(path, cmd, NULL);
-// 	else
-// 		waitpid(pid, NULL, 0);
-// 	freesplit(cmd);
-//     free(path);
-// }
-
 void	bad_cmd(char *path, char **cmd)
 {
 	ft_putstr_fd("Invalid command: ", 2);
@@ -72,4 +57,30 @@ void	execute(char **cmd)
 	if (!path)
 		bad_cmd(path, cmd);
 	execve(path, cmd, NULL);
-} // still need to figure out weather i need to malloc everything
+}
+
+void	do_cmd(char **cmd, int *fd)
+{
+	pid_t	pid;
+	int		pipe_fd[2];
+	
+	if (pipe(pipe_fd) == -1)
+		error("Error (pipe)", 0);
+	pid = fork();
+	if (pid == -1)
+		error("Error (fork)", 0);
+	if (pid == 0)
+	{
+		dup2(fd[0], STDIN_FILENO);
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[0]);
+		execute(cmd);
+	}
+	else
+	{
+		close(fd[0]);
+		close(pipe_fd[1]);
+		fd[0] = pipe_fd[0];
+		waitpid(pid, NULL, 0);
+	}
+}

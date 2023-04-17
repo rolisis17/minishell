@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/15 15:28:50 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/17 17:19:42 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,210 +24,137 @@ void	parse_input(char *input)
 	data->fd[1] = dup(STDOUT_FILENO);
 	i = 0;
 	data->cmd = NULL;
-	data->start = input;
 	if (!(check_empty_line(input)))
 		return;
 	while (input[i])
 	{
-		if (input[i] == 32)
-		{
-			while (input[i] == 32)
-				i++;
-			space(data, input + i);
-		}
+		while (input[i] == 32)
+			i++;
 		if (input[i] == '|')
-			pipex(data, input + i + 1);
+			pipex(data);
 		else if (input[i] == '<')
 			i += file_in(data, input + i + 1);
 		else if (input[i] == '>')
 			i += file_out(data, input + i + 1);
+		else if (input[i] != 32 && input[i])
+			i += space(data, input + i);
 		// else if (input[i] == "$?") // what even is this
-		i++;
-		if (!input[i] && !data->cmd) // will need to fix this, function to check end to execute or is a file or someshit
-		{
-			data->cmd = ft_split(data->start, 32);
-			do_cmd(data->cmd, data->fd); // really need to fix this shit!! otherwise files are working too
-		}
-		else if (!input[i] && data->cmd)
-		{
-			data->cmd = add_split(data->cmd, data->start);
-			do_cmd(data->cmd, data->fd);
-		}
+		if (!input[i++]) // why??
+			break ;
 	}
 	if (data->cmd)
+	{
+		do_cmd(data->cmd, data->fd);
 		freesplit(data->cmd);
+	}
 	output(data->fd);
 	free(data);
 }
 
-// char	*single_q(char *input, char *current, int fd)
-// {
-// 	char	*res;
-// 	char	*end;
-// 	int		len;
-	
-// 	if (current == NULL)
-// 	{
-// 		if (input[0] != 39)
-// 		{
-// 			end = ft_strchr(input, 32);
-// 			len = end - input;
-// 			res = ft_strlcpy(res, input, len);
-// 			if (find_path(res) == NULL)
-// 			{
-// 				error(res, 1);
-// 				return (NULL);
-// 			}
-// 			return (res);
-// 		}
-// 		end = ft_strchr(input[1], 39);	
-// 	}
-// 	else
-// 		return ()
-// }// okay this shit is fucked!!! echo still print shit like fuck"some"yes... 
-//the whole thing so theres only a need ot parse that shit if theres a $ in the middle..
-
-
-void	space(t_shell *data, char *new_start)
+int	space(t_shell *data, char *new)
 {
-	char	*res;
-	char	*end;
-	int		len;
-
-	res = NULL;
-	if (!data->cmd)
+	data->len = 0;
+	if (new[0] == 34)// 34 == "
+		data->res = dub_qte(data, new);
+	if (new[0] == 36)// 36 == $
 	{
-		end = ft_strchr(data->start, 32);
-		len = end - data->start;
-		res = ft_substr(data->start, 0, len);
-		// res	= parse_work() // check quotes and $ 
-		data->cmd = ft_split(res, 32); // some leak here ... 
-		free (res);
+		if (!env_var(data, new))
+			return(data->len - 1);	// not working with simple wrong input $SOMETHING...
 	}
+	// else if (new[0] == 39)// 39 == '
+	// 	func();
 	else
 	{
-		end = ft_strchr(data->start, 32);
-		len = end - data->start;
-		res = ft_substr(data->start, 0, len);
-		data->cmd = add_split(data->cmd, res);
-		free(res);
+		data->len = get_cmd(new);
+		data->res = ft_substr(new, 0, data->len);
 	}
-	data->start = new_start;
+	if (data->cmd)
+		data->cmd = add_split(data->cmd, data->res);
+	else
+		data->cmd = ft_split(data->res, 32);
+	if (data->res)
+		free(data->res);
+	return(data->len - 1);	
 }
 
-void	pipex(t_shell *data, char *new_start)
+void	pipex(t_shell *data)
 {
-	char	*res;
-	char	*end;
-	int		len;
 	// need to take care of sitution like || maybe sytax error message?
 	if (data->cmd)
-	{
 		do_cmd(data->cmd, data->fd);
-		freesplit(data->cmd);
-	}
 	else
 	{
-		end = ft_strchr(data->start, '|');
-		len = end - data->start;
-		res = ft_substr(data->start, 0, len);
-		data->cmd = ft_split(res, 32);
+		data->cmd = ft_split("|", 32);
 		do_cmd(data->cmd, data->fd);
-		freesplit(data->cmd);
-		free(res);
 	}
-	data->cmd = NULL;
-	data->start = new_start;
+	data->cmd = freedom(data->cmd, NULL, NULL);
 }
 
-int	file_in(t_shell *data, char *new_start)
+int	file_in(t_shell *data, char *new)
 {
-	int		len;
-	char	*end;
-	char	*res;
+	int		sp;
 
-	len = 0;
-	if (!data->cmd) // cat< infile
-	{
-		end = ft_strchr(data->start, '<');
-		len = end - data->start;
-		res = ft_substr(data->start, 0, len);
-		data->cmd = ft_split(res, 32);
-		free(res);
-		len = 0;
-	}
-	while(new_start[len] == 32)
-		len++;
-	while(new_start[len] && new_start[len] != 32 && new_start[len] != '|') // these will probs be &&
-		len++;
-	res = ft_substr(new_start, 0, len);
-	end = ft_strtrim(res, " ");
-	printf("HERE:%s", end);
-	data->fd[0] = open(end, O_RDONLY);
+	data->len = 0;
+	sp = 0;
+	while(new[sp] == 32)
+		sp++;
+	data->len = get_cmd(new + sp);
+	data->len = search_another(data, new, sp, '<');
+	data->fd[0] = open(data->res, O_RDONLY);
 	if (data->fd[0] < 0)
 		perror("Error");
-	else
+	else if (data->cmd)
+	{
 		do_cmd(data->cmd, data->fd);
-	data->cmd = freedom(data->cmd, res, end);
-	data->start = new_start + len;
-	return (len);
+		data->cmd = freedom(data->cmd, NULL, NULL);	
+	}
+	free(data->res);
+	return (data->len);
 }
 
-int	file_out(t_shell *data, char *new_start)
+int search_another(t_shell *data, char *str, int sp, int c)
 {
-	int		len;
-	char	*end;
-	char	*res;
-
-	len = 0;
-	if (!data->cmd) // cat< infile
-	{
-		end = ft_strchr(data->start, '>');
-		len = end - data->start;
-		res = ft_substr(data->start, 0, len);
-		data->cmd = ft_split(res, 32);
-		free(res);
-		len = 0;
-	}
-	while(data->start[len] == 32)
-		len++;
-	while(data->start[len] && data->start[len] != 32 && data->start[len] != '|') // these will probs be &&
-		len++;
-	res = ft_substr(data->start, 0, len);
-	data->fd[0] = open(res, O_RDWR, O_CREAT, O_TRUNC);
-	if (data->fd[0] < 0)
-		perror("Error");
-	else
-		do_cmd(data->cmd, data->fd);
-	data->cmd = freedom(data->cmd, res, end);
-	data->start = new_start + len;
-	return (len);
-} // need to check if this func is the same as infile!
-
-void	do_cmd(char **cmd, int *fd)
-{
-	pid_t	pid;
-	int		pipe_fd[2];
+	int		space;
 	
-	if (pipe(pipe_fd) == -1)
-		error("Error (pipe)", 0);
-	pid = fork();
-	if (pid == -1)
-		error("Error (fork)", 0);
-	if (pid == 0)
+	space = 0;
+	while(str[space] == 32)
+		space++;
+	if (str[sp + data->len + space] == c)
 	{
-		dup2(fd[0], STDIN_FILENO);
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		close(pipe_fd[0]);
-		execute(cmd);
+		sp += ++data->len;
+		sp += space;
+		space = 0;
+		while(str[sp] == 32)
+			space++;
+		data->len = get_cmd(str + sp + space);
+		data->res = ft_substr(str, sp + space, data->len);
+		return (sp + space + data->len);
 	}
-	else
+	else 
+		data->res = ft_substr(str, sp, data->len);
+	return (data->len + sp);
+}
+
+int	file_out(t_shell *data, char *new)
+{
+	int		sp;
+
+	data->len = 0;
+	sp = 0;
+	while(new[sp] == 32)
+		sp++;
+	data->len = get_cmd(new + sp);
+	data->len = search_another(data, new, sp, '>');
+	data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (data->fd[1] < 0)
+		perror("Error");
+	else if (data->cmd)
 	{
-		close(fd[0]);
-		close(pipe_fd[1]);
-		fd[0] = pipe_fd[0];
-		waitpid(pid, NULL, 0);
+		do_cmd(data->cmd, data->fd);
+		data->cmd = freedom(data->cmd, NULL, NULL);	
 	}
+	free(data->res);
+	return (data->len);
 }
 
 void	output(int *fd)
@@ -242,7 +169,71 @@ void	output(int *fd)
 	close(fd[1]);
 }
 
-void	envar(void)
+char	*env_var(t_shell *data, char *new)
 {
-	printf("MAKE ENVIRONMENT VARIABLE WORK\n");
+	char	*temp;
+	char	*temp2;
+	
+	data->len = get_cmd(new);
+	temp = ft_substr(new, 1, data->len);
+	temp2 = getenv(temp);
+	if (temp2 == NULL)
+	{
+		// perror(temp); this doesnt work
+		// data->res = ft_substr(new, 0, data->len);// check out how bash is behaving its werid
+		free(temp);
+		return (NULL);
+	}
+	else
+	{
+		data->res = ft_calloc(ft_strlen(temp2) + 1, sizeof(char));
+		ft_strlcpy(data->res, temp2, ft_strlen(temp2) + 1);
+	}
+	free(temp);
+	return (data->res);
+} // if env variable doesnt exist it needs to be ignored. make work!
+
+char	*dub_qte(t_shell *data, char *new)
+{
+	char	*temp;
+	char	*ptr;
+	int		ptr_len;
+	
+	data->len = get_cmd(new);
+	temp = ft_substr(new, 1, data->len - 1); // does this need a minus 1?
+	ptr = ft_strchr(temp, 34);
+	if (!ptr)
+		return (ft_substr(new, 0, data->len));
+	else if (ft_strlen(ptr) == data->len)
+		return (ft_substr(new, 1, data->len - 2)); // if above is no then this is 1 not 2
+	else
+	ptr_len = ft_strlen(ptr);
+	data->res = ft_substr(new, 1, data->len - ptr_len);
+	data->res = check_env(data->res);
+	data->res = ft_strjoin(data->res, ptr, -2);
+}
+
+char	*check_env(char *str)
+{
+	char	*ptr;
+	char	*new;
+	char	*var;
+
+	ptr = ft_strchr(str, 36);
+	if (ptr == NULL)
+		return (str);
+	new = ft_substr(str, 0, ft_strlen(str) - ft_strlen(ptr));
+	var = ft_strchr(ptr, 32);
+	if (var == NULL)
+	{
+		ptr = getenv(ptr + 1);
+		if (ptr == NULL)
+			return(new);
+		return(ft_strjoin(new, ptr, -2));
+	}
+	ptr = ft_substr(ptr, 1, ft_strlen(var) - 1); // this and everything after needs to be fixed
+	ptr = getenv(var);
+	if (ptr == NULL)
+		return(new);
+	new = 
 }
