@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/17 17:19:42 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/18 18:57:40 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,13 @@ void	parse_input(char *input)
 		if (input[i] == '|')
 			pipex(data);
 		else if (input[i] == '<')
-			i += file_in(data, input + i + 1);
+			i += file_in(data, input + i + 1); // need to check how there work with quotes and $ does it need the checker?
 		else if (input[i] == '>')
-			i += file_out(data, input + i + 1);
+			i += file_out(data, input + i + 1); 
+		else if (input[i] == 34 || input[i] == 39)
+			i += quotes(data, input + i);
 		else if (input[i] != 32 && input[i])
-			i += space(data, input + i);
+			i += space(data, input + i, 1);
 		// else if (input[i] == "$?") // what even is this
 		if (!input[i++]) // why??
 			break ;
@@ -51,31 +53,87 @@ void	parse_input(char *input)
 	free(data);
 }
 
-int	space(t_shell *data, char *new)
+int	space(t_shell *data, char *new, int arg)
 {
 	data->len = 0;
-	if (new[0] == 34)// 34 == "
-		data->res = dub_qte(data, new);
-	if (new[0] == 36)// 36 == $
-	{
-		if (!env_var(data, new))
-			return(data->len - 1);	// not working with simple wrong input $SOMETHING...
-	}
-	// else if (new[0] == 39)// 39 == '
-	// 	func();
+	if (arg == 0)
+		data->len = get_cmd(new + 1, 0) + 1; // change this to also stop at quote when using in space
 	else
-	{
-		data->len = get_cmd(new);
-		data->res = ft_substr(new, 0, data->len);
-	}
+		data->len = get_cmd(new, 0);
+	data->res = ft_substr(new, 0, data->len);
+	check_substr(data, 0);
 	if (data->cmd)
 		data->cmd = add_split(data->cmd, data->res);
 	else
 		data->cmd = ft_split(data->res, 32);
 	if (data->res)
 		free(data->res);
-	return(data->len - 1);	
+	return(data->len - 1);  // does this fuck anything up?
 }
+
+int	quotes(t_shell *data, char *new)
+{
+	char	*ptr;
+	
+	ptr = ft_strchr(new + 1, new[0]);
+	if (ptr == NULL)
+		return(space(data, new, 0));
+	data->res = ft_substr(new, 1, ptr - new - 1);
+	data->len = ft_strlen(data->res);
+	check_substr(data, new[0]);
+	if (data->cmd)
+		data->cmd = add_split(data->cmd, data->res);
+	else
+		data->cmd = ft_split(data->res, 34);
+	free(data->res);
+	return(data->len + 2);
+}
+
+void	check_substr(t_shell *data, char c)
+{
+	char	*beg;
+	int		len;
+
+	if (c == 39)
+		return ;
+	len = ft_strlen(data->res);
+	while(ft_strchr(data->res, 36) != NULL)
+	{
+		beg = NULL;
+		if (data->res[0] != 36)
+		{
+			beg = ft_strchr(data->res, 36);
+			beg = ft_substr(data->res, 0, len - ft_strlen(beg));
+		}
+		data->res = env_var(data->res, len, beg);
+	}
+}
+
+char	*env_var(char *data, int len, char *beg)
+{
+	char	*var;
+	char	*end;
+	char	*res;
+	int		cmd_len;
+	
+	cmd_len = get_cmd(data + ft_strlen(beg), 0);
+	var = ft_substr(data, ft_strlen(beg) + 1, cmd_len - 1);
+	cmd_len = ft_strlen(beg) + ft_strlen(var) + 1;
+	end = ft_substr(data, cmd_len, len - cmd_len);
+	res = getenv(var);
+	if (res == NULL)
+	{
+		res = ft_strjoin(beg, end, -2);
+		freedom(NULL, data, var);
+		free(end);
+		return(res);
+	}	
+	beg = ft_strjoin(beg, res, -2);
+	beg = ft_strjoin(beg, end, -2);
+	freedom(NULL, data, var);
+	free(end);
+	return (beg);
+} // if env variable doesnt exist it needs to be ignored. make work!
 
 void	pipex(t_shell *data)
 {
@@ -98,7 +156,7 @@ int	file_in(t_shell *data, char *new)
 	sp = 0;
 	while(new[sp] == 32)
 		sp++;
-	data->len = get_cmd(new + sp);
+	data->len = get_cmd(new + sp, 1);
 	data->len = search_another(data, new, sp, '<');
 	data->fd[0] = open(data->res, O_RDONLY);
 	if (data->fd[0] < 0)
@@ -126,7 +184,7 @@ int search_another(t_shell *data, char *str, int sp, int c)
 		space = 0;
 		while(str[sp] == 32)
 			space++;
-		data->len = get_cmd(str + sp + space);
+		data->len = get_cmd(str + sp + space, 1);
 		data->res = ft_substr(str, sp + space, data->len);
 		return (sp + space + data->len);
 	}
@@ -143,7 +201,7 @@ int	file_out(t_shell *data, char *new)
 	sp = 0;
 	while(new[sp] == 32)
 		sp++;
-	data->len = get_cmd(new + sp);
+	data->len = get_cmd(new + sp, 1);
 	data->len = search_another(data, new, sp, '>');
 	data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (data->fd[1] < 0)
@@ -167,73 +225,4 @@ void	output(int *fd)
 	free(buf);
 	close(fd[0]);
 	close(fd[1]);
-}
-
-char	*env_var(t_shell *data, char *new)
-{
-	char	*temp;
-	char	*temp2;
-	
-	data->len = get_cmd(new);
-	temp = ft_substr(new, 1, data->len);
-	temp2 = getenv(temp);
-	if (temp2 == NULL)
-	{
-		// perror(temp); this doesnt work
-		// data->res = ft_substr(new, 0, data->len);// check out how bash is behaving its werid
-		free(temp);
-		return (NULL);
-	}
-	else
-	{
-		data->res = ft_calloc(ft_strlen(temp2) + 1, sizeof(char));
-		ft_strlcpy(data->res, temp2, ft_strlen(temp2) + 1);
-	}
-	free(temp);
-	return (data->res);
-} // if env variable doesnt exist it needs to be ignored. make work!
-
-char	*dub_qte(t_shell *data, char *new)
-{
-	char	*temp;
-	char	*ptr;
-	int		ptr_len;
-	
-	data->len = get_cmd(new);
-	temp = ft_substr(new, 1, data->len - 1); // does this need a minus 1?
-	ptr = ft_strchr(temp, 34);
-	if (!ptr)
-		return (ft_substr(new, 0, data->len));
-	else if (ft_strlen(ptr) == data->len)
-		return (ft_substr(new, 1, data->len - 2)); // if above is no then this is 1 not 2
-	else
-	ptr_len = ft_strlen(ptr);
-	data->res = ft_substr(new, 1, data->len - ptr_len);
-	data->res = check_env(data->res);
-	data->res = ft_strjoin(data->res, ptr, -2);
-}
-
-char	*check_env(char *str)
-{
-	char	*ptr;
-	char	*new;
-	char	*var;
-
-	ptr = ft_strchr(str, 36);
-	if (ptr == NULL)
-		return (str);
-	new = ft_substr(str, 0, ft_strlen(str) - ft_strlen(ptr));
-	var = ft_strchr(ptr, 32);
-	if (var == NULL)
-	{
-		ptr = getenv(ptr + 1);
-		if (ptr == NULL)
-			return(new);
-		return(ft_strjoin(new, ptr, -2));
-	}
-	ptr = ft_substr(ptr, 1, ft_strlen(var) - 1); // this and everything after needs to be fixed
-	ptr = getenv(var);
-	if (ptr == NULL)
-		return(new);
-	new = 
 }

@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/17 16:00:18 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/18 18:40:07 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,14 @@ typedef struct  s_shell
     char    *res;
 }               t_shell;
 
-int		searchforquotes(char *str, int quote, int start);
-void	handle_input(char *line);
 void	make_history(char *line);
-char	*to_trim_quotes(char *str, int quote);
+//parse
 int		check_empty_line(char *line);
-void	error(char *msg, int arg);
 //cmds
 char	*find_path(char *cmd);
-void    execute(char **cmd);
 void	bad_cmd(char *path, char **cmd);
+void    execute(char **cmd);
+void	do_cmd(char **cmd, int *fd);
 //signals
 void    sig_handler(void);
 void    ctrlc(int signum);
@@ -51,18 +49,23 @@ void	cd_command(char *str);
 void    env_cmd(void);
 // parse 2
 void	parse_input(char *input);
-int		space(t_shell *data, char *new);
-void	do_cmd(char **cmd, int *fd);
-void	output(int *fd);
+int		space(t_shell *data, char *new, int arg);
+int     quotes(t_shell *data, char *new);
+void	check_substr(t_shell *data, char c);
+char	*env_var(char *data, int len, char *beg);
 void	pipex(t_shell *data);
-char	*env_var(t_shell *data, char *new);
 int     file_in(t_shell *data, char *new);
-int     file_out(t_shell *data, char *new);
 int		search_another(t_shell *data, char *str, int sp, int c);
+int     file_out(t_shell *data, char *new);
+void	output(int *fd);
+
 //splitting
 char    **add_split(char **split, char *new);
 void	freesplit(char **splited);
 //tools
 char    **freedom(char **split, char *ze, char *dom);
-int		get_cmd(char *str);
+int		get_cmd(char *str, int arg);
+char	*find_quote(char *str, int len);
+void	error(char *msg, int arg);
+
 #endif
