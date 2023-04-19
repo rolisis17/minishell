@@ -6,52 +6,11 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/18 18:57:40 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/19 08:43:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-//failed test =  ls      -la | uniq| wc     -l
-
-void	parse_input(char *input)
-{
-	int		i;
-	t_shell	*data;
-	
-	data = (t_shell *)malloc(sizeof(t_shell));
-	data->fd[0] = dup(STDIN_FILENO); // start with the normal and deppending on < > and shit will change and send to output func
-	data->fd[1] = dup(STDOUT_FILENO);
-	i = 0;
-	data->cmd = NULL;
-	if (!(check_empty_line(input)))
-		return;
-	while (input[i])
-	{
-		while (input[i] == 32)
-			i++;
-		if (input[i] == '|')
-			pipex(data);
-		else if (input[i] == '<')
-			i += file_in(data, input + i + 1); // need to check how there work with quotes and $ does it need the checker?
-		else if (input[i] == '>')
-			i += file_out(data, input + i + 1); 
-		else if (input[i] == 34 || input[i] == 39)
-			i += quotes(data, input + i);
-		else if (input[i] != 32 && input[i])
-			i += space(data, input + i, 1);
-		// else if (input[i] == "$?") // what even is this
-		if (!input[i++]) // why??
-			break ;
-	}
-	if (data->cmd)
-	{
-		do_cmd(data->cmd, data->fd);
-		freesplit(data->cmd);
-	}
-	output(data->fd);
-	free(data);
-}
 
 int	space(t_shell *data, char *new, int arg)
 {
@@ -146,73 +105,6 @@ void	pipex(t_shell *data)
 		do_cmd(data->cmd, data->fd);
 	}
 	data->cmd = freedom(data->cmd, NULL, NULL);
-}
-
-int	file_in(t_shell *data, char *new)
-{
-	int		sp;
-
-	data->len = 0;
-	sp = 0;
-	while(new[sp] == 32)
-		sp++;
-	data->len = get_cmd(new + sp, 1);
-	data->len = search_another(data, new, sp, '<');
-	data->fd[0] = open(data->res, O_RDONLY);
-	if (data->fd[0] < 0)
-		perror("Error");
-	else if (data->cmd)
-	{
-		do_cmd(data->cmd, data->fd);
-		data->cmd = freedom(data->cmd, NULL, NULL);	
-	}
-	free(data->res);
-	return (data->len);
-}
-
-int search_another(t_shell *data, char *str, int sp, int c)
-{
-	int		space;
-	
-	space = 0;
-	while(str[space] == 32)
-		space++;
-	if (str[sp + data->len + space] == c)
-	{
-		sp += ++data->len;
-		sp += space;
-		space = 0;
-		while(str[sp] == 32)
-			space++;
-		data->len = get_cmd(str + sp + space, 1);
-		data->res = ft_substr(str, sp + space, data->len);
-		return (sp + space + data->len);
-	}
-	else 
-		data->res = ft_substr(str, sp, data->len);
-	return (data->len + sp);
-}
-
-int	file_out(t_shell *data, char *new)
-{
-	int		sp;
-
-	data->len = 0;
-	sp = 0;
-	while(new[sp] == 32)
-		sp++;
-	data->len = get_cmd(new + sp, 1);
-	data->len = search_another(data, new, sp, '>');
-	data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (data->fd[1] < 0)
-		perror("Error");
-	else if (data->cmd)
-	{
-		do_cmd(data->cmd, data->fd);
-		data->cmd = freedom(data->cmd, NULL, NULL);	
-	}
-	free(data->res);
-	return (data->len);
 }
 
 void	output(int *fd)

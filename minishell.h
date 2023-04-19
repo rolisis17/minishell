@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/18 18:40:07 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/19 08:39:17 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ typedef struct  s_shell
 }               t_shell;
 
 void	make_history(char *line);
-//parse
-int		check_empty_line(char *line);
 //cmds
 char	*find_path(char *cmd);
 void	bad_cmd(char *path, char **cmd);
@@ -47,16 +45,18 @@ char	*this_folder_is(int	check);
 char	*prev_folder(char *path);
 void	cd_command(char *str);
 void    env_cmd(void);
-// parse 2
+//parse
 void	parse_input(char *input);
+int     file_in(t_shell *data, char *new);
+int     file_out(t_shell *data, char *new);
+int		search_another(t_shell *data, char *str, int sp, int c);
+int		check_empty_line(char *line);
+// parse 2
 int		space(t_shell *data, char *new, int arg);
 int     quotes(t_shell *data, char *new);
 void	check_substr(t_shell *data, char c);
 char	*env_var(char *data, int len, char *beg);
 void	pipex(t_shell *data);
-int     file_in(t_shell *data, char *new);
-int		search_another(t_shell *data, char *str, int sp, int c);
-int     file_out(t_shell *data, char *new);
 void	output(int *fd);
 
 //splitting

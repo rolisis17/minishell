@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/15 07:36:46 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/19 08:34:35 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int main(void)
 			quit(line);
 		if (ft_strncmp(line, "exit", 4) == 0)
 			quit(line);
-        parse_input(line);
+		if ((check_empty_line(line)))
+        	parse_input(line);
   		add_history(line);
 		free(line);
     }
