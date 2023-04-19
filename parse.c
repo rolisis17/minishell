@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/19 08:42:27 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/19 10:29:48 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,68 +50,49 @@ void	parse_input(char *input)
 int	file_in(t_shell *data, char *new)
 {
 	int		sp;
+	int		flag;
 
-	data->len = 0;
 	sp = 0;
-	while(new[sp] == 32)
+	flag = 0;
+	if (new[0] == '<')
+		flag = 1;
+	while(new[sp + flag] == 32)
 		sp++;
-	data->len = get_cmd(new + sp, 1);
-	data->len = search_another(data, new, sp, '<');
-	data->fd[0] = open(data->res, O_RDONLY);
-	if (data->fd[0] < 0)
-		perror("Error");
-	else if (data->cmd)
+	data->len = get_cmd(new + sp + flag, 1);
+	data->res = ft_substr(new, flag + sp, data->len);
+	if (flag == 1)
+		here_doc(data);
+	else
 	{
-		do_cmd(data->cmd, data->fd);
-		data->cmd = freedom(data->cmd, NULL, NULL);	
+		data->fd[0] = open(data->res, O_RDONLY);
+		if (data->fd[0] < 0)
+			perror("Error");	
 	}
 	free(data->res);
-	return (data->len);
+	return (data->len + flag + sp);
 }
 
 int	file_out(t_shell *data, char *new)
 {
 	int		sp;
+	int		flag;
 
-	data->len = 0;
 	sp = 0;
-	while(new[sp] == 32)
+	flag = 0;
+	if (new[0] == '>')
+		flag = 1;
+	while(new[sp + flag] == 32)
 		sp++;
-	data->len = get_cmd(new + sp, 1);
-	data->len = search_another(data, new, sp, '>');
-	data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	data->len = get_cmd(new + sp + flag, 1);
+	data->res = ft_substr(new, flag + sp, data->len);
+	if (flag == 1)
+		data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_APPEND, 0644);
+	else
+		data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (data->fd[1] < 0)
 		perror("Error");
-	else if (data->cmd)
-	{
-		do_cmd(data->cmd, data->fd);
-		data->cmd = freedom(data->cmd, NULL, NULL);	
-	}
 	free(data->res);
-	return (data->len);
-}
-
-int search_another(t_shell *data, char *str, int sp, int c)
-{
-	int		space;
-	
-	space = 0;
-	while(str[space] == 32)
-		space++;
-	if (str[sp + data->len + space] == c)
-	{
-		sp += ++data->len;
-		sp += space;
-		space = 0;
-		while(str[sp] == 32)
-			space++;
-		data->len = get_cmd(str + sp + space, 1);
-		data->res = ft_substr(str, sp + space, data->len);
-		return (sp + space + data->len);
-	}
-	else 
-		data->res = ft_substr(str, sp, data->len);
-	return (data->len + sp);
+	return (data->len + flag + sp);
 }
 
 int	check_empty_line(char *line)
@@ -126,3 +107,44 @@ int	check_empty_line(char *line)
 	}
 	return (0);
 }
+
+void	here_doc(t_shell *data)
+{
+	pid_t	pid;
+	int		pipe_fd[2];
+
+	if (pipe(pipe_fd) == -1)
+		error("Error (pipe)", 0);
+	pid = fork();
+	if (pid == -1)
+		error("Error (fork)", 0);
+	if (pid == 0)
+		here_doc_child(data, pipe_fd);
+	else
+	{
+		close(data->fd[0]);
+		close(pipe_fd[1]);
+		data->fd[0] = pipe_fd[0];
+		waitpid(pid, NULL, 0);
+	}
+} // signals dont work in here_doc!!!
+
+void	here_doc_child(t_shell *data, int *pipe)
+{
+	char	*buffer;
+	
+	close(pipe[0]);
+	while (1)
+	{
+		buffer = readline("here_doc> ");
+		if (ft_strncmp(buffer, data->res, data->len) == 0)
+			break ;
+		write(pipe[1], buffer, ft_strlen(buffer));
+		write(pipe[1], "\n", 1);
+		free(buffer);
+	}
+	write(pipe[1], "\0", 1);
+	free (buffer);
+	exit(0);
+}
+	

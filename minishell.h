@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/19 08:39:17 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/19 10:26:28 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
 int		search_another(t_shell *data, char *str, int sp, int c);
 int		check_empty_line(char *line);
+void	here_doc(t_shell *data);
+void	here_doc_child(t_shell *data, int *pipe);
 // parse 2
 int		space(t_shell *data, char *new, int arg);
 int     quotes(t_shell *data, char *new);
