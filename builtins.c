@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/13 17:37:20 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/14 16:49:32 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*prev_folder(char *path)
 	f = ft_strlen(path);
 	while (path[--f] != '/');
 	path[f + 1] = 0;
-	ft_strjoin("/", path, 0) //need to free path
+	ft_strjoin("/", path, 0); //need to free path
 	return (ft_strjoin("/", path, 0));
 }
 
@@ -50,7 +50,7 @@ void	cd_command(char *str)
 	prev = NULL;
 	splited = ft_split(str, 32);
 	if (splited[2])
-		error_func2("cd: too many arguments");
+		error("cd: too many arguments", 0);
 	if (ft_strncmp(splited[1], "..", 2) == 0)
 		prev = prev_folder(this_folder_is(1));
 	else if (splited[1][0] == '/')
