@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/14 16:49:32 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/20 14:16:51 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,11 @@ char	*prev_folder(char *path)
 	return (ft_strjoin("/", path, 0));
 }
 
-void	cd_command(char *str)
+void	cd_command(char **splited)
 {
-	char	**splited;
 	char	*prev;
 
 	prev = NULL;
-	splited = ft_split(str, 32);
 	if (splited[2])
 		error("cd: too many arguments", 0);
 	if (ft_strncmp(splited[1], "..", 2) == 0)

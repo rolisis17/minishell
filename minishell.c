@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/19 08:34:35 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/20 12:35:06 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int main(void)
     while (1)
 	{
 		sig_handler();
+		// rl_on_new_line();
 		line = readline("> ");
 		if (line == NULL)
 			quit(line);
