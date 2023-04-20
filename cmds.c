@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/17 15:52:59 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/20 14:44:40 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ void	execute(char **cmd)
 {
 	char	*path;
 
-	// check_builtin() // check for builtins here!!!
+	check_builtin(cmd)
+	 // or exit? or exit inside the command func to get out of the fork but here we need to free everything
 	// can make the execution within each builtin, this was can disregard options and exit the child process
 	path = find_path(cmd[0]);
 	if (!path)
@@ -83,4 +84,17 @@ void	do_cmd(char **cmd, int *fd)
 		fd[0] = pipe_fd[0];
 		waitpid(pid, NULL, 0);
 	}
+}
+
+void	check_builtin(char **cmd)
+{
+	if (ft_strncmp(cmd[0], "echo", 4) == 0)
+	if (ft_strncmp(cmd[0], "cd", 2) == 0)
+		cd_command(cmd); // need to fix all these function to take char ** because need to free, and check options which will be other strings
+	else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
+	else if (ft_strncmp(cmd[0], "export", 6) == 0)
+	else if (ft_strncmp(cmd[0], "unset", 5) == 0)
+	else if (ft_strncmp(cmd[0], "evn", 4) == 0)
+		env_cmd(cmd);
+	if (ft_strncmp(cmd[0], "exit", 4) == 0) ??? because need to return error if has options, shouldnt have any
 }
