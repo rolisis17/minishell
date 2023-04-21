@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/19 08:43:13 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/21 15:53:08 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	space(t_shell *data, char *new, int arg)
 		data->cmd = ft_split(data->res, 32);
 	if (data->res)
 		free(data->res);
-	return(data->len - 1);  // does this fuck anything up?
+	return(data->len - 1);
 }
 
 int	quotes(t_shell *data, char *new)
@@ -98,11 +98,11 @@ void	pipex(t_shell *data)
 {
 	// need to take care of sitution like || maybe sytax error message?
 	if (data->cmd)
-		do_cmd(data->cmd, data->fd);
+		do_cmd(data);
 	else
 	{
 		data->cmd = ft_split("|", 32);
-		do_cmd(data->cmd, data->fd);
+		do_cmd(data);
 	}
 	data->cmd = freedom(data->cmd, NULL, NULL);
 }

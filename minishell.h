@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/20 14:14:55 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/21 16:06:18 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct  s_shell
 	int		len;
     char    **cmd;
     char    *res;
+    char    *here_doc;
 }               t_shell;
 
 void	make_history(char *line);
@@ -35,8 +36,9 @@ void	make_history(char *line);
 char	*find_path(char *cmd);
 void	bad_cmd(char *path, char **cmd);
 void    execute(char **cmd);
-void	do_cmd(char **cmd, int *fd);
-int	check_builtin(char **cmd);
+void	do_cmd(t_shell *data);
+void    data_to_pipe(t_shell *data);
+void	check_builtin(char **cmd);
 //signals
 void    sig_handler(void);
 void    ctrlc(int signum);
@@ -45,15 +47,18 @@ void    quit(char *str);
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path);
 void	cd_command(char **splited);
-void    env_cmd(void);
+void    env_cmd(char **cmd);
+void	ft_exit(char **cmd);
 //parse
 void	parse_input(char *input);
+t_shell	*data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
 int		search_another(t_shell *data, char *str, int sp, int c);
 int		check_empty_line(char *line);
 void	here_doc(t_shell *data);
 void	here_doc_child(t_shell *data, int *pipe);
+void	here_new(t_shell *data);
 // parse 2
 int		space(t_shell *data, char *new, int arg);
 int     quotes(t_shell *data, char *new);
@@ -66,7 +71,7 @@ void	output(int *fd);
 char    **add_split(char **split, char *new);
 void	freesplit(char **splited);
 //tools
-char    **freedom(char **split, char *ze, char *dom);
+char    **freedom(char **ted, void *ze, void *dom);
 int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);

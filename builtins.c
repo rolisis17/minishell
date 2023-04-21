@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/20 14:16:51 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/21 10:02:43 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,23 @@ void	cd_command(char **splited)
     // printf("Current working directory changed.\n");
 }
 
-void    env_cmd(void)
+void    env_cmd(char **cmd)
 {
     extern char **environ;
     int         i;
 
     i = -1;
     while (environ[++i])
+	{
         printf("%s\n", environ[i]);
+	}
+	cmd = freedom(cmd, NULL, NULL);
+	exit (0);
 } // env command!
+
+void	ft_exit(char **cmd)
+{
+	ft_putendl_fd("exit does not take options in this minishell", 2);
+	cmd = freedom(cmd, NULL, NULL);
+	exit(0);
+}
