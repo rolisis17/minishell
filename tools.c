@@ -6,16 +6,16 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/18 17:13:10 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/21 16:05:57 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **freedom(char **split, char *ze, char *dom)
+char **freedom(char **ted, void *ze, void *dom)
 {
-	if (split)
-    	freesplit(split);
+	if (ted)
+    	freesplit(ted);
     if (ze)
         free(ze);
     if (dom)

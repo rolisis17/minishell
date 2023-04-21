@@ -6,23 +6,22 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/20 14:30:19 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/21 16:06:58 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parse_input(char *input)
+void	parse_input(char *line)
 {
 	int		i;
+	char	*input;
 	t_shell	*data;
 	
-	data = (t_shell *)malloc(sizeof(t_shell));
-	data->fd[0] = dup(STDIN_FILENO); // start with the normal and deppending on < > and shit will change and send to output func
-	data->fd[1] = dup(STDOUT_FILENO);
-	data->cmd = NULL;
-	i = -1;
-	while (input[++i])
+	data = data_init();
+	input = ft_strtrim(line, " ");
+	i = 0;
+	while (input[i])
 	{
 		while (input[i] == 32)
 			i++;
@@ -34,17 +33,30 @@ void	parse_input(char *input)
 			i += file_out(data, input + i + 1); 
 		else if (input[i] == 34 || input[i] == 39)
 			i += quotes(data, input + i);
-		else if (input[i] != 32 && input[i])
+		else if (input[i] && input[i] != 32)
 			i += space(data, input + i, 1);
 		// else if (input[i] == "$?") // what even is this
+		i++;
 	}
 	if (data->cmd)
 	{
-		do_cmd(data->cmd, data->fd);
+		do_cmd(data);
 		freesplit(data->cmd);
 	}
 	output(data->fd);
-	free(data);
+	freedom(NULL, data, input);
+}
+
+t_shell	*data_init(void)
+{
+	t_shell	*data;
+	
+	data = (t_shell *)malloc(sizeof(t_shell));
+	data->fd[0] = dup(STDIN_FILENO);
+	data->fd[1] = dup(STDOUT_FILENO);
+	data->cmd = NULL;
+	data->here_doc = NULL;
+	return (data);
 }
 
 int	file_in(t_shell *data, char *new)
@@ -61,12 +73,15 @@ int	file_in(t_shell *data, char *new)
 	data->len = get_cmd(new + sp + flag, 1);
 	data->res = ft_substr(new, flag + sp, data->len);
 	if (flag == 1)
-		here_doc(data);
+		here_new(data);
 	else
 	{
 		data->fd[0] = open(data->res, O_RDONLY);
 		if (data->fd[0] < 0)
+		{
 			perror("Error");	
+			data->cmd = freedom(data->cmd, NULL, NULL); // test!
+		}
 	}
 	free(data->res);
 	return (data->len + flag + sp);
@@ -137,7 +152,7 @@ void	here_doc_child(t_shell *data, int *pipe)
 	while (1)
 	{
 		buffer = readline("here_doc> ");
-		if (ft_strncmp(buffer, data->res, data->len) == 0)
+		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
 			break ;
 		write(pipe[1], buffer, ft_strlen(buffer));
 		write(pipe[1], "\n", 1);
@@ -146,5 +161,21 @@ void	here_doc_child(t_shell *data, int *pipe)
 	write(pipe[1], "\0", 1);
 	free (buffer);
 	exit(0);
+}
+
+void	here_new(t_shell *data)
+{
+	char	*buffer;
+
+	while (1)
+	{
+		buffer = readline("here_doc> ");
+		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
+			break ;
+		data->here_doc = ft_strjoin(data->here_doc, buffer, -2);
+		data->here_doc = ft_strjoin(data->here_doc, "\n", -2);
+		free(buffer);
+	}
+	free (buffer);
 }
 	
