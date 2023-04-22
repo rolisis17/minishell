@@ -34,12 +34,14 @@ char	*this_folder_is(int	check)
 char	*prev_folder(char *path)
 {
 	int	f;
+	char **new;
 
 	f = ft_strlen(path);
 	while (path[--f] != '/');
 	path[f + 1] = 0;
-	ft_strjoin("/", path, 0); //need to free path
-	return (ft_strjoin("/", path, 0));
+	new = ft_strjoin("/", path, 0); //need to free path
+	free (path);
+	return (new);
 }
 
 void	cd_command(char **splited)
@@ -49,18 +51,27 @@ void	cd_command(char **splited)
 	prev = NULL;
 	if (splited[2])
 		error("cd: too many arguments", 0);
-	if (ft_strncmp(splited[1], "..", 2) == 0)
-		prev = prev_folder(this_folder_is(1));
-	else if (splited[1][0] == '/')
-		prev = ft_strjoin("/", splited[1], 0);
-	else if (!(prev) && splited[1][0] == '.')
-		splited[1]++;
+	prev = change_dot(splited[1]);
 	if (chdir(prev) == -1)
         perror("chdir");
 	freesplit(splited);
 	if (prev)
 		free(prev);
     // printf("Current working directory changed.\n");
+}
+
+char	*change_dot(char *str)
+{
+	if (str[0] == '.' && !(str[1]))
+		return (this_folder_is(1));
+	else if (str[0] == '.' && str[1] == '/')
+		return (ft_strjoin(this_folder_is(1), str + 1));
+	else if (ft_strncmp("..\0", str, 3) == 0)
+		return (prev_folder(this_folder_is(1)));
+	else if (ft_strncmp("/\0", str, 2) == 0)
+		return (getenv("PWD"));
+	else
+		return (str);
 }
 
 void    env_cmd(char **cmd)
@@ -82,4 +93,14 @@ void	ft_exit(char **cmd)
 	ft_putendl_fd("exit does not take options in this minishell", 2);
 	cmd = freedom(cmd, NULL, NULL);
 	exit(0);
+}
+
+int	exit_error(char *str, int check)
+{
+	static int	exit;
+
+	if (check)
+		return (exit);
+	if (ft_strncmp("cd", str, 2) == 0)
+		exit = 126;
 }

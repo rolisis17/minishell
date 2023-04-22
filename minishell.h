@@ -46,6 +46,7 @@ void    quit(char *str);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path);
+char    *change_dot(char *str)
 void	cd_command(char **splited);
 void    env_cmd(char **cmd);
 void	ft_exit(char **cmd);
