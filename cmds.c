@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/21 13:37:03 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/23 19:46:44 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	execute(char **cmd)
 	char	*path;
 
 	check_builtin(cmd);
+	  // need to do a exit function with free in everything for us to call everytime, Joao just fail minishell evaluation. Leaks when exit.
 	 // or exit? or exit inside the command func to get out of the fork but here we need to free everything
 	// can make the execution within each builtin, this was can disregard options and exit the child process
 	path = find_path(cmd[0]);

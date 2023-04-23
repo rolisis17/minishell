@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/21 16:06:18 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/23 11:20:53 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void    quit(char *str);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path);
-char    *change_dot(char *str)
+char    *change_dot(char *str);
 void	cd_command(char **splited);
 void    env_cmd(char **cmd);
 void	ft_exit(char **cmd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/21 10:02:43 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/23 20:15:36 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*this_folder_is(int	check)
 char	*prev_folder(char *path)
 {
 	int	f;
-	char **new;
+	char *new;
 
 	f = ft_strlen(path);
 	while (path[--f] != '/');
@@ -49,29 +49,34 @@ void	cd_command(char **splited)
 	char	*prev;
 
 	prev = NULL;
-	if (splited[2])
+	if (splited[1] && splited[2])
 		error("cd: too many arguments", 0);
 	prev = change_dot(splited[1]);
+	printf("%s\n", prev);
+	printf("%s\n", getenv("PWD"));
 	if (chdir(prev) == -1)
         perror("chdir");
 	freesplit(splited);
-	if (prev)
-		free(prev);
+	// if (prev)
+	// 	free(prev);
+	exit (0);
     // printf("Current working directory changed.\n");
 }
 
 char	*change_dot(char *str)
 {
-	if (str[0] == '.' && !(str[1]))
-		return (this_folder_is(1));
-	else if (str[0] == '.' && str[1] == '/')
-		return (ft_strjoin(this_folder_is(1), str + 1));
-	else if (ft_strncmp("..\0", str, 3) == 0)
-		return (prev_folder(this_folder_is(1)));
-	else if (ft_strncmp("/\0", str, 2) == 0)
-		return (getenv("PWD"));
-	else
-		return (str);
+	char *res;
+
+	res = NULL;
+	if (ft_strncmp(".", str, 2) == 0)
+		res = this_folder_is(1);
+	else if (ft_strncmp("./", str, 3) == 0)
+		res = ft_strjoin(this_folder_is(1), str + 1, -2);
+	else if (ft_strncmp("..", str, 3) == 0)
+		res = prev_folder(this_folder_is(1));
+	else if (!str)
+		res = ft_strdup(getenv("HOME"));
+	return (res);
 }
 
 void    env_cmd(char **cmd)
@@ -103,4 +108,5 @@ int	exit_error(char *str, int check)
 		return (exit);
 	if (ft_strncmp("cd", str, 2) == 0)
 		exit = 126;
+	return (0);
 }
