@@ -40,7 +40,10 @@ void	parse_input(char *line)
 	}
 	if (data->cmd)
 	{
-		do_cmd(data);
+		if (ft_strncmp(data->cmd[0], "cd", 2) == 0)
+			cd_command(data->cmd);
+		else
+			do_cmd(data);
 		freesplit(data->cmd);
 	}
 	output(data->fd);

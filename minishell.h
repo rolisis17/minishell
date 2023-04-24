@@ -46,13 +46,15 @@ void    quit(char *str);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path);
-char    *change_dot(char *str);
+char    *relative_cd(char **str);
+char	*relative_cd2(char *str);
 void	cd_command(char **splited);
 void    env_cmd(char **cmd);
 void	ft_exit(char **cmd);
+void	echo_cmd(char **cmd);
 //parse
 void	parse_input(char *input);
-t_shell	*data_init(void);
+t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
 int		search_another(t_shell *data, char *str, int sp, int c);

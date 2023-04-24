@@ -34,49 +34,66 @@ char	*this_folder_is(int	check)
 char	*prev_folder(char *path)
 {
 	int	f;
-	char *new;
+	// char *new;
 
 	f = ft_strlen(path);
-	while (path[--f] != '/');
+	while ((path[--f] != '/') && (ft_strncmp("/", path, 1) == 0));
 	path[f + 1] = 0;
-	new = ft_strjoin("/", path, 0); //need to free path
-	free (path);
-	return (new);
+	// new = ft_strjoin("/", path, 0); //need to free path
+	// free (path);
+	return (path);
 }
 
 void	cd_command(char **splited)
 {
 	char	*prev;
+    // char cwd[1024];
 
-	prev = NULL;
 	if (splited[1] && splited[2])
 		error("cd: too many arguments", 0);
-	prev = change_dot(splited[1]);
-	printf("%s\n", prev);
-	printf("%s\n", getenv("PWD"));
-	if (chdir(prev) == -1)
+	prev = relative_cd(&splited[1]);
+    if (chdir(prev) == -1)
+	{
         perror("chdir");
-	freesplit(splited);
-	// if (prev)
-	// 	free(prev);
-	exit (0);
-    // printf("Current working directory changed.\n");
+        fprintf(stderr, "Could not change directory to '%s'\n", prev);
+        free(prev);
+        return;
+    }
+    // if (getcwd(cwd, sizeof(cwd)) != NULL) {
+    //     printf("Current working directory: %s\n", cwd);
+    // } else {
+    //     perror("getcwd() error");
+    // }
+    // free(prev);
 }
 
-char	*change_dot(char *str)
+char	*relative_cd(char **str)
 {
-	char *res;
+	if (!(*str))
+		return (getenv("HOME"));
+	if (ft_strncmp(".", (*str), 2) == 0)
+		return (this_folder_is(1));
+	else if (ft_strncmp("./", (*str), 3) == 0)
+		return (ft_strjoin(this_folder_is(1), (*str) + 1, -2));
+	else if (ft_strncmp("..", (*str), 3) == 0)
+		return (prev_folder(this_folder_is(1)));
+	else if (ft_strncmp("../", (*str), 3) == 0)
+		return (relative_cd2(*str));
+	return (*str);
+}
 
-	res = NULL;
-	if (ft_strncmp(".", str, 2) == 0)
-		res = this_folder_is(1);
-	else if (ft_strncmp("./", str, 3) == 0)
-		res = ft_strjoin(this_folder_is(1), str + 1, -2);
-	else if (ft_strncmp("..", str, 3) == 0)
-		res = prev_folder(this_folder_is(1));
-	else if (!str)
-		res = ft_strdup(getenv("HOME"));
-	return (res);
+char	*relative_cd2(char *str)
+{
+	char	*to_join;
+
+	to_join = this_folder_is(1);
+	while (ft_strncmp("../", str, 3) == 0)
+	{
+		str = str + 3;
+		to_join = prev_folder(to_join);
+	}
+	to_join = ft_strjoin(to_join, str, -2);
+	return (to_join);
 }
 
 void    env_cmd(char **cmd)
@@ -92,6 +109,24 @@ void    env_cmd(char **cmd)
 	cmd = freedom(cmd, NULL, NULL);
 	exit (0);
 } // env command!
+
+void	echo_cmd(char **cmd)
+{
+	int	f;
+	int	checker;
+
+	f = 0;
+	checker = 0;
+	if (ft_strncmp(cmd[1], "-n", 3) == 0)
+	{
+		f++;
+		checker++;
+	}
+	while (cmd[++f])
+		printf("%s", cmd[f]);
+	if (checker)
+		printf("\n");
+}
 
 void	ft_exit(char **cmd)
 {

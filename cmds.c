@@ -120,13 +120,14 @@ void	data_to_pipe(t_shell *data)
 void	check_builtin(char **cmd)
 {
 	// if (ft_strncmp(cmd[0], "echo", 4) == 0)
-	if (ft_strncmp(cmd[0], "cd", 2) == 0)
-		cd_command(cmd); // need to fix all these function to take char ** because need to free, and check options which will be other strings
+	 // need to fix all these function to take char ** because need to free, and check options which will be other strings
 	// else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
 	// else if (ft_strncmp(cmd[0], "export", 6) == 0)
 	// else if (ft_strncmp(cmd[0], "unset", 5) == 0)
-	else if (ft_strncmp(cmd[0], "evn", 4) == 0)
+	if (ft_strncmp(cmd[0], "evn", 4) == 0) // really "evn"? how this shit is supposed to work? I will fix it later, tks.
 		env_cmd(cmd);
+	else if (ft_strncmp(cmd[1], "echo", 5) == 0)
+		echo_cmd(cmd);
 	else if (ft_strncmp(cmd[0], "exit", 5) == 0)
 		ft_exit(cmd); // to say there are no options
 	else if (ft_strncmp(cmd[0], "|", 1) == 0)
