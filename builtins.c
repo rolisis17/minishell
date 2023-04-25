@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/23 20:15:36 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/25 20:02:15 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,20 @@ void	cd_command(char **splited)
         free(prev);
         return;
     }
+	return;
     // if (getcwd(cwd, sizeof(cwd)) != NULL) {
     //     printf("Current working directory: %s\n", cwd);
     // } else {
     //     perror("getcwd() error");
     // }
-    // free(prev);
+    free(prev);
 }
 
 char	*relative_cd(char **str)
 {
 	if (!(*str))
 		return (getenv("HOME"));
-	if (ft_strncmp(".", (*str), 2) == 0)
+	else if (ft_strncmp(".", (*str), 2) == 0)
 		return (this_folder_is(1));
 	else if (ft_strncmp("./", (*str), 3) == 0)
 		return (ft_strjoin(this_folder_is(1), (*str) + 1, -2));
@@ -85,15 +86,22 @@ char	*relative_cd(char **str)
 char	*relative_cd2(char *str)
 {
 	char	*to_join;
+	char	*res;
+	int		f;
 
 	to_join = this_folder_is(1);
-	while (ft_strncmp("../", str, 3) == 0)
+	f = ft_strlen(to_join);
+	while (str && ft_strncmp("../", str, 3) == 0)
 	{
 		str = str + 3;
-		to_join = prev_folder(to_join);
+		while ((to_join[--f - 1] != '/') && (ft_strncmp("/", to_join, 1) == 0));
+		printf("%zu\n", ft_strlen(str));
 	}
-	to_join = ft_strjoin(to_join, str, -2);
-	return (to_join);
+	res = ft_calloc(f + 2, sizeof(char));
+	ft_strlcpy(res, to_join, f + 1);
+	free (to_join);
+	res = ft_strjoin(res, str, -2);
+	return (res);
 }
 
 void    env_cmd(char **cmd)

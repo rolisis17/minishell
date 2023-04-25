@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/23 20:18:43 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/25 16:04:18 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,14 @@ void	parse_input(char *line)
 		// else if (input[i] == "$?") // what even is this
 		i++;
 	}
-	if (data->cmd)
+	if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
+		cd_command(data->cmd);
+	else if (data->cmd)
 	{
-		if (ft_strncmp(data->cmd[0], "cd", 2) == 0)
-			cd_command(data->cmd);
-		else
-			do_cmd(data);
+		do_cmd(data);
 		freesplit(data->cmd);
+		output(data->fd);
 	}
-	output(data->fd);
 	freedom(NULL, data, input);
 }
 

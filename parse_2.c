@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/21 15:53:08 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/25 16:34:50 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	pipex(t_shell *data)
 void	output(int *fd)
 {
 	char *buf;
-	
+
 	buf = malloc(sizeof(char));
 	while (read(fd[0], buf, 1) > 0)
 		write(fd[1], buf, 1);

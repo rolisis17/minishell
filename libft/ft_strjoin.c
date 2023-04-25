@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 09:22:49 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/14 16:49:52 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/25 18:52:32 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*ft_strjoin(char *s1, char *s2, int f)
 	char	*s3;
 
 	u = ft_strlen(s1) + ft_strlen(s2);
+	printf("%d\n", u);
 	if (f == -1)
 		u -= ft_strlen(s1);
 	s3 = (char *)ft_calloc(u + 1, sizeof(char));
