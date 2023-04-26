@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/25 15:49:52 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/26 16:00:55 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	do_cmd(t_shell *data)
 {
 	pid_t	pid;
 	int		pipe_fd[2];
-	
+
 	data_to_pipe(data);
 	if (pipe(pipe_fd) == -1)
 		error("Error (pipe)", 0);
@@ -126,6 +126,8 @@ void	check_builtin(char **cmd)
 	// else if (ft_strncmp(cmd[0], "unset", 5) == 0)
 	if (ft_strncmp(cmd[0], "evn", 4) == 0) // really "evn"? how this shit is supposed to work? I will fix it later, tks.
 		env_cmd(cmd);
+	else if (ft_strncmp(cmd[0], "export", 7) == 0)
+		export_cmd(cmd);
 	else if (ft_strncmp(cmd[1], "echo", 5) == 0)
 		echo_cmd(cmd);
 	else if (ft_strncmp(cmd[0], "exit", 5) == 0)

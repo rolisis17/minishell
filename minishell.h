@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/23 11:20:53 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/26 16:38:28 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ typedef struct  s_shell
     char    *here_doc;
 }               t_shell;
 
+typedef struct s_terminal
+{
+	char	**env;
+}			t_terminal;
+
 void	make_history(char *line);
 //cmds
 char	*find_path(char *cmd);
@@ -52,6 +57,7 @@ void	cd_command(char **splited);
 void    env_cmd(char **cmd);
 void	ft_exit(char **cmd);
 void	echo_cmd(char **cmd);
+void	export_cmd(char **cmd);
 //parse
 void	parse_input(char *input);
 t_shell *data_init(void);

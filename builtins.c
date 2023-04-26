@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/25 20:02:15 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/26 17:03:00 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,3 +153,29 @@ int	exit_error(char *str, int check)
 		exit = 126;
 	return (0);
 }
+
+void	export_cmd(char **cmd)
+{
+	extern char **environ;
+
+	environ = add_split(environ, cmd[1]);
+	cmd = freedom(cmd, NULL, NULL);
+	exit (0);
+}
+
+// |, >, <, <<, >> (TOP)
+// ""
+// >>>>, >>|, <<|> (Bater na mae)
+// echo "ola, mundo" >t.txt >>l.txt >>>|> h.txt | wc | ls -la
+// new + ft_strlen(2 x Recebida);
+// echo2"ola, mundo"23>2t.txt2>>2l.txt23>>23>23|23>2h.txt232wc232ls2-la
+// echo "ola, mundo"
+// > t.txt
+// >> l.txt
+// >> 
+// > 
+// |
+// > h.txt
+// wc
+// ls, la
+// echo "ola, Mundo"
