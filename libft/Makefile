@@ -43,3 +43,5 @@ fclean : clean
 re : fclean all
 
 .PHONY : fclean all bonus clean re 
+
+# https://docs.ton.org/develop/func/overview blockchain code language that I very close to C

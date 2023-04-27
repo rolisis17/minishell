@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/21 16:06:18 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/27 16:49:58 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,14 @@ typedef struct  s_shell
     char    **cmd;
     char    *res;
     char    *here_doc;
+	int		cd_flag;
+	int		exit_status;
 }               t_shell;
+
+typedef struct s_terminal
+{
+	char	**env;
+}			t_terminal;
 
 void	make_history(char *line);
 //cmds
@@ -46,12 +53,16 @@ void    quit(char *str);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path);
+char    *relative_cd(char *str);
+char	*relative_cd2(char *str);
 void	cd_command(char **splited);
 void    env_cmd(char **cmd);
 void	ft_exit(char **cmd);
+void	echo_cmd(char **cmd);
+void	export_cmd(char **cmd);
 //parse
 void	parse_input(char *input);
-t_shell	*data_init(void);
+t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
 int		search_another(t_shell *data, char *str, int sp, int c);
@@ -75,5 +86,6 @@ char    **freedom(char **ted, void *ze, void *dom);
 int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
+char	*ft_strjoin_mod(char *str1, char *str2, int pos);
 
 #endif

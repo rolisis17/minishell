@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/21 10:02:43 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/27 17:40:51 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ char	*this_folder_is(int	check)
         exit(EXIT_FAILURE);
     }
 	if (check == 0)
+	{
     	printf("%s\n", buf);
+		exit(0);
+	}
 	else
 		res = ft_strdup(buf);
 	return (res);
@@ -34,33 +37,67 @@ char	*this_folder_is(int	check)
 char	*prev_folder(char *path)
 {
 	int	f;
+	// char *new;
 
 	f = ft_strlen(path);
-	while (path[--f] != '/');
+	while ((path[--f] != '/') && (ft_strncmp("/", path, 1) == 0));
 	path[f + 1] = 0;
-	ft_strjoin("/", path, 0); //need to free path
-	return (ft_strjoin("/", path, 0));
+	// new = ft_strjoin("/", path, 0); //need to free path
+	// free (path);
+	return (path);
 }
 
 void	cd_command(char **splited)
 {
 	char	*prev;
+    
 
-	prev = NULL;
-	if (splited[2])
+	if (splited[1] && splited[2])
 		error("cd: too many arguments", 0);
-	if (ft_strncmp(splited[1], "..", 2) == 0)
-		prev = prev_folder(this_folder_is(1));
-	else if (splited[1][0] == '/')
-		prev = ft_strjoin("/", splited[1], 0);
-	else if (!(prev) && splited[1][0] == '.')
-		splited[1]++;
-	if (chdir(prev) == -1)
+	prev = relative_cd(splited[1]);
+    if (chdir(prev) == -1)
+	{
         perror("chdir");
-	freesplit(splited);
-	if (prev)
-		free(prev);
-    // printf("Current working directory changed.\n");
+        fprintf(stderr, "Could not change directory to '%s'\n", prev);
+        freedom(NULL, prev, NULL);
+        return;
+    }
+	freedom(NULL, prev, NULL);
+	return;
+}
+
+char	*relative_cd(char *str)
+{
+	if (!str)
+		return (ft_strdup(getenv("HOME")));
+	else if (ft_strncmp(".", str, 2) == 0)
+		return (this_folder_is(1));
+	else if (ft_strncmp("./", str, 3) == 0)
+		return (ft_strjoin_mod(this_folder_is(1), str + 1, 0));
+	else if (ft_strncmp("..", str, 3) == 0)
+		return (prev_folder(this_folder_is(1)));
+	else if (ft_strncmp("../", str, 3) == 0)
+		return (relative_cd2(str));
+	return (ft_strdup(str));
+}
+
+char	*relative_cd2(char *str)
+{
+	char	*to_join;
+	char	*res;
+	int		f;
+
+	to_join = this_folder_is(1);
+	f = ft_strlen(to_join);
+	while (str && ft_strncmp("../", str, 3) == 0)
+	{
+		str = str + 3;
+		while ((to_join[--f - 1] != '/') && (ft_strncmp("/", to_join, 1) == 0));
+	}
+	res = ft_substr(to_join, 0, f);
+	free (to_join);
+	res = ft_strjoin_mod(res, str, 0);
+	return (res);
 }
 
 void    env_cmd(char **cmd)
@@ -77,9 +114,64 @@ void    env_cmd(char **cmd)
 	exit (0);
 } // env command!
 
+void	echo_cmd(char **cmd)
+{
+	int	f;
+	int	checker;
+
+	f = 0;
+	checker = 0;
+	if (ft_strncmp(cmd[1], "-n", 3) == 0)
+	{
+		f++;
+		checker++;
+	}
+	while (cmd[++f])
+		printf("%s", cmd[f]);
+	if (checker)
+		printf("\n");
+}
+
 void	ft_exit(char **cmd)
 {
 	ft_putendl_fd("exit does not take options in this minishell", 2);
 	cmd = freedom(cmd, NULL, NULL);
 	exit(0);
 }
+
+int	exit_error(char *str, int check)
+{
+	static int	exit;
+
+	if (check)
+		return (exit);
+	if (ft_strncmp("cd", str, 2) == 0)
+		exit = 126;
+	return (0);
+}
+
+void	export_cmd(char **cmd)
+{
+	extern char **environ;
+
+	environ = add_split(environ, cmd[1]);
+	cmd = freedom(cmd, NULL, NULL);
+	exit (0);
+}
+
+// |, >, <, <<, >> (TOP)
+// ""
+// >>>>, >>|, <<|> (Bater na mae)
+// echo "ola, mundo" >t.txt >>l.txt >>>|> h.txt | wc | ls -la
+// new + ft_strlen(2 x Recebida);
+// echo2"ola, mundo"23>2t.txt2>>2l.txt23>>23>23|23>2h.txt232wc232ls2-la
+// echo "ola, mundo"
+// > t.txt
+// >> l.txt
+// >> 
+// > 
+// |
+// > h.txt
+// wc
+// ls, la
+// echo "ola, Mundo"
