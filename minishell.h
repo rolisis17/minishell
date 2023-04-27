@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/26 16:38:28 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/27 16:49:58 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef struct  s_shell
     char    **cmd;
     char    *res;
     char    *here_doc;
+	int		cd_flag;
+	int		exit_status;
 }               t_shell;
 
 typedef struct s_terminal
@@ -51,7 +53,7 @@ void    quit(char *str);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path);
-char    *relative_cd(char **str);
+char    *relative_cd(char *str);
 char	*relative_cd2(char *str);
 void	cd_command(char **splited);
 void    env_cmd(char **cmd);
@@ -84,5 +86,6 @@ char    **freedom(char **ted, void *ze, void *dom);
 int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
+char	*ft_strjoin_mod(char *str1, char *str2, int pos);
 
 #endif

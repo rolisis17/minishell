@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/26 16:00:55 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/27 17:41:14 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@ char	*find_path(char *cmd)
     int     i;
 
     i = -1;
-	cmd_temp = ft_strjoin("/", cmd, 0);
+	cmd_temp = ft_strjoin("/", cmd);
     paths = ft_split(getenv("PATH"), ':');
     while (paths[++i])
     {
-        the_path = ft_strjoin(paths[i], cmd_temp, 0);
+        the_path = ft_strjoin(paths[i], cmd_temp);
         if (access(the_path, F_OK) == 0)
         {
             freesplit(paths);
@@ -119,12 +119,12 @@ void	data_to_pipe(t_shell *data)
 
 void	check_builtin(char **cmd)
 {
-	// if (ft_strncmp(cmd[0], "echo", 4) == 0)
 	 // need to fix all these function to take char ** because need to free, and check options which will be other strings
-	// else if (ft_strncmp(cmd[0], "pwd", 3) == 0)
+	if (ft_strncmp(cmd[0], "pwd", 4) == 0)
+		this_folder_is(0);
 	// else if (ft_strncmp(cmd[0], "export", 6) == 0)
 	// else if (ft_strncmp(cmd[0], "unset", 5) == 0)
-	if (ft_strncmp(cmd[0], "evn", 4) == 0) // really "evn"? how this shit is supposed to work? I will fix it later, tks.
+	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		env_cmd(cmd);
 	else if (ft_strncmp(cmd[0], "export", 7) == 0)
 		export_cmd(cmd);

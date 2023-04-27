@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/26 17:03:00 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/27 17:40:51 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ char	*this_folder_is(int	check)
         exit(EXIT_FAILURE);
     }
 	if (check == 0)
+	{
     	printf("%s\n", buf);
+		exit(0);
+	}
 	else
 		res = ft_strdup(buf);
 	return (res);
@@ -47,40 +50,35 @@ char	*prev_folder(char *path)
 void	cd_command(char **splited)
 {
 	char	*prev;
-    // char cwd[1024];
+    
 
 	if (splited[1] && splited[2])
 		error("cd: too many arguments", 0);
-	prev = relative_cd(&splited[1]);
+	prev = relative_cd(splited[1]);
     if (chdir(prev) == -1)
 	{
         perror("chdir");
         fprintf(stderr, "Could not change directory to '%s'\n", prev);
-        free(prev);
+        freedom(NULL, prev, NULL);
         return;
     }
+	freedom(NULL, prev, NULL);
 	return;
-    // if (getcwd(cwd, sizeof(cwd)) != NULL) {
-    //     printf("Current working directory: %s\n", cwd);
-    // } else {
-    //     perror("getcwd() error");
-    // }
-    free(prev);
 }
 
-char	*relative_cd(char **str)
+char	*relative_cd(char *str)
 {
-	if (!(*str))
-		return (getenv("HOME"));
-	else if (ft_strncmp(".", (*str), 2) == 0)
+	if (!str)
+		return (ft_strdup(getenv("HOME")));
+	else if (ft_strncmp(".", str, 2) == 0)
 		return (this_folder_is(1));
-	else if (ft_strncmp("./", (*str), 3) == 0)
-		return (ft_strjoin(this_folder_is(1), (*str) + 1, -2));
-	else if (ft_strncmp("..", (*str), 3) == 0)
+	else if (ft_strncmp("./", str, 3) == 0)
+		return (ft_strjoin_mod(this_folder_is(1), str + 1, 0));
+	else if (ft_strncmp("..", str, 3) == 0)
 		return (prev_folder(this_folder_is(1)));
-	else if (ft_strncmp("../", (*str), 3) == 0)
-		return (relative_cd2(*str));
-	return (*str);
+	else if (ft_strncmp("../", str, 3) == 0)
+		return (relative_cd2(str));
+	return (ft_strdup(str));
 }
 
 char	*relative_cd2(char *str)
@@ -95,12 +93,10 @@ char	*relative_cd2(char *str)
 	{
 		str = str + 3;
 		while ((to_join[--f - 1] != '/') && (ft_strncmp("/", to_join, 1) == 0));
-		printf("%zu\n", ft_strlen(str));
 	}
-	res = ft_calloc(f + 2, sizeof(char));
-	ft_strlcpy(res, to_join, f + 1);
+	res = ft_substr(to_join, 0, f);
 	free (to_join);
-	res = ft_strjoin(res, str, -2);
+	res = ft_strjoin_mod(res, str, 0);
 	return (res);
 }
 

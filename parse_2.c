@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/25 16:34:50 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/27 16:28:35 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,13 @@ char	*env_var(char *data, int len, char *beg)
 	res = getenv(var);
 	if (res == NULL)
 	{
-		res = ft_strjoin(beg, end, -2);
+		res = ft_strjoin_mod(beg, end, 0);
 		freedom(NULL, data, var);
 		free(end);
 		return(res);
 	}	
-	beg = ft_strjoin(beg, res, -2);
-	beg = ft_strjoin(beg, end, -2);
+	beg = ft_strjoin_mod(beg, res, 0);
+	beg = ft_strjoin_mod(beg, end, 0);
 	freedom(NULL, data, var);
 	free(end);
 	return (beg);
@@ -98,13 +98,23 @@ void	pipex(t_shell *data)
 {
 	// need to take care of sitution like || maybe sytax error message?
 	if (data->cmd)
-		do_cmd(data);
+	{
+		if (ft_strncmp("cd", data->cmd[0], 3) == 0)
+		{
+			data->cmd = freedom(data->cmd, NULL, NULL);
+			close(data->fd[0]);
+			data->fd[0]= dup(STDIN_FILENO);	
+		}
+		else
+			do_cmd(data);
+	}
 	else
 	{
 		data->cmd = ft_split("|", 32);
 		do_cmd(data);
 	}
 	data->cmd = freedom(data->cmd, NULL, NULL);
+	data->cd_flag++;
 }
 
 void	output(int *fd)

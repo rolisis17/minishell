@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/26 17:20:12 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/27 17:40:31 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,18 @@ void	parse_input(char *line)
 	if (data->cmd)
 	{
 		if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
-			cd_command(data->cmd);
+		{
+			if (data->cd_flag == 0)
+				cd_command(data->cmd);
+		}
 		else // here_doc need to fix "LIMITER" in quotes.
 		{
 			do_cmd(data);
-			freesplit(data->cmd);
 			output(data->fd);
 		}
+		// freesplit(data->cmd);
 	}
-	freedom(NULL, data, input);
+	freedom(data->cmd, data, input);
 }
 
 t_shell	*data_init(void)
@@ -61,6 +64,7 @@ t_shell	*data_init(void)
 	data->fd[1] = dup(STDOUT_FILENO);
 	data->cmd = NULL;
 	data->here_doc = NULL;
+	data->cd_flag = 0;
 	return (data);
 }
 
@@ -177,8 +181,8 @@ void	here_new(t_shell *data)
 		buffer = readline("here_doc> ");
 		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
 			break ;
-		data->here_doc = ft_strjoin(data->here_doc, buffer, -2);
-		data->here_doc = ft_strjoin(data->here_doc, "\n", -2);
+		data->here_doc = ft_strjoin_mod(data->here_doc, buffer, 0);
+		data->here_doc = ft_strjoin_mod(data->here_doc, "\n", 0);
 		free(buffer);
 	}
 	free (buffer);
