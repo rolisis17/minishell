@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/27 17:40:51 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/27 20:41:38 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,11 +153,34 @@ int	exit_error(char *str, int check)
 void	export_cmd(char **cmd)
 {
 	extern char **environ;
+  	char *new_env_var = cmd[1];
+    char *args[] = {"env", "-i", new_env_var, "./minishell", NULL};
 
-	environ = add_split(environ, cmd[1]);
-	cmd = freedom(cmd, NULL, NULL);
+    execv("/usr/bin/env", args);
 	exit (0);
 }
+
+char	**new_env(char **envp)
+{
+	char	**new;
+	int		counter;
+	int		f;
+
+	f = -1;
+	counter = -1;
+	while (envp[++counter]);
+	new = ft_calloc(counter + 1, sizeof(char **));
+	while (envp[++f] && new[f])
+	{
+		new[f] = ft_strdup(envp[1]);
+	}
+		
+}
+
+// char	*dollar_sign(char *str)
+// {
+	
+// }
 
 // |, >, <, <<, >> (TOP)
 // ""

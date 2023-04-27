@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/27 17:40:31 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/27 20:29:48 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ void	parse_input(char *line)
 			if (data->cd_flag == 0)
 				cd_command(data->cmd);
 		}
+		if (ft_strncmp(data->cmd[0], "export", 7) == 0)
+			export_cmd(data->cmd);
 		else // here_doc need to fix "LIMITER" in quotes.
 		{
 			do_cmd(data);

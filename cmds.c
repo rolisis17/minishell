@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 17:41:14 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/27 20:29:21 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,8 @@ void	check_builtin(char **cmd)
 	// else if (ft_strncmp(cmd[0], "unset", 5) == 0)
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		env_cmd(cmd);
-	else if (ft_strncmp(cmd[0], "export", 7) == 0)
-		export_cmd(cmd);
+	// else if (ft_strncmp(cmd[0], "export", 7) == 0)
+	// 	export_cmd(cmd);
 	else if (ft_strncmp(cmd[1], "echo", 5) == 0)
 		echo_cmd(cmd);
 	else if (ft_strncmp(cmd[0], "exit", 5) == 0)
