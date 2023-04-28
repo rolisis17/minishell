@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 16:49:58 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 20:52:18 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <readline/history.h>
 # include <signal.h>
 
+extern char **environ;
+
 typedef struct  s_shell
 {
     int     fd[2];
@@ -33,12 +35,10 @@ typedef struct  s_shell
 	int		exit_status;
 }               t_shell;
 
-typedef struct s_terminal
-{
-	char	**env;
-}			t_terminal;
-
 void	make_history(char *line);
+void	keep_history(char *line, int check);
+void	new_history();
+void	hiddenfile_history(char **keep);
 //cmds
 char	*find_path(char *cmd);
 void	bad_cmd(char *path, char **cmd);
@@ -60,6 +60,7 @@ void    env_cmd(char **cmd);
 void	ft_exit(char **cmd);
 void	echo_cmd(char **cmd);
 void	export_cmd(char **cmd);
+void	unset_cmd(char **cmd);
 //parse
 void	parse_input(char *input);
 t_shell *data_init(void);
@@ -79,7 +80,9 @@ void	pipex(t_shell *data);
 void	output(int *fd);
 
 //splitting
-char    **add_split(char **split, char *new);
+char	**add_split(char **split, char *new, int arg);
+char	**copy_split(char **split, int arg);
+char	**remove_split(char **split, char *rem, int arg);
 void	freesplit(char **splited);
 //tools
 char    **freedom(char **ted, void *ze, void *dom);

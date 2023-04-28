@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/27 20:29:48 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/28 21:00:18 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	parse_input(char *line)
 		// else if (input[i] == "$?") // what even is this
 		i++;
 	}
+	environ = copy_split(environ, 1);
 	if (data->cmd)
 	{
 		if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
@@ -45,16 +46,18 @@ void	parse_input(char *line)
 			if (data->cd_flag == 0)
 				cd_command(data->cmd);
 		}
-		if (ft_strncmp(data->cmd[0], "export", 7) == 0)
+		else if (ft_strncmp(data->cmd[0], "export", 7) == 0)
 			export_cmd(data->cmd);
+		else if (ft_strncmp(data->cmd[0], "unset", 6) == 0)
+			unset_cmd(data->cmd);
 		else // here_doc need to fix "LIMITER" in quotes.
 		{
-			do_cmd(data);
+			do_cmd(data); // BASH cannot run in the child process.
 			output(data->fd);
 		}
 		// freesplit(data->cmd);
 	}
-	freedom(data->cmd, data, input);
+	freedom(data->cmd, data, input); // need to free data every place.
 }
 
 t_shell	*data_init(void)
@@ -134,45 +137,45 @@ int	check_empty_line(char *line)
 	return (0);
 }
 
-void	here_doc(t_shell *data)
-{
-	pid_t	pid;
-	int		pipe_fd[2];
+// void	here_doc(t_shell *data)
+// {
+// 	pid_t	pid;
+// 	int		pipe_fd[2];
 
-	if (pipe(pipe_fd) == -1)
-		error("Error (pipe)", 0);
-	pid = fork();
-	if (pid == -1)
-		error("Error (fork)", 0);
-	if (pid == 0)
-		here_doc_child(data, pipe_fd);
-	else
-	{
-		close(data->fd[0]);
-		close(pipe_fd[1]);
-		data->fd[0] = pipe_fd[0];
-		waitpid(pid, NULL, 0);
-	}
-} // signals dont work in here_doc!!!
+// 	if (pipe(pipe_fd) == -1)
+// 		error("Error (pipe)", 0);
+// 	pid = fork();
+// 	if (pid == -1)
+// 		error("Error (fork)", 0);
+// 	if (pid == 0)
+// 		here_doc_child(data, pipe_fd);
+// 	else
+// 	{
+// 		close(data->fd[0]);
+// 		close(pipe_fd[1]);
+// 		data->fd[0] = pipe_fd[0];
+// 		waitpid(pid, NULL, 0);
+// 	}
+// } // signals dont work in here_doc!!!
 
-void	here_doc_child(t_shell *data, int *pipe)
-{
-	char	*buffer;
+// void	here_doc_child(t_shell *data, int *pipe)
+// {
+// 	char	*buffer;
 	
-	close(pipe[0]);
-	while (1)
-	{
-		buffer = readline("here_doc> ");
-		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
-			break ;
-		write(pipe[1], buffer, ft_strlen(buffer));
-		write(pipe[1], "\n", 1);
-		free(buffer);
-	}
-	write(pipe[1], "\0", 1);
-	free (buffer);
-	exit(0);
-}
+// 	close(pipe[0]);
+// 	while (1)
+// 	{
+// 		buffer = readline("here_doc> ");
+// 		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
+// 			break ;
+// 		write(pipe[1], buffer, ft_strlen(buffer));
+// 		write(pipe[1], "\n", 1);
+// 		free(buffer);
+// 	}
+// 	write(pipe[1], "\0", 1);
+// 	free (buffer);
+// 	exit(0);
+// }
 
 void	here_new(t_shell *data)
 {

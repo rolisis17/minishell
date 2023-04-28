@@ -6,13 +6,14 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 20:25:51 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/28 20:53:50 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(void)
+
+int main()
 {
     char *line;
 
@@ -23,14 +24,14 @@ int main(void)
 		sig_handler();
 		// rl_on_new_line();
 		line = readline("> ");
+		keep_history(line, 0);
 		if (line == NULL)
 			quit(line);
 		if (ft_strncmp(line, "exit", 5) == 0)
 			quit(line);
 		if ((check_empty_line(line)))
         	parse_input(line);
-  		add_history(line);
-		free(line);
+		freedom(NULL, line, NULL);
     }
     return 0;
 }
@@ -41,6 +42,62 @@ void make_history(char *line)
 	rl_replace_line("", 0);
 	rl_redisplay();
 	add_history(line);
+}
+
+void	keep_history(char *line, int check)
+{
+	static char **keep;
+
+	if (!check)
+	{
+		if (!keep)
+			keep = ft_split(line, 02);
+		else
+			keep = add_split(keep, line, 0);
+		add_history(line);
+	}
+	if (check && keep)
+		hiddenfile_history(keep);
+}
+
+void	new_history()
+{
+	char	*gnl;
+	char	*res;
+	int		fd;
+
+	if (access(".minihist", F_OK) == 0)
+	{
+		fd = open(".minihist", O_RDWR);
+		gnl = get_next_line(fd);
+		while (gnl)
+		{
+			res = ft_strtrim(gnl, "\n");
+			add_history(res);
+			freedom (NULL, res, gnl);
+			gnl = get_next_line(fd);
+		}
+		if (gnl)
+			free (gnl);
+		close (fd);
+		if (unlink(".minihist") == -1)
+		{
+			perror("unlink");
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
+void	hiddenfile_history(char **keep)
+{
+	int	fd;
+	int	counter;
+
+	counter = -1;
+	fd = open(".minihist", O_RDWR | O_CREAT | O_TRUNC, 0777);
+	while (keep[++counter])
+		ft_putendl_fd(keep[counter], fd);
+	close(fd);
 }
 
 // void handle_input(char *line)

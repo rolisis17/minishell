@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/27 20:41:38 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/28 20:59:22 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ char	*relative_cd2(char *str)
 
 void    env_cmd(char **cmd)
 {
-    extern char **environ;
     int         i;
 
     i = -1;
@@ -152,12 +151,18 @@ int	exit_error(char *str, int check)
 
 void	export_cmd(char **cmd)
 {
-	extern char **environ;
-  	char *new_env_var = cmd[1];
-    char *args[] = {"env", "-i", new_env_var, "./minishell", NULL};
+	// char	*args[] = {"./minishell", NULL};
+	// char	*env_path;
 
-    execv("/usr/bin/env", args);
-	exit (0);
+	// keep_history(NULL, 1);
+	environ = add_split(environ, cmd[1], 0);
+	// printf("%s\n", getenv("cara"));
+    // execve(ft_strjoin(find_path("env"), "env"), args, NULL); // check if need to free data.
+}
+
+void	unset_cmd(char **cmd)
+{
+	environ = remove_split(environ, cmd[1], 0);
 }
 
 char	**new_env(char **envp)
@@ -174,7 +179,7 @@ char	**new_env(char **envp)
 	{
 		new[f] = ft_strdup(envp[1]);
 	}
-		
+	return (NULL);
 }
 
 // char	*dollar_sign(char *str)
