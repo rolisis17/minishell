@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/28 18:21:28 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 22:14:57 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,8 @@ void	here_new(t_shell *data)
 	char	*limiter;
 	int		len;
 
-	limiter = remove_quotes(data->res, 39, 0);
-	limiter = remove_quotes(limiter, 34, 1);
+	limiter = remove_quotes(data->res, 34, 0);
+	limiter = remove_quotes(limiter, 39, 1);
 	len = ft_strlen(limiter);
 	while (1)
 	{
@@ -148,60 +148,22 @@ char	*remove_quotes(char *str, int qte, int arg)
 	char	*end;
 	
 	ptr = str;
-	while (ft_strchr(ptr, 34) != NULL)
+	res = NULL;
+	start = ft_strchr(ptr, qte);
+	while (start != NULL)
 	{
-		start = ft_strchr(ptr, 34);
-		end = ft_strchr(start, 34);
-		if (end == NULL)
-		{
-			if (!res)
-				return(ft_strdup(str));
-			else
-				res = ft_strjoin_mod(res, start, 0);
-		}
-		else
-			res = split_n_join(ft_substr(ptr, 0, end - start), NULL, 34);
-		printf("THIS:%s", res);
-		ptr = end;	
+		end = ft_strchr(start + 1, qte);
+		if (end)
+			ptr = split_n_join(ft_substr(ptr, 0, end - ptr), NULL, qte);
+		res = ft_strjoin_mod(res, ptr, 0);
+		if (end)
+			free(ptr);
+		ptr = end + 1;	
+		start = ft_strchr(end, qte);
 	}
+	if (!res)
+		res = ft_strdup(str);
+	if (arg == 1)
+		free(str);
 	return (res);
-
-	
-// 	else
-// 	{
-// 		len = ptr - str;
-// 		printf("HERE: %i\n", len);
-// 		end = ft_strchr(str + len, 34);
-// 		if (ptr == NULL)
-// 			return(ft_strdup(str));
-// 	}
-// 	data->res = ft_substr(str, 1, ptr - str - 1);
-// 	data->len = ft_strlen(data->res);
-// 	check_substr(data, str[0]);
-// 	if (data->cmd)
-// 		data->cmd = add_split(data->cmd, data->res);
-// 	else
-// 		data->cmd = ft_split(data->res, 34);
-// 	free(data->res);
-// 	return(data->len + 2);
-	// i = 0;
-	// temp = NULL;
-	// if (ft_strchr(str, qte) != NULL)
-	// {
-	// 	temp = ft_split(str, qte);
-	// 	if (temp[1] != NULL)
-	// 	{
-	// 		while(temp[i])
-	// 			res = ft_strjoin_mod(res, temp[i++], 0);
-	// 	}
-	// 	else
-	// 		res = ft_strdup(temp[0]);
-	// }
-	// else
-	// 	res = ft_strdup(str);
-	// if (arg == 1)
-	// 	freedom(temp, str, NULL, NULL);
-	// else if (temp)
-	// 	freesplit(temp);
-	// return(res);
 }
