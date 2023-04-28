@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 15:01:59 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 18:13:40 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,25 @@ void	freesplit(char **splited)
 		counter++;
 	}
 	free (splited);
+}
+
+char	*split_n_join(char *str, char **split, int spliter)
+{
+	char	**split;
+	char	*res;
+	int		i;
+
+	i = 0;
+	res = NULL;
+	if (!split)
+		split = ft_split(str, spliter);
+	if (split[1] != NULL)
+	{
+		while(split[i])
+			res = ft_strjoin_mod(res, split[++i], 0);
+	}
+	else 
+		res = ft_strdup(split[0]);
+	freedom(split, str, NULL, NULL);
+	return (res);
 }

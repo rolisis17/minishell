@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/26 16:43:56 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/28 11:32:38 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,32 +43,15 @@ void make_history(char *line)
 	add_history(line);
 }
 
-// void handle_input(char *line)
-// {
-// 	char	**cmd;
-// 	char	*path;
-// 	char	*quotes;
-//     // printf("You entered: %s\n", line);
-// 	// here we need to parse.
-// 	if (!(check_empty_line(line)))
-// 		return;
-// 	quotes = to_trim_quotes(line, 34);
-// 	if (quotes)
-// 	{
-// 		printf("%s\n", quotes);
-// 		free (quotes);
-// 	}
-// 	// here we finish parse.
-// 	cmd = ft_split(line, 32);
-// 	if (ft_strncmp(line, "pwd", 3) == 0)
-// 		this_folder_is(0);
-// 	if (ft_strncmp(line, "cd", 2) == 0)
-// 		cd_command(line);
-// 	path = find_path(cmd[0]); // finds the path to the cmd
-// 	if (!path)
-// 		bad_cmd(path, cmd);
-// 	else
-// 		execute(path, cmd); // forks to execute and frees everything 
-// 	// so far this is only good for single commands.
-// }
+int	check_empty_line(char *line)
+{
+	int	f;
 
+	f = -1;
+	while (line[++f])
+	{
+		if (line[f] != '\n' && line[f] != 32 && line[f] != '.') // if its just a . should return an error
+			return (1);
+	}
+	return (0);
+}

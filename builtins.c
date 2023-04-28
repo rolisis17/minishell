@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/27 17:40:51 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 11:47:33 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ void	cd_command(char **splited)
 	{
         perror("chdir");
         fprintf(stderr, "Could not change directory to '%s'\n", prev);
-        freedom(NULL, prev, NULL);
+        freedom(NULL, prev, NULL, NULL);
         return;
     }
-	freedom(NULL, prev, NULL);
+	freedom(NULL, prev, NULL, NULL);
 	return;
 }
 
@@ -110,7 +110,7 @@ void    env_cmd(char **cmd)
 	{
         printf("%s\n", environ[i]);
 	}
-	cmd = freedom(cmd, NULL, NULL);
+	cmd = freedom(cmd, NULL, NULL, NULL);
 	exit (0);
 } // env command!
 
@@ -135,7 +135,7 @@ void	echo_cmd(char **cmd)
 void	ft_exit(char **cmd)
 {
 	ft_putendl_fd("exit does not take options in this minishell", 2);
-	cmd = freedom(cmd, NULL, NULL);
+	cmd = freedom(cmd, NULL, NULL, NULL);
 	exit(0);
 }
 
@@ -155,7 +155,7 @@ void	export_cmd(char **cmd)
 	extern char **environ;
 
 	environ = add_split(environ, cmd[1]);
-	cmd = freedom(cmd, NULL, NULL);
+	cmd = freedom(cmd, NULL, NULL, NULL);
 	exit (0);
 }
 

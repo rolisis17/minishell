@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 16:28:35 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 12:09:10 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,14 @@ char	*env_var(char *data, int len, char *beg)
 	if (res == NULL)
 	{
 		res = ft_strjoin_mod(beg, end, 0);
-		freedom(NULL, data, var);
-		free(end);
+		freedom(NULL, data, var, end);
+		// free(end);
 		return(res);
 	}	
 	beg = ft_strjoin_mod(beg, res, 0);
 	beg = ft_strjoin_mod(beg, end, 0);
-	freedom(NULL, data, var);
-	free(end);
+	freedom(NULL, data, var, end);
+	// free(end);
 	return (beg);
 } // if env variable doesnt exist it needs to be ignored. make work!
 
@@ -101,7 +101,7 @@ void	pipex(t_shell *data)
 	{
 		if (ft_strncmp("cd", data->cmd[0], 3) == 0)
 		{
-			data->cmd = freedom(data->cmd, NULL, NULL);
+			data->cmd = freedom(data->cmd, NULL, NULL, NULL);
 			close(data->fd[0]);
 			data->fd[0]= dup(STDIN_FILENO);	
 		}
@@ -113,7 +113,7 @@ void	pipex(t_shell *data)
 		data->cmd = ft_split("|", 32);
 		do_cmd(data);
 	}
-	data->cmd = freedom(data->cmd, NULL, NULL);
+	data->cmd = freedom(data->cmd, NULL, NULL, NULL);
 	data->cd_flag++;
 }
 

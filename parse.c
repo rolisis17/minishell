@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/27 17:40:31 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 18:21:28 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	parse_input(char *line)
 		}
 		// freesplit(data->cmd);
 	}
-	freedom(data->cmd, data, input);
+	freedom(data->cmd, data->here_doc, input, data);
 }
 
 t_shell	*data_init(void)
@@ -89,7 +89,7 @@ int	file_in(t_shell *data, char *new)
 		if (data->fd[0] < 0)
 		{
 			perror("Error");	
-			data->cmd = freedom(data->cmd, NULL, NULL); // test!
+			data->cmd = freedom(data->cmd, NULL, NULL, NULL); // test!
 		}
 	}
 	free(data->res);
@@ -119,72 +119,89 @@ int	file_out(t_shell *data, char *new)
 	return (data->len + flag + sp);
 }
 
-int	check_empty_line(char *line)
-{
-	int	f;
-
-	f = -1;
-	while (line[++f])
-	{
-		if (line[f] != '\n' && line[f] != 32 && line[f] != '.')
-			return (1);
-	}
-	return (0);
-}
-
-void	here_doc(t_shell *data)
-{
-	pid_t	pid;
-	int		pipe_fd[2];
-
-	if (pipe(pipe_fd) == -1)
-		error("Error (pipe)", 0);
-	pid = fork();
-	if (pid == -1)
-		error("Error (fork)", 0);
-	if (pid == 0)
-		here_doc_child(data, pipe_fd);
-	else
-	{
-		close(data->fd[0]);
-		close(pipe_fd[1]);
-		data->fd[0] = pipe_fd[0];
-		waitpid(pid, NULL, 0);
-	}
-} // signals dont work in here_doc!!!
-
-void	here_doc_child(t_shell *data, int *pipe)
-{
-	char	*buffer;
-	
-	close(pipe[0]);
-	while (1)
-	{
-		buffer = readline("here_doc> ");
-		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
-			break ;
-		write(pipe[1], buffer, ft_strlen(buffer));
-		write(pipe[1], "\n", 1);
-		free(buffer);
-	}
-	write(pipe[1], "\0", 1);
-	free (buffer);
-	exit(0);
-}
-
 void	here_new(t_shell *data)
 {
 	char	*buffer;
+	char	*limiter;
+	int		len;
 
+	limiter = remove_quotes(data->res, 39, 0);
+	limiter = remove_quotes(limiter, 34, 1);
+	len = ft_strlen(limiter);
 	while (1)
 	{
 		buffer = readline("here_doc> ");
-		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
+		if (ft_strncmp(buffer, limiter, len + 1) == 0)
 			break ;
 		data->here_doc = ft_strjoin_mod(data->here_doc, buffer, 0);
 		data->here_doc = ft_strjoin_mod(data->here_doc, "\n", 0);
 		free(buffer);
 	}
-	free (buffer);
+	freedom(NULL, buffer, limiter, NULL);
 }
+
+char	*remove_quotes(char *str, int qte, int arg)
+{
+	char	*res;
+	char	*ptr;
+	char	*start;
+	char	*end;
 	
+	ptr = str;
+	while (ft_strchr(ptr, 34) != NULL)
+	{
+		start = ft_strchr(ptr, 34);
+		end = ft_strchr(start, 34);
+		if (end == NULL)
+		{
+			if (!res)
+				return(ft_strdup(str));
+			else
+				res = ft_strjoin_mod(res, start, 0);
+		}
+		else
+			res = split_n_join(ft_substr(ptr, 0, end - start), NULL, 34);
+		printf("THIS:%s", res);
+		ptr = end;	
+	}
+	return (res);
+
+	
+// 	else
+// 	{
+// 		len = ptr - str;
+// 		printf("HERE: %i\n", len);
+// 		end = ft_strchr(str + len, 34);
+// 		if (ptr == NULL)
+// 			return(ft_strdup(str));
+// 	}
+// 	data->res = ft_substr(str, 1, ptr - str - 1);
+// 	data->len = ft_strlen(data->res);
+// 	check_substr(data, str[0]);
+// 	if (data->cmd)
+// 		data->cmd = add_split(data->cmd, data->res);
+// 	else
+// 		data->cmd = ft_split(data->res, 34);
+// 	free(data->res);
+// 	return(data->len + 2);
+	// i = 0;
+	// temp = NULL;
+	// if (ft_strchr(str, qte) != NULL)
+	// {
+	// 	temp = ft_split(str, qte);
+	// 	if (temp[1] != NULL)
+	// 	{
+	// 		while(temp[i])
+	// 			res = ft_strjoin_mod(res, temp[i++], 0);
+	// 	}
+	// 	else
+	// 		res = ft_strdup(temp[0]);
+	// }
+	// else
+	// 	res = ft_strdup(str);
+	// if (arg == 1)
+	// 	freedom(temp, str, NULL, NULL);
+	// else if (temp)
+	// 	freesplit(temp);
+	// return(res);
+}

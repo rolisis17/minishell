@@ -6,21 +6,25 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 15:22:36 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 11:51:14 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **freedom(char **ted, void *ze, void *dom)
+char **freedom(char **ted, void *ze, void *dom, void *style)
 {
 	if (ted)
     	freesplit(ted);
     if (ze)
         free(ze);
     if (dom)
-        free(dom);
-    return (NULL);
+	{
+    	free(dom);
+	}
+	if (style)
+		free(style);
+	return(NULL);
 }
 
 int	get_cmd(char *str, int arg)

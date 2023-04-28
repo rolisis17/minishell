@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 16:49:58 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 18:15:33 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_terminal
 }			t_terminal;
 
 void	make_history(char *line);
+int		check_empty_line(char *line);
 //cmds
 char	*find_path(char *cmd);
 void	bad_cmd(char *path, char **cmd);
@@ -66,10 +67,10 @@ t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
 int		search_another(t_shell *data, char *str, int sp, int c);
-int		check_empty_line(char *line);
-void	here_doc(t_shell *data);
-void	here_doc_child(t_shell *data, int *pipe);
+// void	here_doc(t_shell *data);
+// void	here_doc_child(t_shell *data, int *pipe);
 void	here_new(t_shell *data);
+char	*remove_quotes(char *str, int qte, int arg);
 // parse 2
 int		space(t_shell *data, char *new, int arg);
 int     quotes(t_shell *data, char *new);
@@ -81,8 +82,9 @@ void	output(int *fd);
 //splitting
 char    **add_split(char **split, char *new);
 void	freesplit(char **splited);
+char	*split_n_join(char *str, char **split, int spliter);
 //tools
-char    **freedom(char **ted, void *ze, void *dom);
+char    **freedom(char **ted, void *ze, void *dom, void *style);
 int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
