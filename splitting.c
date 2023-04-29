@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 20:53:06 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/29 16:11:59 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	**copy_split(char **split, int arg)
         new_split[i] = ft_calloc(len + 1, sizeof(char));
         ft_strlcpy(new_split[i], split[i], len + 1);
     }
-    new_split[++i] = NULL;
+    new_split[i] = NULL;
 	if (!arg)
     	freesplit(split);
     return(new_split);

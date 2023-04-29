@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/28 20:59:22 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/29 20:06:07 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,20 +149,83 @@ int	exit_error(char *str, int check)
 	return (0);
 }
 
+void	set_env(t_shell *data)
+{
+	char	**env_new;
+
+	env_new = copy_split(environ, 1);
+	environ = env_new;
+	data->minienv = env_new;
+}
+
 void	export_cmd(char **cmd)
 {
-	// char	*args[] = {"./minishell", NULL};
-	// char	*env_path;
-
-	// keep_history(NULL, 1);
-	environ = add_split(environ, cmd[1], 0);
+	char	**args;
+	char	**cmp;
+	
+	// char	**env_new;
+	// args = ft_split("env -i", 32);
+	// env_new = add_split(environ, cmd[1], 1);
+	// environ = env_new;
+	// free (data->minienv);
+	// data->minienv = env_new;
 	// printf("%s\n", getenv("cara"));
-    // execve(ft_strjoin(find_path("env"), "env"), args, NULL); // check if need to free data.
+	// while (environ[++f])
+	// args = add_split(args, "./minishell", 0);
+    // execve(find_path("env"), args, NULL); // check if need to free data.
+	if(getenv("CURVA"))
+	{
+		cmp = ft_split("./minishell ", 32);
+		keep_history(NULL, 1);
+		args = copy_split(environ, 1);
+		args = add_split(args, cmd[1], 0);
+    	execve(getenv("CURVA"), cmp, args);
+	}
+}
+
+void	set_path_env(void)
+{
+	char	**args;
+	char	**cmp;
+	char	*path;
+	char	*comm;
+
+	if (!(getenv("CURVA")))
+	{
+		keep_history(NULL, 1);
+		path = this_folder_is(1);
+		comm = ft_strjoin("CURVA=", path);
+		cmp = ft_split("./minishell ", 32);
+		args = copy_split(environ, 1);
+		args = add_split(args, comm, 0);
+		execve(path, cmp, args);
+	}
 }
 
 void	unset_cmd(char **cmd)
 {
-	environ = remove_split(environ, cmd[1], 0);
+	char	**args;
+	char	**cmp;
+	int		f;
+	
+	// char	**env_new;
+	f = -1;
+	// args = ft_split("env -i", 32);
+	// env_new = add_split(environ, cmd[1], 1);
+	// environ = env_new;
+	// free (data->minienv);
+	// data->minienv = env_new;
+	// printf("%s\n", getenv("cara"));
+	// args = add_split(args, "./minishell", 0);
+    // execve(find_path("env"), args, NULL); // check if need to free data.
+	if(getenv("CURVA"))
+	{
+		keep_history(NULL, 1);
+		cmp = ft_split("./minishell ", 32);
+		args = copy_split(environ, 1);
+		args = remove_split(args, cmd[1], 0);
+    	execve(getenv("CURVA"), cmp, args); // check if need to free data.
+	}
 }
 
 char	**new_env(char **envp)
@@ -176,9 +239,7 @@ char	**new_env(char **envp)
 	while (envp[++counter]);
 	new = ft_calloc(counter + 1, sizeof(char **));
 	while (envp[++f] && new[f])
-	{
 		new[f] = ft_strdup(envp[1]);
-	}
 	return (NULL);
 }
 

@@ -6,17 +6,19 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 20:53:50 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/29 19:32:11 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+// int ac, char **av, char **envp
 int main()
 {
     char *line;
 
+	new_history();
+	set_path_env();
 	// ft_printf("\033[2J\033[1;1H");
 	line = NULL;
     while (1)
@@ -73,7 +75,7 @@ void	new_history()
 		while (gnl)
 		{
 			res = ft_strtrim(gnl, "\n");
-			add_history(res);
+			keep_history(res, 0);
 			freedom (NULL, res, gnl);
 			gnl = get_next_line(fd);
 		}

@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 16:33:34 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/29 19:44:49 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,24 @@ char	*find_path(char *cmd)
     int     i;
 
     i = -1;
-	cmd_temp = ft_strjoin("/", cmd);
-    paths = ft_split(getenv("PATH"), ':');
-    while (paths[++i])
-    {
-        the_path = ft_strjoin(paths[i], cmd_temp);
-        if (access(the_path, F_OK) == 0)
-        {
-            freesplit(paths);
-            free(cmd_temp);
-            return (the_path);
-        }
-        free (the_path);
+	if (getenv("PATH"))
+	{
+		cmd_temp = ft_strjoin("/", cmd);
+		paths = ft_split(getenv("PATH"), ':');
+		while (paths[++i])
+		{
+			the_path = ft_strjoin(paths[i], cmd_temp);
+			if (access(the_path, F_OK) == 0)
+			{
+				freesplit(paths);
+				free(cmd_temp);
+				return (the_path);
+			}
+			free (the_path);
+		}
+		freesplit(paths);
+		free (cmd_temp);
 	}
-    freesplit(paths);
-    free (cmd_temp);
 	return (NULL);
 }
 

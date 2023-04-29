@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/28 21:00:18 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/29 15:32:40 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	parse_input(char *line)
 		// else if (input[i] == "$?") // what even is this
 		i++;
 	}
-	environ = copy_split(environ, 1);
+	// set_env(data);
 	if (data->cmd)
 	{
 		if (ft_strncmp(data->cmd[0], "cd", 3) == 0)

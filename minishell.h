@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 20:52:18 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/29 19:31:27 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct  s_shell
     char    *here_doc;
 	int		cd_flag;
 	int		exit_status;
+	char	**minienv;
 }               t_shell;
 
 void	make_history(char *line);
@@ -61,6 +62,8 @@ void	ft_exit(char **cmd);
 void	echo_cmd(char **cmd);
 void	export_cmd(char **cmd);
 void	unset_cmd(char **cmd);
+void	set_env(t_shell *data);
+void	set_path_env(void);
 //parse
 void	parse_input(char *input);
 t_shell *data_init(void);
