@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 12:09:10 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/29 19:27:38 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,25 @@ int	quotes(t_shell *data, char *new)
 	char	*ptr;
 	
 	ptr = ft_strchr(new + 1, new[0]);
-	if (ptr == NULL)
+	if (ptr == NULL || new[1] == '\0')
 		return(space(data, new, 0));
 	data->res = ft_substr(new, 1, ptr - new - 1);
+	printf("HERE:%s\n", new);
 	data->len = ft_strlen(data->res);
 	check_substr(data, new[0]);
+	if (data->len == 0)
+	{
+		if (new[2] == 32 || new[2] == '|' || new[2] == '<' || new[2] == '>') // fix this shit
+		// free(data->res);
+		// data->res = ft_strdup(" ");
+		// return(data->len + 1); // needs to give error 
+	}
 	if (data->cmd)
 		data->cmd = add_split(data->cmd, data->res);
 	else
-		data->cmd = ft_split(data->res, 34);
+		data->cmd = ft_split(data->res, new[0]);
 	free(data->res);
-	return(data->len + 2);
+	return(data->len + 1); // this was 2 make sure it works with 1... nahhh its better with 1
 }
 
 void	check_substr(t_shell *data, char c)

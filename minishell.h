@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 18:15:33 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/29 18:42:36 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,6 @@ t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
 int		search_another(t_shell *data, char *str, int sp, int c);
-// void	here_doc(t_shell *data);
-// void	here_doc_child(t_shell *data, int *pipe);
 void	here_new(t_shell *data);
 char	*remove_quotes(char *str, int qte, int arg);
 // parse 2
