@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/29 17:57:36 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/30 18:20:30 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ void	parse_input(char *line)
 			i += file_in(data, input + i + 1); // need to check how there work with quotes and $ does it need the checker?
 		else if (input[i] == '>')
 			i += file_out(data, input + i + 1); 
-		else if (input[i] == 34 || input[i] == 39)
-			i += quotes(data, input + i);
+		// else if (input[i] == 34 || input[i] == 39)
+		// 	i += quotes(data, input + i);
 		else if (input[i] && input[i] != 32)
-			i += space(data, input + i, 1);
+			i += space_new(data, input + i);
 		// else if (input[i] == "$?") // what even is this
 		i++;
 	}

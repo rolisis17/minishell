@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/29 19:27:38 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/30 18:27:33 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	space(t_shell *data, char *new, int arg)
 {
-	data->len = 0;
 	if (arg == 0)
 		data->len = get_cmd(new + 1, 0) + 1; // change this to also stop at quote when using in space
 	else
@@ -30,6 +29,8 @@ int	space(t_shell *data, char *new, int arg)
 	return(data->len - 1);
 }
 
+
+
 int	quotes(t_shell *data, char *new)
 {
 	char	*ptr;
@@ -38,15 +39,15 @@ int	quotes(t_shell *data, char *new)
 	if (ptr == NULL || new[1] == '\0')
 		return(space(data, new, 0));
 	data->res = ft_substr(new, 1, ptr - new - 1);
-	printf("HERE:%s\n", new);
+	// printf("HERE:%s\n", new);
 	data->len = ft_strlen(data->res);
 	check_substr(data, new[0]);
 	if (data->len == 0)
 	{
-		if (new[2] == 32 || new[2] == '|' || new[2] == '<' || new[2] == '>') // fix this shit
-		// free(data->res);
+		// if (new[2] == 32 || new[2] == '|' || new[2] == '<' || new[2] == '>') // fix this shit
+		free(data->res);
 		// data->res = ft_strdup(" ");
-		// return(data->len + 1); // needs to give error 
+		return(data->len + 1); // needs to give error 
 	}
 	if (data->cmd)
 		data->cmd = add_split(data->cmd, data->res);
@@ -72,7 +73,7 @@ void	check_substr(t_shell *data, char c)
 			beg = ft_strchr(data->res, 36);
 			beg = ft_substr(data->res, 0, len - ft_strlen(beg));
 		}
-		data->res = env_var(data->res, len, beg);
+		data->res = env_var(data->res, len, beg); // might need to add a strjoin here. test $something$something
 	}
 }
 

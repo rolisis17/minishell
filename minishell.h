@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/29 18:42:36 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/30 18:36:10 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <term.h>
 
 typedef struct  s_shell
 {
@@ -76,7 +77,11 @@ void	check_substr(t_shell *data, char c);
 char	*env_var(char *data, int len, char *beg);
 void	pipex(t_shell *data);
 void	output(int *fd);
-
+// parse 3
+int		space_new(t_shell *data, char *new);
+int		quote_new(t_shell *data, char *new);
+int		env_var_new(t_shell *data, char *new);
+void	check_substr_new(t_shell *data, char *new, char c);
 //splitting
 char    **add_split(char **split, char *new);
 void	freesplit(char **splited);
@@ -87,5 +92,6 @@ int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
 char	*ft_strjoin_mod(char *str1, char *str2, int pos);
+char	*char_join(char *str, int c);
 
 #endif

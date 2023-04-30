@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 11:32:38 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/30 14:03:12 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int main(void)
 {
     char *line;
 
+	// tputs(tgetstr("clear", NULL), 1, putchar);
 	ft_printf("\033[2J\033[1;1H");
 	line = NULL;
     while (1)
