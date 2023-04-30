@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/29 20:06:07 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/30 19:24:25 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,48 +34,74 @@ char	*this_folder_is(int	check)
 	return (res);
 }
 
-char	*prev_folder(char *path)
+char	*prev_folder(char *path, int safe)
 {
 	int	f;
-	// char *new;
+	char *new;
 
 	f = ft_strlen(path);
-	while ((path[--f] != '/') && (ft_strncmp("/", path, 1) == 0));
-	path[f + 1] = 0;
-	// new = ft_strjoin("/", path, 0); //need to free path
-	// free (path);
-	return (path);
+	while ((path[--f - 1] != '/') && (ft_strncmp("/", path, 1) == 0));
+	new = ft_calloc(f + 1, sizeof(char));
+	ft_strlcpy(new, path, f + 1);
+	if (safe)
+		free (path);
+	return (new);
 }
 
 void	cd_command(char **splited)
 {
 	char	*prev;
     
-
+	prev = NULL;
 	if (splited[1] && splited[2])
 		error("cd: too many arguments", 0);
 	prev = relative_cd(splited[1]);
+	set_oldpwd();
+	ft_strlcpy(getenv("PWD"), prev, ft_strlen(prev));
     if (chdir(prev) == -1)
 	{
         perror("chdir");
-        fprintf(stderr, "Could not change directory to '%s'\n", prev);
         freedom(NULL, prev, NULL);
         return;
     }
 	freedom(NULL, prev, NULL);
+	set_pwd();
 	return;
+}
+
+void	set_oldpwd(void)
+{
+	char	*oldpwd;
+	
+	oldpwd = this_folder_is(1);
+	ft_strlcpy(getenv("OLDPWD"), oldpwd, ft_strlen(oldpwd) + 1);
+	free (oldpwd);
+}
+
+void	set_pwd(void)
+{
+	char	*newpwd;
+	
+	newpwd = this_folder_is(1);
+	ft_strlcpy(getenv("PWD"), newpwd, ft_strlen(newpwd) + 1);
+	free (newpwd);
 }
 
 char	*relative_cd(char *str)
 {
 	if (!str)
-		return (ft_strdup(getenv("HOME")));
+	{
+		if (getenv("HOME"))
+			return (ft_strdup(getenv("HOME")));
+		else
+			return (this_folder_is(1));
+	}
 	else if (ft_strncmp(".", str, 2) == 0)
 		return (this_folder_is(1));
 	else if (ft_strncmp("./", str, 3) == 0)
 		return (ft_strjoin_mod(this_folder_is(1), str + 1, 0));
 	else if (ft_strncmp("..", str, 3) == 0)
-		return (prev_folder(this_folder_is(1)));
+		return (prev_folder(this_folder_is(1), 1));
 	else if (ft_strncmp("../", str, 3) == 0)
 		return (relative_cd2(str));
 	return (ft_strdup(str));
@@ -149,15 +175,6 @@ int	exit_error(char *str, int check)
 	return (0);
 }
 
-void	set_env(t_shell *data)
-{
-	char	**env_new;
-
-	env_new = copy_split(environ, 1);
-	environ = env_new;
-	data->minienv = env_new;
-}
-
 void	export_cmd(char **cmd)
 {
 	char	**args;
@@ -175,11 +192,16 @@ void	export_cmd(char **cmd)
     // execve(find_path("env"), args, NULL); // check if need to free data.
 	if(getenv("CURVA"))
 	{
-		cmp = ft_split("./minishell ", 32);
+		cmp = ft_split(" ", 02);
 		keep_history(NULL, 1);
 		args = copy_split(environ, 1);
 		args = add_split(args, cmd[1], 0);
-    	execve(getenv("CURVA"), cmp, args);
+    	if (execve(getenv("CURVA"), cmp, args) == -1)
+		{
+			perror("execve");
+			freedom(cmp, NULL, NULL);
+			freedom(args, NULL, NULL);
+		}
 	}
 }
 
@@ -194,11 +216,16 @@ void	set_path_env(void)
 	{
 		keep_history(NULL, 1);
 		path = this_folder_is(1);
+		path = ft_strjoin(this_folder_is(1), "/minishell");
 		comm = ft_strjoin("CURVA=", path);
-		cmp = ft_split("./minishell ", 32);
-		args = copy_split(environ, 1);
-		args = add_split(args, comm, 0);
-		execve(path, cmp, args);
+		cmp = ft_split(" ", 02);
+		args = add_split(environ, comm, 1);
+		if (execve(path, cmp, args) == -1)
+		{
+			perror("execve");
+			freedom(cmp, path, comm);
+			freedom(args, NULL, NULL);
+		}
 	}
 }
 
@@ -221,10 +248,14 @@ void	unset_cmd(char **cmd)
 	if(getenv("CURVA"))
 	{
 		keep_history(NULL, 1);
-		cmp = ft_split("./minishell ", 32);
-		args = copy_split(environ, 1);
-		args = remove_split(args, cmd[1], 0);
-    	execve(getenv("CURVA"), cmp, args); // check if need to free data.
+		cmp = ft_split(" ", 32);
+		args = remove_split(environ, cmd[1], 1);
+    	if (execve(getenv("CURVA"), cmp, args) == -1)
+		{
+			perror("execve");
+			freedom(cmp, NULL, NULL);
+			freedom(args, NULL, NULL);
+		}
 	}
 }
 

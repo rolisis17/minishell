@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/29 19:31:27 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/30 19:25:32 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,19 @@ void    ctrlc(int signum);
 void    quit(char *str);
 //builtins
 char	*this_folder_is(int	check);
-char	*prev_folder(char *path);
+char	*prev_folder(char *path, int safe);
+void	set_oldpwd(void);
+void	set_pwd(void);
 char    *relative_cd(char *str);
 char	*relative_cd2(char *str);
 void	cd_command(char **splited);
 void    env_cmd(char **cmd);
 void	ft_exit(char **cmd);
+void	exit_status(char *msg, int check);
+int		check_status(char *msg);
 void	echo_cmd(char **cmd);
 void	export_cmd(char **cmd);
 void	unset_cmd(char **cmd);
-void	set_env(t_shell *data);
 void	set_path_env(void);
 //parse
 void	parse_input(char *input);

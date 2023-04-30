@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/29 19:32:11 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/04/30 18:25:19 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int main()
 {
     char *line;
 
-	new_history();
 	set_path_env();
+	new_history();
 	// ft_printf("\033[2J\033[1;1H");
 	line = NULL;
     while (1)
@@ -66,28 +66,40 @@ void	new_history()
 {
 	char	*gnl;
 	char	*res;
+	char	*hist;
 	int		fd;
 
-	if (access(".minihist", F_OK) == 0)
+	hist = NULL;
+	if (getenv("CURVA"))
 	{
-		fd = open(".minihist", O_RDWR);
-		gnl = get_next_line(fd);
-		while (gnl)
+		hist = ft_strdup(getenv("CURVA"));
+		hist = prev_folder(hist, 1);
+		hist = ft_strjoin_mod(hist, ".minihist", 0);
+		if (access(hist, F_OK) == 0)
 		{
-			res = ft_strtrim(gnl, "\n");
-			keep_history(res, 0);
-			freedom (NULL, res, gnl);
+			fd = open(hist, O_RDWR);
 			gnl = get_next_line(fd);
-		}
-		if (gnl)
-			free (gnl);
-		close (fd);
-		if (unlink(".minihist") == -1)
-		{
-			perror("unlink");
-			exit(EXIT_FAILURE);
+			while (gnl)
+			{
+				res = ft_strtrim(gnl, "\n");
+				keep_history(res, 0);
+				freedom (NULL, res, gnl);
+				gnl = get_next_line(fd);
+			}
+			if (gnl)
+				free (gnl);
+			close (fd);
+			if (unlink(hist) == -1)
+			{
+				perror("unlink");
+				if (hist)
+					free (hist);
+				exit(EXIT_FAILURE);
+			}
 		}
 	}
+	if (hist)
+		free (hist);
 }
 
 void	hiddenfile_history(char **keep)
