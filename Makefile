@@ -1,9 +1,12 @@
-SRC = minishell.c cmds.c parse.c signals.c builtins.c parse_2.c splitting.c tools.c
-OBJ = $(SRC:.c=.o)
+SRC = minishell.c cmds.c parse.c signals.c builtins.c parse_2.c splitting.c tools.c parse_3.c
+BIN = bin
+OBJ = ${SRC:%c=${BIN}/%o}
 NAME = minishell
+HEADERS = minishell.h
 FLAGS = -Wall -Werror -Wextra -g
-LIBFT = -C ./libft --no-print-directory
-RM = rm -f
+FSAN = -fsanitize=address
+LIBFT = libft
+RM = rm -rf
 CC = cc
 
 #Colors
@@ -11,26 +14,32 @@ GREEN=\033[0;32m
 RED=\033[0;31m
 END=\033[0m
 
-all : $(NAME)
+all : ${NAME}
 
-%.o: %.c
-	@$(CC) $(FLAGS) -c $< -o $@
-
-$(NAME): $(OBJ)
-# @make $(LIBFT)
-	@$(CC) $(OBJ) -fsanitize=address -Llibft -lft -lreadline -g -o $(NAME)
+${NAME} : ${BIN} ${OBJ} ${HEADERS} | ${LIBFT}
+	@${CC} ${OBJ} ${FSAN} -Llibft -lft -lreadline -o ${NAME}
 	@echo "$(GREEN)>>>> Compiled <<<<$(END)"
 
+${BIN}/%o : %c
+	@${CC} ${FLAGS} -c $< -o $@
+
+${BIN} :
+	@mkdir -p ${BIN}
+
 clean :
-	@$(RM) $(OBJ)
-# @make clean $(LIBFT)
+	@${RM} ${BIN}
 	@echo "$(RED)>>>> Cleaned <<<<$(END)"
 
-fclean : clean 
-	@$(RM) $(NAME)
-# @make fclean $(LIBFT)
+fclean : clean
+	@${RM} ${NAME}
 	@echo "$(RED)>>>> All <<<<$(END)"
+
+libclean : 
+	@make fclean -C ${LIBFT} --no-print-directory
+
+${LIBFT} :
+	@make -C ${LIBFT} --no-print-directory
 
 re : fclean all
 
-.PHONY : all fclean clean re make
+.PHONY : all clean fclean ${LIBFT} re libclean
