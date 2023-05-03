@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 09:30:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/04 15:14:47 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/03 08:40:19 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,12 @@ char	**ft_split(char const *s, char c)
 {
 	char	**split;
 
+	if (ft_strlen(s) == 0)
+	{
+		split = ft_calloc(2, sizeof(char *));
+		split[0] = ft_calloc(1, sizeof(char));
+		return(split);
+	}
 	split = (char **) malloc(sizeof(char *) * (make_str(s, NULL, c) + 1));
 	if (!split)
 		return (0);
@@ -62,15 +68,15 @@ char	**ft_split(char const *s, char c)
 
 // int main()
 // {
-//     char const str[] = "0 1 2 3 4 ";
+//     // char const str[] = "\0";
 //     char c = ' ';
-// 	char **res = ft_split(str, c);
-// 	printf("%i\n", counter(str, c));
+// 	char **res = ft_split(NULL, c);
+// 	// printf("%i\n", counter(str, c));
 // 	printf("Result word 1: %s$\n", res[0]);
 // 	printf("Result word 2: %s$\n", res[1]);
-// 	printf("Result word 3: %s$\n", res[2]);
-// 	printf("Result word 4: %s$\n", res[3]);
-// 	printf("Result word 5: %s$\n", res[4]);
-// 	printf("Result word NULL: %s$\n", res[5]);
+// 	// printf("Result word 3: %s$\n", res[2]);
+// 	// printf("Result word 4: %s$\n", res[3]);
+// 	// printf("Result word 5: %s$\n", res[4]);
+// 	// printf("Result word NULL: %s$\n", res[5]);
 // 	free_data(res);
 // }

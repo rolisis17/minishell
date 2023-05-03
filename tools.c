@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/30 17:11:19 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/03 09:48:19 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,17 @@ int	get_cmd(char *str, int arg)
 {
 	int	i;
 
-	i = -1;
-	while (str[++i])
+	i = 0;
+	while (str[i])
 	{
-		if (arg == 0 && (str[i] == 34 || str[i] == 39))
+		if (arg < 1 && (str[i] == 34 || str[i] == 39))
 			return (i);
 		if (str[i] == '<' || str[i] == '>')
 			return (i);
 		if (str[i] == '|' || str[i] == 32)
+			return (i);
+		i++;
+		if (arg < 0 && str[i] == '$')
 			return (i);
 	}
 	return (i);
@@ -122,7 +125,6 @@ char *char_join(char *str, int c)
 		free (str);
 	}
 	res[i] = c;
-	// printf("HERE:%s\n", res);
 	return(res);
 }
 

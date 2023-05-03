@@ -6,11 +6,14 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/30 18:20:30 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/03 16:00:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// test
+// cat < | ls
 
 void	parse_input(char *line)
 {
@@ -31,10 +34,13 @@ void	parse_input(char *line)
 			i += file_in(data, input + i + 1); // need to check how there work with quotes and $ does it need the checker?
 		else if (input[i] == '>')
 			i += file_out(data, input + i + 1); 
-		// else if (input[i] == 34 || input[i] == 39)
-		// 	i += quotes(data, input + i);
 		else if (input[i] && input[i] != 32)
-			i += space_new(data, input + i);
+			i += space_new(data, input + i, 0);
+		if (data->exit_flag == 1)
+		{
+			freedom(data->cmd, data->here_doc, input, data);
+			return ;
+		}
 		// else if (input[i] == "$?") // what even is this
 		i++;
 	}
@@ -45,12 +51,11 @@ void	parse_input(char *line)
 			if (data->cd_flag == 0)
 				cd_command(data->cmd);
 		}
-		else // here_doc need to fix "LIMITER" in quotes.
+		else
 		{
 			do_cmd(data);
 			output(data->fd);
 		}
-		// freesplit(data->cmd);
 	}
 	freedom(data->cmd, data->here_doc, input, data);
 }
@@ -65,6 +70,7 @@ t_shell	*data_init(void)
 	data->cmd = NULL;
 	data->here_doc = NULL;
 	data->cd_flag = 0;
+	data->exit_flag = 0;
 	return (data);
 }
 
@@ -75,13 +81,19 @@ int	file_in(t_shell *data, char *new)
 
 	sp = 0;
 	flag = 0;
-	if (new[0] == '<')
+	if (new[0] == '<') // weird with <<< fix 
 		flag = 1;
 	while(new[sp + flag] == 32)
 		sp++;
-	data->len = get_cmd(new + sp + flag, 1);
-	data->res = ft_substr(new, flag + sp, data->len);
-	if (flag == 1)
+	// data->len = get_cmd(new + sp + flag, 1);
+	// data->res = ft_substr(new, flag + sp, data->len);
+	data->len = space_new(data, new + sp + flag, 1); // still need to figure out <<<
+	if (data->res == NULL)
+	{
+		ft_putendl_fd("Syntax error", 2); // this needs to be added to errors! shouldnt execute anything if this error occures leave loop maybe with a flag
+		data->exit_flag = 1;
+	}
+	else if (flag == 1)
 		here_new(data);
 	else
 	{
@@ -89,10 +101,10 @@ int	file_in(t_shell *data, char *new)
 		if (data->fd[0] < 0)
 		{
 			perror("Error");	
-			data->cmd = freedom(data->cmd, NULL, NULL, NULL); // test!
+			data->cmd = freedom(data->cmd, NULL, NULL, NULL);
 		}
 	}
-	free(data->res);
+	freedom(NULL, data->res, NULL, NULL);
 	return (data->len + flag + sp);
 }
 
@@ -107,15 +119,24 @@ int	file_out(t_shell *data, char *new)
 		flag = 1;
 	while(new[sp + flag] == 32)
 		sp++;
-	data->len = get_cmd(new + sp + flag, 1);
-	data->res = ft_substr(new, flag + sp, data->len);
-	if (flag == 1)
-		data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_APPEND, 0644);
-	else
-		data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (data->fd[1] < 0)
-		perror("Error");
-	free(data->res);
+	// data->len = get_cmd(new + sp + flag, 1);
+	// data->res = ft_substr(new, flag + sp, data->len);
+	data->len = space_new(data, new + sp + flag, 1);
+	if (data->res == NULL)
+	{
+		ft_putendl_fd("Syntax error", 2); // this needs to be added to errors! shouldnt execute anything if this error occures leave loop maybe with a flag
+		data->exit_flag = 1;
+	}
+	else 
+	{
+		if (flag == 1)
+			data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_APPEND, 0644);
+		else
+			data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (data->fd[1] < 0)
+			perror("Error");
+		free(data->res);
+	}
 	return (data->len + flag + sp);
 }
 
@@ -125,6 +146,12 @@ void	here_new(t_shell *data)
 	char	*limiter;
 	int		len;
 
+	if (data->here_doc) // protection for multi heredoc call :)
+	{
+		free(data->here_doc);
+		data->here_doc = NULL;
+	}
+	// printf("THIS:%s\n", data->res); // maybe can add error here, if null syntax error
 	limiter = remove_quotes(data->res, 34, 0);
 	limiter = remove_quotes(limiter, 39, 1);
 	len = ft_strlen(limiter);
@@ -140,30 +167,4 @@ void	here_new(t_shell *data)
 	freedom(NULL, buffer, limiter, NULL);
 }
 
-char	*remove_quotes(char *str, int qte, int arg)
-{
-	char	*res;
-	char	*ptr;
-	char	*start;
-	char	*end;
-	
-	ptr = str;
-	res = NULL;
-	start = ft_strchr(ptr, qte);
-	while (start != NULL)
-	{
-		end = ft_strchr(start + 1, qte);
-		if (end)
-			ptr = split_n_join(ft_substr(ptr, 0, end - ptr), NULL, qte);
-		res = ft_strjoin_mod(res, ptr, 0);
-		if (end)
-			free(ptr);
-		ptr = end + 1;	
-		start = ft_strchr(end, qte);
-	}
-	if (!res)
-		res = ft_strdup(str);
-	if (arg == 1)
-		free(str);
-	return (res);
-}
+

@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/30 18:36:10 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/03 13:09:39 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct  s_shell
     char    *res;
     char    *here_doc;
 	int		cd_flag;
+	int		exit_flag;
 	int		exit_status;
 }               t_shell;
 
@@ -67,21 +68,17 @@ void	parse_input(char *input);
 t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
-int		search_another(t_shell *data, char *str, int sp, int c);
 void	here_new(t_shell *data);
-char	*remove_quotes(char *str, int qte, int arg);
 // parse 2
-int		space(t_shell *data, char *new, int arg);
-int     quotes(t_shell *data, char *new);
-void	check_substr(t_shell *data, char c);
+int		space_new(t_shell *data, char *new, int arg);
+int		quote_new(t_shell *data, char *new);
 char	*env_var(char *data, int len, char *beg);
 void	pipex(t_shell *data);
 void	output(int *fd);
 // parse 3
-int		space_new(t_shell *data, char *new);
-int		quote_new(t_shell *data, char *new);
 int		env_var_new(t_shell *data, char *new);
 void	check_substr_new(t_shell *data, char *new, char c);
+char	*remove_quotes(char *str, int qte, int arg);
 //splitting
 char    **add_split(char **split, char *new);
 void	freesplit(char **splited);

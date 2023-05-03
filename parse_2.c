@@ -6,75 +6,55 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/30 18:27:33 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/03 10:59:03 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	space(t_shell *data, char *new, int arg)
+int	space_new(t_shell *data, char *new, int arg)
 {
-	if (arg == 0)
-		data->len = get_cmd(new + 1, 0) + 1; // change this to also stop at quote when using in space
-	else
-		data->len = get_cmd(new, 0);
-	data->res = ft_substr(new, 0, data->len);
-	check_substr(data, 0);
+	int	i;
+	
+	i = 0;
+	data->res = NULL;
+	while(new[i] && new[i] != '|' && new[i] != '<' && new[i] != '>' && new[i] != 32)
+	{
+		if (new[i] == 34 || new[i] == 39)
+			i += quote_new(data, new + i);
+		else if (new[i] == 36)
+			i += env_var_new(data, new + i);
+		else
+			data->res = char_join(data->res, new[i++]);
+	}
+	if (arg == 1)
+		return (i);
 	if (data->cmd)
 		data->cmd = add_split(data->cmd, data->res);
+	else if (ft_strlen(data->res) == 0)
+		error("Command '' not found", 1); // cannot send empty str to find path, can make seperate condition, thats it.
 	else
 		data->cmd = ft_split(data->res, 32);
 	if (data->res)
 		free(data->res);
-	return(data->len - 1);
+	return (i - 1);
 }
 
-
-
-int	quotes(t_shell *data, char *new)
+int	quote_new(t_shell *data, char *new)
 {
 	char	*ptr;
+	char	*temp;
 	
 	ptr = ft_strchr(new + 1, new[0]);
 	if (ptr == NULL || new[1] == '\0')
-		return(space(data, new, 0));
-	data->res = ft_substr(new, 1, ptr - new - 1);
-	// printf("HERE:%s\n", new);
-	data->len = ft_strlen(data->res);
-	check_substr(data, new[0]);
-	if (data->len == 0)
 	{
-		// if (new[2] == 32 || new[2] == '|' || new[2] == '<' || new[2] == '>') // fix this shit
-		free(data->res);
-		// data->res = ft_strdup(" ");
-		return(data->len + 1); // needs to give error 
+		data->res = ft_strjoin_mod(data->res, new, 0);
+		return(ft_strlen(new));
 	}
-	if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res);
-	else
-		data->cmd = ft_split(data->res, new[0]);
-	free(data->res);
-	return(data->len + 1); // this was 2 make sure it works with 1... nahhh its better with 1
-}
-
-void	check_substr(t_shell *data, char c)
-{
-	char	*beg;
-	int		len;
-
-	if (c == 39)
-		return ;
-	len = ft_strlen(data->res);
-	while(ft_strchr(data->res, 36) != NULL)
-	{
-		beg = NULL;
-		if (data->res[0] != 36)
-		{
-			beg = ft_strchr(data->res, 36);
-			beg = ft_substr(data->res, 0, len - ft_strlen(beg));
-		}
-		data->res = env_var(data->res, len, beg); // might need to add a strjoin here. test $something$something
-	}
+	temp = ft_substr(new, 1, ptr - new - 1);
+	data->len = ft_strlen(temp);
+	check_substr_new(data, temp, new[0]);
+	return(data->len + 2);
 }
 
 char	*env_var(char *data, int len, char *beg)
@@ -93,15 +73,13 @@ char	*env_var(char *data, int len, char *beg)
 	{
 		res = ft_strjoin_mod(beg, end, 0);
 		freedom(NULL, data, var, end);
-		// free(end);
 		return(res);
 	}	
 	beg = ft_strjoin_mod(beg, res, 0);
 	beg = ft_strjoin_mod(beg, end, 0);
 	freedom(NULL, data, var, end);
-	// free(end);
 	return (beg);
-} // if env variable doesnt exist it needs to be ignored. make work!
+} 
 
 void	pipex(t_shell *data)
 {

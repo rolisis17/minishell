@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 22:11:37 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/03 08:27:09 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ char **add_split(char **split, char *new)
     }
     len = ft_strlen(new);
     new_split[i] = ft_calloc(len + 1, sizeof(char));
-    ft_strlcpy(new_split[i], new, len + 1);
+	if (len > 0)
+    	ft_strlcpy(new_split[i], new, len + 1);
     new_split[++i] = NULL;
     freesplit(split);
     return(new_split);
