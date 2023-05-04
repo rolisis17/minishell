@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 13:48:23 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 13:56:45 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	new_history()
 			{
 				res = ft_strtrim(gnl, "\n");
 				keep_history(res, 0);
-				freedom (NULL, res, gnl);
+				freedom (NULL, res, gnl, NULL);
 				gnl = get_next_line(fd);
 			}
 			if (gnl)

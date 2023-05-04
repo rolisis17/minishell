@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 13:42:33 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 14:00:06 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	space_new(t_shell *data, char *new, int arg)
 	if (arg == 1)
 		return (i);
 	if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res);
+		data->cmd = add_split(data->cmd, data->res, 1);
 	else if (ft_strlen(data->res) == 0)
 		error("Command '' not found", 1); // cannot send empty str to find path, can make seperate condition, thats it.
 	else
