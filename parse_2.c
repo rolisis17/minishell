@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 16:28:35 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/28 18:26:48 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	space(t_shell *data, char *new, int arg)
 	data->res = ft_substr(new, 0, data->len);
 	check_substr(data, 0);
 	if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res);
+		data->cmd = add_split(data->cmd, data->res, 0);
 	else
 		data->cmd = ft_split(data->res, 32);
 	if (data->res)
@@ -41,7 +41,7 @@ int	quotes(t_shell *data, char *new)
 	data->len = ft_strlen(data->res);
 	check_substr(data, new[0]);
 	if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res);
+		data->cmd = add_split(data->cmd, data->res, 0);
 	else
 		data->cmd = ft_split(data->res, 34);
 	free(data->res);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   splitting.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 15:01:59 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/04/30 13:14:44 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int word_count(char **split);
 
-char **add_split(char **split, char *new)
+char	**add_split(char **split, char *new, int arg)
 {
     int     i;
     int     len;
@@ -37,7 +37,59 @@ char **add_split(char **split, char *new)
     new_split[i] = ft_calloc(len + 1, sizeof(char));
     ft_strlcpy(new_split[i], new, len + 1);
     new_split[++i] = NULL;
-    freesplit(split);
+	if (!arg)
+    	freesplit(split);
+    return(new_split);
+}
+
+char	**copy_split(char **split, int arg)
+{
+    int     i;
+    int     len;
+    char    **new_split;
+
+    i = word_count(split);
+	new_split = (char **) malloc(sizeof(char *) * (i + 1));
+    if (!new_split)
+		return (0);
+    i = -1;
+    while (split[++i])
+    {
+        len = ft_strlen(split[i]);
+        new_split[i] = ft_calloc(len + 1, sizeof(char));
+        ft_strlcpy(new_split[i], split[i], len + 1);
+    }
+    new_split[i] = NULL;
+	if (!arg)
+    	freesplit(split);
+    return(new_split);
+}
+
+char	**remove_split(char **split, char *rem, int arg)
+{
+    int     i;
+	int		f;
+    int     len;
+    char    **new_split;
+
+    i = word_count(split);
+	new_split = (char **) malloc(sizeof(char *) * i);
+    if (!new_split)
+		return (0);
+    i = -1;
+	f = -1;
+    while (split[++i])
+    {
+		if ((ft_strncmp(split[i], rem, ft_strlen(rem)) != 0))
+		{
+			len = ft_strlen(split[i]);
+			new_split[++f] = ft_calloc(len + 1, sizeof(char));
+			ft_strlcpy(new_split[f], split[i], len + 1);
+		}
+    }
+    new_split[++f] = NULL;
+	if (!arg)
+    	freesplit(split);
     return(new_split);
 }
 
