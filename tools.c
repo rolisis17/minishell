@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/03 09:48:19 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 13:42:55 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,33 @@ char	*find_quote(char *str, int len)
 	return (NULL);
 }
 
-void	error(char *msg, int arg)
+// void	error(char *msg, int arg)
+// {
+// 	if (arg == 0)
+// 	{
+// 		ft_putendl_fd(msg, 2);
+// 		exit(-1);
+// 	}
+// 	else if (arg == 1)
+// 		ft_putstr_fd("Invalid command: ", 2);
+// 	ft_putendl_fd(msg, 2);
+// }
+
+void	exit_status(char *msg, int check)
 {
-	if (arg == 0)
-	{
-		ft_putendl_fd(msg, 2);
-		exit(-1);
-	}
-	else if (arg == 1)
-		ft_putstr_fd("Invalid command: ", 2);
-	ft_putendl_fd(msg, 2);
+	static int	status;
+
+	status = check_status(msg);
+	if (check)
+		printf("%d\n", status);
+}
+
+int	check_status(char *msg)
+{
+	if (ft_strncmp(msg, "execve", 6) == 0 || ft_strncmp(msg, "getcwd", 6) == 0 \
+	|| ft_strncmp(msg, "chdir", 6) == 0)
+		return (127);
+	return (0);
 }
 
 char	*ft_strjoin_mod(char *str1, char *str2, int pos)

@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/03 18:21:46 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 13:41:08 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	parse_input(char *line)
 		// else if (input[i] == "$?") // what even is this
 		i++;
 	}
+	// set_env(data);
 	if (data->cmd)
 	{
 		if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
@@ -51,9 +52,13 @@ void	parse_input(char *line)
 			if (data->cd_flag == 0)
 				cd_command(data->cmd);
 		}
-		else
+		else if (ft_strncmp(data->cmd[0], "export", 7) == 0)
+			export_cmd(data->cmd);
+		else if (ft_strncmp(data->cmd[0], "unset", 6) == 0)
+			unset_cmd(data->cmd);
+		else // here_doc need to fix "LIMITER" in quotes.
 		{
-			do_cmd(data);
+			do_cmd(data); // BASH cannot run in the child process.
 			output(data->fd);
 		}
 	}
