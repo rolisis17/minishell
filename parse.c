@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/04 15:42:02 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 18:48:57 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ t_shell	*data_init(void)
 	data->cd_flag = 0;
 	data->exit_flag = 0;
 	data->pipe_flag = 0;
+	data->out_flag = 0;
 	return (data);
 }
 
@@ -135,6 +136,7 @@ int	file_out(t_shell *data, char *new)
 	}
 	else 
 	{
+		data->out_flag = 1;
 		if (flag == 1)
 			data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_APPEND, 0644);
 		else

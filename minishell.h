@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 16:15:41 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 17:44:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct  s_shell
 	int		cd_flag;
 	int		exit_flag;
 	int		pipe_flag;
+	int		out_flag;
 	int		exit_status;
 	char	**minienv;
 }               t_shell;

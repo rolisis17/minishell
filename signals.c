@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 16:07:02 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 15:44:25 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 19:15:28 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@ void    sig_handler(void)
 
 void    ctrlc(int signum)
 {
-    printf("\n");
-    rl_on_new_line();
-    rl_replace_line("", 0);
-    rl_redisplay();
-    signal(signum, ctrlc);
+	if (signum == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+    // signal(signum, ctrlc);
 }
 
 void    quit(char *str)
