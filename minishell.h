@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/30 19:25:32 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/04 13:43:49 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <term.h>
 
 extern char **environ;
 
@@ -32,11 +33,13 @@ typedef struct  s_shell
     char    *res;
     char    *here_doc;
 	int		cd_flag;
+	int		exit_flag;
 	int		exit_status;
 	char	**minienv;
 }               t_shell;
 
 void	make_history(char *line);
+int		check_empty_line(char *line);
 void	keep_history(char *line, int check);
 void	new_history();
 void	hiddenfile_history(char **keep);
@@ -72,29 +75,29 @@ void	parse_input(char *input);
 t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
-int		search_another(t_shell *data, char *str, int sp, int c);
-int		check_empty_line(char *line);
-void	here_doc(t_shell *data);
-void	here_doc_child(t_shell *data, int *pipe);
 void	here_new(t_shell *data);
 // parse 2
-int		space(t_shell *data, char *new, int arg);
-int     quotes(t_shell *data, char *new);
-void	check_substr(t_shell *data, char c);
+int		space_new(t_shell *data, char *new, int arg);
+int		quote_new(t_shell *data, char *new);
 char	*env_var(char *data, int len, char *beg);
 void	pipex(t_shell *data);
 void	output(int *fd);
-
+// parse 3
+int		env_var_new(t_shell *data, char *new);
+void	check_substr_new(t_shell *data, char *new, char c);
+char	*remove_quotes(char *str, int qte, int arg);
 //splitting
 char	**add_split(char **split, char *new, int arg);
 char	**copy_split(char **split, int arg);
 char	**remove_split(char **split, char *rem, int arg);
 void	freesplit(char **splited);
+char	*split_n_join(char *str, char **split, int spliter);
 //tools
-char    **freedom(char **ted, void *ze, void *dom);
+char    **freedom(char **ted, void *ze, void *dom, void *style);
 int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
 char	*ft_strjoin_mod(char *str1, char *str2, int pos);
+char	*char_join(char *str, int c);
 
 #endif

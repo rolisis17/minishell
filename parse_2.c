@@ -3,69 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   parse_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/28 18:26:48 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/04 14:00:06 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	space(t_shell *data, char *new, int arg)
+int	space_new(t_shell *data, char *new, int arg)
 {
-	data->len = 0;
-	if (arg == 0)
-		data->len = get_cmd(new + 1, 0) + 1; // change this to also stop at quote when using in space
-	else
-		data->len = get_cmd(new, 0);
-	data->res = ft_substr(new, 0, data->len);
-	check_substr(data, 0);
+	int	i;
+	
+	i = 0;
+	data->res = NULL;
+	while(new[i] && new[i] != '|' && new[i] != '<' && new[i] != '>' && new[i] != 32)
+	{
+		if (new[i] == 34 || new[i] == 39)
+			i += quote_new(data, new + i);
+		else if (new[i] == 36)
+			i += env_var_new(data, new + i);
+		else
+			data->res = char_join(data->res, new[i++]);
+	}
+	if (arg == 1)
+		return (i);
 	if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res, 0);
+		data->cmd = add_split(data->cmd, data->res, 1);
+	else if (ft_strlen(data->res) == 0)
+		error("Command '' not found", 1); // cannot send empty str to find path, can make seperate condition, thats it.
 	else
 		data->cmd = ft_split(data->res, 32);
 	if (data->res)
 		free(data->res);
-	return(data->len - 1);
+	return (i - 1);
 }
 
-int	quotes(t_shell *data, char *new)
+int	quote_new(t_shell *data, char *new)
 {
 	char	*ptr;
+	char	*temp;
 	
 	ptr = ft_strchr(new + 1, new[0]);
-	if (ptr == NULL)
-		return(space(data, new, 0));
-	data->res = ft_substr(new, 1, ptr - new - 1);
-	data->len = ft_strlen(data->res);
-	check_substr(data, new[0]);
-	if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res, 0);
-	else
-		data->cmd = ft_split(data->res, 34);
-	free(data->res);
-	return(data->len + 2);
-}
-
-void	check_substr(t_shell *data, char c)
-{
-	char	*beg;
-	int		len;
-
-	if (c == 39)
-		return ;
-	len = ft_strlen(data->res);
-	while(ft_strchr(data->res, 36) != NULL)
+	if (ptr == NULL || new[1] == '\0')
 	{
-		beg = NULL;
-		if (data->res[0] != 36)
-		{
-			beg = ft_strchr(data->res, 36);
-			beg = ft_substr(data->res, 0, len - ft_strlen(beg));
-		}
-		data->res = env_var(data->res, len, beg);
+		data->res = ft_strjoin_mod(data->res, new, 0);
+		return(ft_strlen(new));
 	}
+	temp = ft_substr(new, 1, ptr - new - 1);
+	data->len = ft_strlen(temp);
+	check_substr_new(data, temp, new[0]);
+	return(data->len + 2);
 }
 
 char	*env_var(char *data, int len, char *beg)
@@ -83,16 +72,14 @@ char	*env_var(char *data, int len, char *beg)
 	if (res == NULL)
 	{
 		res = ft_strjoin_mod(beg, end, 0);
-		freedom(NULL, data, var);
-		free(end);
+		freedom(NULL, data, var, end);
 		return(res);
 	}	
 	beg = ft_strjoin_mod(beg, res, 0);
 	beg = ft_strjoin_mod(beg, end, 0);
-	freedom(NULL, data, var);
-	free(end);
+	freedom(NULL, data, var, end);
 	return (beg);
-} // if env variable doesnt exist it needs to be ignored. make work!
+} 
 
 void	pipex(t_shell *data)
 {
@@ -101,7 +88,7 @@ void	pipex(t_shell *data)
 	{
 		if (ft_strncmp("cd", data->cmd[0], 3) == 0)
 		{
-			data->cmd = freedom(data->cmd, NULL, NULL);
+			data->cmd = freedom(data->cmd, NULL, NULL, NULL);
 			close(data->fd[0]);
 			data->fd[0]= dup(STDIN_FILENO);	
 		}
@@ -113,7 +100,7 @@ void	pipex(t_shell *data)
 		data->cmd = ft_split("|", 32);
 		do_cmd(data);
 	}
-	data->cmd = freedom(data->cmd, NULL, NULL);
+	data->cmd = freedom(data->cmd, NULL, NULL, NULL);
 	data->cd_flag++;
 }
 

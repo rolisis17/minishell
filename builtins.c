@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/30 19:24:25 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/04 13:59:45 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ void	cd_command(char **splited)
     if (chdir(prev) == -1)
 	{
         perror("chdir");
-        freedom(NULL, prev, NULL);
+        freedom(NULL, prev, NULL, NULL);
         return;
     }
-	freedom(NULL, prev, NULL);
+	freedom(NULL, prev, NULL, NULL);
 	set_pwd();
 	return;
 }
@@ -135,7 +135,7 @@ void    env_cmd(char **cmd)
 	{
         printf("%s\n", environ[i]);
 	}
-	cmd = freedom(cmd, NULL, NULL);
+	cmd = freedom(cmd, NULL, NULL, NULL);
 	exit (0);
 } // env command!
 
@@ -160,7 +160,7 @@ void	echo_cmd(char **cmd)
 void	ft_exit(char **cmd)
 {
 	ft_putendl_fd("exit does not take options in this minishell", 2);
-	cmd = freedom(cmd, NULL, NULL);
+	cmd = freedom(cmd, NULL, NULL, NULL);
 	exit(0);
 }
 
@@ -199,8 +199,8 @@ void	export_cmd(char **cmd)
     	if (execve(getenv("CURVA"), cmp, args) == -1)
 		{
 			perror("execve");
-			freedom(cmp, NULL, NULL);
-			freedom(args, NULL, NULL);
+			freedom(cmp, NULL, NULL, NULL);
+			freedom(args, NULL, NULL, NULL);
 		}
 	}
 }
@@ -223,8 +223,8 @@ void	set_path_env(void)
 		if (execve(path, cmp, args) == -1)
 		{
 			perror("execve");
-			freedom(cmp, path, comm);
-			freedom(args, NULL, NULL);
+			freedom(cmp, path, comm, NULL);
+			freedom(args, NULL, NULL, NULL);
 		}
 	}
 }
@@ -253,8 +253,8 @@ void	unset_cmd(char **cmd)
     	if (execve(getenv("CURVA"), cmp, args) == -1)
 		{
 			perror("execve");
-			freedom(cmp, NULL, NULL);
-			freedom(args, NULL, NULL);
+			freedom(cmp, NULL, NULL, NULL);
+			freedom(args, NULL, NULL, NULL);
 		}
 	}
 }

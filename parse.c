@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/04/29 15:32:40 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/04 13:41:08 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// test
+// cat < | ls
 
 void	parse_input(char *line)
 {
@@ -31,10 +34,13 @@ void	parse_input(char *line)
 			i += file_in(data, input + i + 1); // need to check how there work with quotes and $ does it need the checker?
 		else if (input[i] == '>')
 			i += file_out(data, input + i + 1); 
-		else if (input[i] == 34 || input[i] == 39)
-			i += quotes(data, input + i);
 		else if (input[i] && input[i] != 32)
-			i += space(data, input + i, 1);
+			i += space_new(data, input + i, 0);
+		if (data->exit_flag == 1)
+		{
+			freedom(data->cmd, data->here_doc, input, data);
+			return ;
+		}
 		// else if (input[i] == "$?") // what even is this
 		i++;
 	}
@@ -55,9 +61,8 @@ void	parse_input(char *line)
 			do_cmd(data); // BASH cannot run in the child process.
 			output(data->fd);
 		}
-		// freesplit(data->cmd);
 	}
-	freedom(data->cmd, data, input); // need to free data every place.
+	freedom(data->cmd, data->here_doc, input, data);
 }
 
 t_shell	*data_init(void)
@@ -70,6 +75,7 @@ t_shell	*data_init(void)
 	data->cmd = NULL;
 	data->here_doc = NULL;
 	data->cd_flag = 0;
+	data->exit_flag = 0;
 	return (data);
 }
 
@@ -80,13 +86,19 @@ int	file_in(t_shell *data, char *new)
 
 	sp = 0;
 	flag = 0;
-	if (new[0] == '<')
+	if (new[0] == '<') // weird with <<< fix 
 		flag = 1;
 	while(new[sp + flag] == 32)
 		sp++;
-	data->len = get_cmd(new + sp + flag, 1);
-	data->res = ft_substr(new, flag + sp, data->len);
-	if (flag == 1)
+	// data->len = get_cmd(new + sp + flag, 1);
+	// data->res = ft_substr(new, flag + sp, data->len);
+	data->len = space_new(data, new + sp + flag, 1); // still need to figure out <<<
+	if (data->res == NULL)
+	{
+		ft_putendl_fd("Syntax error", 2); // this needs to be added to errors! shouldnt execute anything if this error occures leave loop maybe with a flag
+		data->exit_flag = 1;
+	}
+	else if (flag == 1)
 		here_new(data);
 	else
 	{
@@ -94,10 +106,10 @@ int	file_in(t_shell *data, char *new)
 		if (data->fd[0] < 0)
 		{
 			perror("Error");	
-			data->cmd = freedom(data->cmd, NULL, NULL); // test!
+			data->cmd = freedom(data->cmd, NULL, NULL, NULL);
 		}
 	}
-	free(data->res);
+	freedom(NULL, data->res, NULL, NULL);
 	return (data->len + flag + sp);
 }
 
@@ -112,84 +124,52 @@ int	file_out(t_shell *data, char *new)
 		flag = 1;
 	while(new[sp + flag] == 32)
 		sp++;
-	data->len = get_cmd(new + sp + flag, 1);
-	data->res = ft_substr(new, flag + sp, data->len);
-	if (flag == 1)
-		data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_APPEND, 0644);
-	else
-		data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (data->fd[1] < 0)
-		perror("Error");
-	free(data->res);
+	// data->len = get_cmd(new + sp + flag, 1);
+	// data->res = ft_substr(new, flag + sp, data->len);
+	data->len = space_new(data, new + sp + flag, 1);
+	if (data->res == NULL)
+	{
+		ft_putendl_fd("Syntax error", 2); // this needs to be added to errors! shouldnt execute anything if this error occures leave loop maybe with a flag
+		data->exit_flag = 1;
+	}
+	else 
+	{
+		if (flag == 1)
+			data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_APPEND, 0644);
+		else
+			data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		if (data->fd[1] < 0)
+			perror("Error");
+		free(data->res);
+	}
 	return (data->len + flag + sp);
 }
-
-int	check_empty_line(char *line)
-{
-	int	f;
-
-	f = -1;
-	while (line[++f])
-	{
-		if (line[f] != '\n' && line[f] != 32 && line[f] != '.')
-			return (1);
-	}
-	return (0);
-}
-
-// void	here_doc(t_shell *data)
-// {
-// 	pid_t	pid;
-// 	int		pipe_fd[2];
-
-// 	if (pipe(pipe_fd) == -1)
-// 		error("Error (pipe)", 0);
-// 	pid = fork();
-// 	if (pid == -1)
-// 		error("Error (fork)", 0);
-// 	if (pid == 0)
-// 		here_doc_child(data, pipe_fd);
-// 	else
-// 	{
-// 		close(data->fd[0]);
-// 		close(pipe_fd[1]);
-// 		data->fd[0] = pipe_fd[0];
-// 		waitpid(pid, NULL, 0);
-// 	}
-// } // signals dont work in here_doc!!!
-
-// void	here_doc_child(t_shell *data, int *pipe)
-// {
-// 	char	*buffer;
-	
-// 	close(pipe[0]);
-// 	while (1)
-// 	{
-// 		buffer = readline("here_doc> ");
-// 		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
-// 			break ;
-// 		write(pipe[1], buffer, ft_strlen(buffer));
-// 		write(pipe[1], "\n", 1);
-// 		free(buffer);
-// 	}
-// 	write(pipe[1], "\0", 1);
-// 	free (buffer);
-// 	exit(0);
-// }
 
 void	here_new(t_shell *data)
 {
 	char	*buffer;
+	char	*limiter;
+	int		len;
 
+	if (data->here_doc) // protection for multi heredoc call :)
+	{
+		free(data->here_doc);
+		data->here_doc = NULL;
+	}
+	// printf("THIS:%s\n", data->res); // maybe can add error here, if null syntax error
+	limiter = remove_quotes(data->res, 34, 0);
+	limiter = remove_quotes(limiter, 39, 1);
+	len = ft_strlen(limiter);
 	while (1)
 	{
 		buffer = readline("here_doc> ");
-		if (ft_strncmp(buffer, data->res, data->len + 1) == 0)
+		if (ft_strncmp(buffer, limiter, len + 1) == 0)
 			break ;
 		data->here_doc = ft_strjoin_mod(data->here_doc, buffer, 0);
 		data->here_doc = ft_strjoin_mod(data->here_doc, "\n", 0);
 		free(buffer);
 	}
-	free (buffer);
+	freedom(NULL, buffer, limiter, NULL);
 }
-	
+
+

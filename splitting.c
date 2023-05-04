@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   splitting.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/30 13:14:44 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/04 13:57:42 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ char	**add_split(char **split, char *new, int arg)
     }
     len = ft_strlen(new);
     new_split[i] = ft_calloc(len + 1, sizeof(char));
-    ft_strlcpy(new_split[i], new, len + 1);
+	if (len > 0)
+    	ft_strlcpy(new_split[i], new, len + 1);
     new_split[++i] = NULL;
 	if (!arg)
     	freesplit(split);
@@ -114,4 +115,24 @@ void	freesplit(char **splited)
 		counter++;
 	}
 	free (splited);
+}
+
+char	*split_n_join(char *str, char **split, int spliter)
+{
+	char	*res;
+	int		i;
+
+	i = -1;
+	res = NULL;
+	if (!split)
+		split = ft_split(str, spliter);
+	if (split[1] != NULL)
+	{
+		while(split[++i])
+			res = ft_strjoin_mod(res, split[i], 0);
+	}
+	else 
+		res = ft_strdup(split[0]);
+	freedom(split, str, NULL, NULL);
+	return (res);
 }
