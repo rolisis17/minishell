@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 13:42:55 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 14:57:54 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,17 +63,17 @@ char	*find_quote(char *str, int len)
 	return (NULL);
 }
 
-// void	error(char *msg, int arg)
-// {
-// 	if (arg == 0)
-// 	{
-// 		ft_putendl_fd(msg, 2);
-// 		exit(-1);
-// 	}
-// 	else if (arg == 1)
-// 		ft_putstr_fd("Invalid command: ", 2);
-// 	ft_putendl_fd(msg, 2);
-// }
+void	error(char *msg, int arg)
+{
+	if (arg == 0)
+	{
+		ft_putendl_fd(msg, 2);
+		exit(-1);
+	}
+	else if (arg == 1)
+		ft_putstr_fd("Invalid command: ", 2);
+	ft_putendl_fd(msg, 2);
+}
 
 void	exit_status(char *msg, int check)
 {

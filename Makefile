@@ -18,7 +18,7 @@ END=\033[0m
 all : $(NAME)
 
 $(NAME) : $(BIN) $(OBJ) | $(LIBFT)
-	@$(CC) $(OBJ) $(FSAN) -Llibft -lft -lreadline -o $(NAME)
+	@$(CC) $(OBJ) -Llibft -lft -lreadline -o $(NAME)
 	@echo "$(GREEN)>>>> Compiled <<<<$(END)"
 
 $(LIBFT) :

@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 14:00:06 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 16:45:57 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	space_new(t_shell *data, char *new, int arg)
 	if (arg == 1)
 		return (i);
 	if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res, 1);
+		data->cmd = add_split(data->cmd, data->res, 0);
 	else if (ft_strlen(data->res) == 0)
 		error("Command '' not found", 1); // cannot send empty str to find path, can make seperate condition, thats it.
 	else
-		data->cmd = ft_split(data->res, 32);
+		data->cmd = ft_split(data->res, 1);
 	if (data->res)
 		free(data->res);
 	return (i - 1);
@@ -84,6 +84,7 @@ char	*env_var(char *data, int len, char *beg)
 void	pipex(t_shell *data)
 {
 	// need to take care of sitution like || maybe sytax error message?
+	data->pipe_flag = 1;
 	if (data->cmd)
 	{
 		if (ft_strncmp("cd", data->cmd[0], 3) == 0)
