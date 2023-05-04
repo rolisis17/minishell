@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 16:15:41 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 19:58:52 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct  s_shell
 	char	**minienv;
 }               t_shell;
 
+char	*check_getenv(char	*str);
 void	make_history(char *line);
 int		check_empty_line(char *line);
 void	keep_history(char *line, int check);
@@ -69,6 +70,7 @@ void	exit_status(char *msg, int check);
 int		check_status(char *msg);
 void	echo_cmd(char **cmd);
 void	export_cmd(char **cmd);
+int		export_varmod(char *cmd);
 void	unset_cmd(char **cmd);
 void	set_path_env(void);
 //parse
@@ -100,5 +102,6 @@ char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
 char	*ft_strjoin_mod(char *str1, char *str2, int pos);
 char	*char_join(char *str, int c);
+int		strintchr(char	*str, int c);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/04 15:34:30 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 20:57:51 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ void	cd_command(char **splited)
 		error("cd: too many arguments", 0);
 	prev = relative_cd(splited[1]);
 	set_oldpwd();
-	ft_strlcpy(getenv("PWD"), prev, ft_strlen(prev));
+	if (getenv("PWD"))
+		ft_strlcpy(getenv("PWD"), prev, ft_strlen(prev));
     if (chdir(prev) == -1)
 	{
         perror("chdir");
@@ -74,7 +75,8 @@ void	set_oldpwd(void)
 	char	*oldpwd;
 	
 	oldpwd = this_folder_is(1);
-	ft_strlcpy(getenv("OLDPWD"), oldpwd, ft_strlen(oldpwd) + 1);
+	if (getenv("OLDPWD"))
+		ft_strlcpy(getenv("OLDPWD"), oldpwd, ft_strlen(oldpwd) + 1);
 	free (oldpwd);
 }
 
@@ -83,7 +85,8 @@ void	set_pwd(void)
 	char	*newpwd;
 	
 	newpwd = this_folder_is(1);
-	ft_strlcpy(getenv("PWD"), newpwd, ft_strlen(newpwd) + 1);
+	if (getenv("PWD"))
+		ft_strlcpy(getenv("PWD"), newpwd, ft_strlen(newpwd) + 1);
 	free (newpwd);
 }
 
@@ -146,15 +149,23 @@ void	echo_cmd(char **cmd)
 
 	f = 0;
 	checker = 0;
-	if (ft_strncmp(cmd[1], "-n", 3) == 0)
-	{
-		f++;
-		checker++;
-	}
 	while (cmd[++f])
+	{
+		if (ft_strncmp(cmd[f], "-n", 3) == 0)
+			checker = 1;
+		else
+			break;
+	}
+	while (cmd[f])
+	{
 		printf("%s", cmd[f]);
-	if (checker)
+		if (cmd[f + 1])
+			printf(" ");
+		f++;
+	}
+	if (!checker)
 		printf("\n");
+	exit (0);
 }
 
 void	ft_exit(char **cmd)
@@ -180,7 +191,7 @@ void	export_cmd(char **cmd)
 	char	**args;
 	char	**cmp;
 
-	if(getenv("CURVA"))
+	if (cmd[1] && getenv("CURVA") && !(export_varmod(cmd[1])) && strintchr(cmd[1], '='))
 	{
 		cmp = ft_split(" ", 02);
 		keep_history(NULL, 1);
@@ -193,6 +204,54 @@ void	export_cmd(char **cmd)
 			freedom(args, NULL, NULL, NULL);
 		}
 	}
+	else if (!cmd[1])
+	{
+		char c = 97;
+		while (getenv(c))
+			printf("%s\n", getenv(c));
+	}
+}
+
+void	print_export(void)
+{
+	char	**env_sorted;
+	char	*low;
+	char	*seclow;
+	char	*next;
+	int	f;
+
+	f = -1;
+	while (environ[++f])
+	{
+		if (ft_strncmp(environ[f], environ[f + 1], ft_strlen(environ[f] + 1))) // if < 0 -> str1 is bigger else str2
+		{
+			if () // need to do this to get the 3 lowest str and print the last one and keep comparing with the rest;
+		}
+	}
+}
+
+int	export_varmod(char *cmd)
+{
+	char	*env_var;
+	int		len;
+
+	len = strintchr(cmd, '=');
+	env_var = ft_substr(cmd, 0, len - 1);
+	if (getenv(env_var) && len > 0)
+		ft_strlcpy(getenv(env_var), cmd + len, ft_strlen(cmd + len) + 1);
+	else
+		len = 0;
+	free (env_var);
+	return (len);
+}
+
+int	strintchr(char	*str, int c)
+{
+	int	f;
+
+	f = -1;
+	while (str[++f] != c);
+	return (f + 1);
 }
 
 void	set_path_env(void)
@@ -238,20 +297,20 @@ void	unset_cmd(char **cmd)
 	}
 }
 
-char	**new_env(char **envp)
-{
-	char	**new;
-	int		counter;
-	int		f;
+// char	**new_env(char **envp)
+// {
+// 	char	**new;
+// 	int		counter;
+// 	int		f;
 
-	f = -1;
-	counter = -1;
-	while (envp[++counter]);
-	new = ft_calloc(counter + 1, sizeof(char **));
-	while (envp[++f] && new[f])
-		new[f] = ft_strdup(envp[1]);
-	return (NULL);
-}
+// 	f = -1;
+// 	counter = -1;
+// 	while (envp[++counter]);
+// 	new = ft_calloc(counter + 1, sizeof(char **));
+// 	while (envp[++f] && new[f])
+// 		new[f] = ft_strdup(envp[1]);
+// 	return (NULL);
+// }
 
 // char	*dollar_sign(char *str)
 // {
