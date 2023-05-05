@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 18:17:42 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/05 18:45:19 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ char	*find_path(char *cmd)
 			the_path = ft_strjoin(paths[i], cmd_temp);
 			if (access(the_path, F_OK) == 0)
 			{
-				freesplit(paths);
-				free(cmd_temp);
+				freedom(paths, cmd_temp, NULL, NULL);
+				// free(cmd_temp);
 				return (the_path);
 			}
 			free (the_path);
 		}
-		freesplit(paths);
-		free (cmd_temp);
+		freedom(paths, cmd_temp, NULL, NULL);
+		// free (cmd_temp);
 	}
 	return (NULL);
 }
@@ -53,20 +53,16 @@ void	bad_cmd(char *path, char **cmd)
 void	execute(char **cmd)
 {
 	char	*path;
-	char	*ptr;
+	// char	*ptr;
 
 	check_builtin(cmd);
 	  // need to do a exit function with free in everything for us to call everytime, Joao just fail minishell evaluation. Leaks when exit.
 	 // or exit? or exit inside the command func to get out of the fork but here we need to free everything
 	// can make the execution within each builtin, this was can disregard options and exit the child process
 	if (ft_strncmp("/", cmd[0], 1) == 0)
-	{
 		path = ft_strdup(cmd[0]);
-		cmd = freedom(cmd, NULL, NULL, NULL);
-		ptr = ft_strrchr(path, '/');
-		cmd = ft_split(ptr, '/');
-	}
-	path = find_path(cmd[0]);
+	else
+		path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
 	if (execve(path, cmd, environ) == -1)
@@ -90,7 +86,7 @@ void	do_cmd(t_shell *data)
 	if (pid == 0)
 	{
 		dup2(data->fd[0], STDIN_FILENO);
-		if ((ft_strncmp("bash", data->cmd[0], 5) == 0 || ft_strncmp("cat", data->cmd[0], 4) == 0) && data->pipe_flag == 0)
+		if (data->pipe_flag == 0 && data->out_flag == 0)
 			close (pipe_fd[1]);
 		else
 			dup2(pipe_fd[1], STDOUT_FILENO);
@@ -99,6 +95,7 @@ void	do_cmd(t_shell *data)
 	}
 	else
 	{
+    	signal(SIGINT, interupt);
 		close(data->fd[0]);
 		close(pipe_fd[1]);
 		data->fd[0] = pipe_fd[0];
@@ -131,8 +128,7 @@ void	data_to_pipe(t_shell *data)
 		data->fd[0] = fd[0];
 		waitpid(pid, NULL, 0);
 	}
-	free(data->here_doc);
-	data->here_doc = NULL;
+	data->here_doc = freedom(NULL, data->here_doc, NULL, NULL);
 }
 
 void	check_builtin(char **cmd)
@@ -149,7 +145,7 @@ void	check_builtin(char **cmd)
 	else if (ft_strncmp(cmd[0], "|", 1) == 0)
 	{
 		// this is not what bash does but we need a bad syntax error of | is first in string
-		// ft_putendl_fd("Nothing to pipe", 2); 
+		// ft_putendl_fd("Nothing to pipe", 2);
 		exit(0);
 	}
 }

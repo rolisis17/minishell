@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/05 18:18:37 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/05 18:45:38 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <signal.h>
 # include <term.h>
 
-extern char **environ;
+extern char	**environ;
 
 typedef struct  s_shell
 {
@@ -35,9 +35,21 @@ typedef struct  s_shell
 	int		cd_flag;
 	int		exit_flag;
 	int		pipe_flag;
+	int		out_flag;
+	int		here_flag;
 	int		exit_status;
-	char	**minienv;
+	char	**environ;
+	char	*kurva;
 }               t_shell;
+
+typedef struct	s_glob
+{
+	int		here_flag;
+	int		exit_status;
+	char	**environ;
+	char	*kurva;
+}				t_glob;
+
 
 char	*check_getenv(char	*str);
 void	make_history(char *line);
@@ -56,6 +68,8 @@ void	check_builtin(char **cmd);
 void    sig_handler(void);
 void    ctrlc(int signum);
 void    quit(char *str);
+void	interupt(int signum);
+void	here_exit(int signum);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path, int safe);
@@ -100,12 +114,14 @@ char	**remove_split(char **split, char *rem, int arg);
 void	freesplit(char **splited);
 char	*split_n_join(char *str, char **split, int spliter);
 //tools
-char    **freedom(char **ted, void *ze, void *dom, void *style);
+void    *freedom(char **ted, void *ze, void *dom, void *style);
 int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
 char	*ft_strjoin_mod(char *str1, char *str2, int pos);
 char	*char_join(char *str, int c);
 int		strintchr(char	*str, int c);
+
+extern t_glob	g_glob;
 
 #endif

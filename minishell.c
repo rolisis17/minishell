@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 19:40:30 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/05 18:45:23 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,6 @@ int main()
 		freedom(NULL, line, NULL, NULL);
     }
     return 0;
-}
-
-void make_history(char *line)
-{
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	add_history(line);
 }
 
 void	keep_history(char *line, int check)

@@ -6,13 +6,13 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 14:57:54 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 17:33:38 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **freedom(char **ted, void *ze, void *dom, void *style)
+void *freedom(char **ted, void *ze, void *dom, void *style)
 {
 	if (ted)
     	freesplit(ted);
