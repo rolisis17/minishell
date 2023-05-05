@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/04 15:34:30 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 18:19:51 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,13 @@ char	*this_folder_is(int	check)
 	res = NULL;
     if (getcwd(buf, sizeof(buf)) == NULL)
 	{
-        perror("getcwd");
-        exit(EXIT_FAILURE);
+		if (getenv("PWD"))
+			ft_strlcpy(buf, getenv("PWD"), 1024);
+		else
+		{
+			perror("getcwd");
+			exit(EXIT_FAILURE);
+		}
     }
 	if (check == 0)
 	{
@@ -57,7 +62,8 @@ void	cd_command(char **splited)
 		error("cd: too many arguments", 0);
 	prev = relative_cd(splited[1]);
 	set_oldpwd();
-	ft_strlcpy(getenv("PWD"), prev, ft_strlen(prev));
+	if (getenv("PWD"))
+		ft_strlcpy(getenv("PWD"), prev, ft_strlen(prev));
     if (chdir(prev) == -1)
 	{
         perror("chdir");
@@ -74,7 +80,8 @@ void	set_oldpwd(void)
 	char	*oldpwd;
 	
 	oldpwd = this_folder_is(1);
-	ft_strlcpy(getenv("OLDPWD"), oldpwd, ft_strlen(oldpwd) + 1);
+	if (getenv("OLDPWD"))
+		ft_strlcpy(getenv("OLDPWD"), oldpwd, ft_strlen(oldpwd) + 1);
 	free (oldpwd);
 }
 
@@ -83,7 +90,8 @@ void	set_pwd(void)
 	char	*newpwd;
 	
 	newpwd = this_folder_is(1);
-	ft_strlcpy(getenv("PWD"), newpwd, ft_strlen(newpwd) + 1);
+	if (getenv("PWD"))
+		ft_strlcpy(getenv("PWD"), newpwd, ft_strlen(newpwd) + 1);
 	free (newpwd);
 }
 
@@ -146,15 +154,23 @@ void	echo_cmd(char **cmd)
 
 	f = 0;
 	checker = 0;
-	if (ft_strncmp(cmd[1], "-n", 3) == 0)
-	{
-		f++;
-		checker++;
-	}
 	while (cmd[++f])
+	{
+		if (ft_strncmp(cmd[f], "-n", 3) == 0)
+			checker = 1;
+		else
+			break;
+	}
+	while (cmd[f])
+	{
 		printf("%s", cmd[f]);
-	if (checker)
+		if (cmd[f + 1])
+			printf(" ");
+		f++;
+	}
+	if (!checker)
 		printf("\n");
+	exit (0);
 }
 
 void	ft_exit(char **cmd)
@@ -180,7 +196,7 @@ void	export_cmd(char **cmd)
 	char	**args;
 	char	**cmp;
 
-	if(getenv("CURVA"))
+	if (cmd[1] && getenv("CURVA") && !(export_varmod(cmd[1])) && strintchr(cmd[1], '='))
 	{
 		cmp = ft_split(" ", 02);
 		keep_history(NULL, 1);
@@ -193,6 +209,98 @@ void	export_cmd(char **cmd)
 			freedom(args, NULL, NULL, NULL);
 		}
 	}
+	else if (!cmd[1])
+		export_get_seclow(environ, export_get_lower(environ, NULL));
+}
+
+char	*export_get_lower(char **env, char *to_compare)
+{
+	int	f;
+
+	f = -1;
+	while (env[++f])
+	{
+		if (to_compare && ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) < 0)
+			to_compare = env[f];
+		if (!to_compare)
+			to_compare = env[f];
+	}
+	very_trash(to_compare, '=', 34);
+	return (to_compare);
+}
+
+char	*export_get_seclow(char **env, char *to_compare)
+{
+	char	*low;
+	int	f;
+
+	f = -1;
+	while (env[++f] && ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) < 0);
+	low = export_get_big(environ, to_compare);
+	f = -1;
+	while (env[++f] && to_compare)
+	{
+		if (ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) > 0 && \
+		ft_strncmp(env[f], low, ft_strlen(low)) < 0)
+			low = env[f];
+	}
+	very_trash(low, '=', 34);
+	if (low != export_get_big(environ, to_compare))
+		export_get_seclow(environ, low);
+	return (low);
+}
+
+char	*export_get_big(char **env, char *to_compare)
+{
+	int	f;
+
+	f = -1;
+	while (env[++f])
+	{
+		if (to_compare && ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) > 0)
+			to_compare = env[f];
+		if (!to_compare)
+			to_compare = env[f];
+	}
+	return (to_compare);
+}
+
+void	very_trash(char	*str, int flag, int to_add)
+{
+	int	f;
+
+	f = -1;
+	while (str[++f])
+	{
+		printf("%c", str[f]);
+		if (str[f] == flag)
+			printf("%c", to_add);
+	}
+	printf("%c\n", to_add);
+}
+
+int	export_varmod(char *cmd)
+{
+	char	*env_var;
+	int		len;
+
+	len = strintchr(cmd, '=');
+	env_var = ft_substr(cmd, 0, len - 1);
+	if (getenv(env_var) && len > 0)
+		ft_strlcpy(getenv(env_var), cmd + len, ft_strlen(cmd + len) + 1);
+	else
+		len = 0;
+	free (env_var);
+	return (len);
+}
+
+int	strintchr(char	*str, int c)
+{
+	int	f;
+
+	f = -1;
+	while (str[++f] != c);
+	return (f + 1);
 }
 
 void	set_path_env(void)
@@ -238,20 +346,20 @@ void	unset_cmd(char **cmd)
 	}
 }
 
-char	**new_env(char **envp)
-{
-	char	**new;
-	int		counter;
-	int		f;
+// char	**new_env(char **envp)
+// {
+// 	char	**new;
+// 	int		counter;
+// 	int		f;
 
-	f = -1;
-	counter = -1;
-	while (envp[++counter]);
-	new = ft_calloc(counter + 1, sizeof(char **));
-	while (envp[++f] && new[f])
-		new[f] = ft_strdup(envp[1]);
-	return (NULL);
-}
+// 	f = -1;
+// 	counter = -1;
+// 	while (envp[++counter]);
+// 	new = ft_calloc(counter + 1, sizeof(char **));
+// 	while (envp[++f] && new[f])
+// 		new[f] = ft_strdup(envp[1]);
+// 	return (NULL);
+// }
 
 // char	*dollar_sign(char *str)
 // {

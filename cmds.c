@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 17:16:53 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/04 18:17:42 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,11 @@ void	execute(char **cmd)
 	path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
-	execve(path, cmd, environ);
+	if (execve(path, cmd, environ) == -1)
+	{
+		perror("execve");
+		freedom(cmd, path, NULL, NULL);
+	}
 }
 
 void	do_cmd(t_shell *data)
@@ -138,7 +142,7 @@ void	check_builtin(char **cmd)
 		this_folder_is(0);
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
 		env_cmd(cmd);
-	else if (ft_strncmp(cmd[1], "echo", 5) == 0)
+	else if (ft_strncmp(cmd[0], "echo", 5) == 0)
 		echo_cmd(cmd);
 	else if (ft_strncmp(cmd[0], "exit", 5) == 0)
 		ft_exit(cmd); // to say there are no options
