@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 19:58:52 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/05 18:18:37 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,10 @@ int		check_status(char *msg);
 void	echo_cmd(char **cmd);
 void	export_cmd(char **cmd);
 int		export_varmod(char *cmd);
+char	*export_get_lower(char **env, char *to_compare);
+char	*export_get_seclow(char **env, char *to_compare);
+char	*export_get_big(char **env, char *to_compare);
+void	very_trash(char	*str, int flag, int to_add);
 void	unset_cmd(char **cmd);
 void	set_path_env(void);
 //parse

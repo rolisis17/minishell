@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/04 20:57:51 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/05 18:19:51 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,13 @@ char	*this_folder_is(int	check)
 	res = NULL;
     if (getcwd(buf, sizeof(buf)) == NULL)
 	{
-        perror("getcwd");
-        exit(EXIT_FAILURE);
+		if (getenv("PWD"))
+			ft_strlcpy(buf, getenv("PWD"), 1024);
+		else
+		{
+			perror("getcwd");
+			exit(EXIT_FAILURE);
+		}
     }
 	if (check == 0)
 	{
@@ -205,29 +210,73 @@ void	export_cmd(char **cmd)
 		}
 	}
 	else if (!cmd[1])
-	{
-		char c = 97;
-		while (getenv(c))
-			printf("%s\n", getenv(c));
-	}
+		export_get_seclow(environ, export_get_lower(environ, NULL));
 }
 
-void	print_export(void)
+char	*export_get_lower(char **env, char *to_compare)
 {
-	char	**env_sorted;
-	char	*low;
-	char	*seclow;
-	char	*next;
 	int	f;
 
 	f = -1;
-	while (environ[++f])
+	while (env[++f])
 	{
-		if (ft_strncmp(environ[f], environ[f + 1], ft_strlen(environ[f] + 1))) // if < 0 -> str1 is bigger else str2
-		{
-			if () // need to do this to get the 3 lowest str and print the last one and keep comparing with the rest;
-		}
+		if (to_compare && ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) < 0)
+			to_compare = env[f];
+		if (!to_compare)
+			to_compare = env[f];
 	}
+	very_trash(to_compare, '=', 34);
+	return (to_compare);
+}
+
+char	*export_get_seclow(char **env, char *to_compare)
+{
+	char	*low;
+	int	f;
+
+	f = -1;
+	while (env[++f] && ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) < 0);
+	low = export_get_big(environ, to_compare);
+	f = -1;
+	while (env[++f] && to_compare)
+	{
+		if (ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) > 0 && \
+		ft_strncmp(env[f], low, ft_strlen(low)) < 0)
+			low = env[f];
+	}
+	very_trash(low, '=', 34);
+	if (low != export_get_big(environ, to_compare))
+		export_get_seclow(environ, low);
+	return (low);
+}
+
+char	*export_get_big(char **env, char *to_compare)
+{
+	int	f;
+
+	f = -1;
+	while (env[++f])
+	{
+		if (to_compare && ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) > 0)
+			to_compare = env[f];
+		if (!to_compare)
+			to_compare = env[f];
+	}
+	return (to_compare);
+}
+
+void	very_trash(char	*str, int flag, int to_add)
+{
+	int	f;
+
+	f = -1;
+	while (str[++f])
+	{
+		printf("%c", str[f]);
+		if (str[f] == flag)
+			printf("%c", to_add);
+	}
+	printf("%c\n", to_add);
 }
 
 int	export_varmod(char *cmd)
