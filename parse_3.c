@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 15:43:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/03 09:54:21 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 17:33:04 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void	check_substr_new(t_shell *data, char *new, char c)
 		free(new);
 		return ;
 	}
-	len = ft_strlen(new);
 	while(ft_strchr(new, 36) != NULL)
 	{
+		len = ft_strlen(new);
 		beg = NULL;
 		if (new[0] != 36)
 		{

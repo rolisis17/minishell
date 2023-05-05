@@ -6,14 +6,11 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/04 18:48:57 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 18:12:09 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// test
-// cat < | ls
 
 void	parse_input(char *line)
 {
@@ -56,9 +53,9 @@ void	parse_input(char *line)
 			export_cmd(data->cmd);
 		else if (ft_strncmp(data->cmd[0], "unset", 6) == 0)
 			unset_cmd(data->cmd);
-		else // here_doc need to fix "LIMITER" in quotes.
+		else
 		{
-			do_cmd(data); // BASH cannot run in the child process.
+			do_cmd(data);
 			output(data->fd);
 		}
 	}
@@ -78,6 +75,7 @@ t_shell	*data_init(void)
 	data->exit_flag = 0;
 	data->pipe_flag = 0;
 	data->out_flag = 0;
+	g_glob.here_flag = 0;
 	return (data);
 }
 
@@ -92,8 +90,6 @@ int	file_in(t_shell *data, char *new)
 		flag = 1;
 	while(new[sp + flag] == 32)
 		sp++;
-	// data->len = get_cmd(new + sp + flag, 1);
-	// data->res = ft_substr(new, flag + sp, data->len);
 	data->len = space_new(data, new + sp + flag, 1); // still need to figure out <<<
 	if (data->res == NULL)
 	{
@@ -126,8 +122,6 @@ int	file_out(t_shell *data, char *new)
 		flag = 1;
 	while(new[sp + flag] == 32)
 		sp++;
-	// data->len = get_cmd(new + sp + flag, 1);
-	// data->res = ft_substr(new, flag + sp, data->len);
 	data->len = space_new(data, new + sp + flag, 1);
 	if (data->res == NULL)
 	{
@@ -155,17 +149,26 @@ void	here_new(t_shell *data)
 	int		len;
 
 	if (data->here_doc) // protection for multi heredoc call :)
-	{
-		free(data->here_doc);
-		data->here_doc = NULL;
-	}
+		data->here_doc = freedom(NULL, data->here_doc, NULL, NULL);
 	// printf("THIS:%s\n", data->res); // maybe can add error here, if null syntax error
 	limiter = remove_quotes(data->res, 34, 0);
 	limiter = remove_quotes(limiter, 39, 1);
 	len = ft_strlen(limiter);
+	signal(SIGINT, here_exit);
 	while (1)
 	{
+		if (g_glob.here_flag == 1)
+		{
+			data->here_doc = freedom(NULL, data->here_doc, NULL, NULL);
+			g_glob.here_flag = 0;
+			break ;
+		}
 		buffer = readline("here_doc> ");
+		if (buffer == NULL)
+		{
+			ft_putendl_fd("WARNING: here-document delimited by end-of-file", 2);
+			break ;
+		}
 		if (ft_strncmp(buffer, limiter, len + 1) == 0)
 			break ;
 		data->here_doc = ft_strjoin_mod(data->here_doc, buffer, 0);
@@ -175,4 +178,58 @@ void	here_new(t_shell *data)
 	freedom(NULL, buffer, limiter, NULL);
 }
 
+void	here_doc(t_shell *data)
+{
+	int		fd[2];
+	pid_t	pid;
+
+	if (data->here_doc) // protection for multi heredoc call :)
+		data->here_doc = freedom(NULL, data->here_doc, NULL, NULL); // will not need anymore
+	if (pipe(fd) == -1)
+		error("Error (pipe): ", 0);
+	pid = fork();
+	if (pid == -1)
+		error("Error (fork): ", 0);
+	else if (pid == 0)
+	{
+		close(fd[0]);
+		here_child(data, fd);
+		exit(0);
+	}
+	else
+	{
+		close(fd[1]);
+		close(data->fd[0]);
+		data->fd[0] = fd[0];
+		waitpid(pid, NULL, 0);
+	}
+}
+
+void	here_child(t_shell *data, int *fd)
+{
+	char	*buffer;
+	char	*limiter;
+	int		len;
+	
+	limiter = remove_quotes(data->res, 34, 0);
+	limiter = remove_quotes(limiter, 39, 1);
+	len = ft_strlen(limiter);
+	signal(SIGINT, here_exit);
+	while (1)
+	{
+		buffer = readline("here_doc> ");
+		if (buffer == NULL)
+		{
+			ft_putendl_fd("WARNING: here-document delimited by end-of-file", 2);
+			break ;
+		}
+		if (ft_strncmp(buffer, limiter, len + 1) == 0)
+			break ;
+		data->here_doc = ft_strjoin_mod(data->here_doc, buffer, 0);
+		data->here_doc = ft_strjoin_mod(data->here_doc, "\n", 0);
+		free(buffer);
+	}
+	ft_putstr_fd(data->here_doc, fd[1]);
+	freedom(NULL, buffer, limiter, NULL);	
+}
 

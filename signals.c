@@ -6,13 +6,14 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 16:07:02 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 19:15:28 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 15:57:43 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// these are fucked.. need to reset 
+t_glob	g_glob;
+
 void    sig_handler(void)
 {
     signal(SIGINT, ctrlc);
@@ -24,11 +25,32 @@ void    ctrlc(int signum)
 	if (signum == SIGINT)
 	{
 		printf("\n");
-		rl_on_new_line();
 		rl_replace_line("", 0);
+		rl_on_new_line();
 		rl_redisplay();
 	}
-    // signal(signum, ctrlc);
+}
+
+void	interupt(int signum)
+{
+	if (signum == SIGINT)
+	{
+		printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+	}
+}
+
+void	here_exit(int signum)
+{
+	if (signum == SIGINT)
+	{
+		g_glob.here_flag = 1;
+		printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		// rl_redisplay();
+	}
 }
 
 void    quit(char *str)

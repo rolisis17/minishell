@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 18:22:02 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 17:42:30 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ char	*find_path(char *cmd)
 			the_path = ft_strjoin(paths[i], cmd_temp);
 			if (access(the_path, F_OK) == 0)
 			{
-				freesplit(paths);
-				free(cmd_temp);
+				freedom(paths, cmd_temp, NULL, NULL);
+				// free(cmd_temp);
 				return (the_path);
 			}
 			free (the_path);
 		}
-		freesplit(paths);
-		free (cmd_temp);
+		freedom(paths, cmd_temp, NULL, NULL);
+		// free (cmd_temp);
 	}
 	return (NULL);
 }
@@ -91,6 +91,7 @@ void	do_cmd(t_shell *data)
 	}
 	else
 	{
+    	signal(SIGINT, interupt);
 		close(data->fd[0]);
 		close(pipe_fd[1]);
 		data->fd[0] = pipe_fd[0];
@@ -123,8 +124,7 @@ void	data_to_pipe(t_shell *data)
 		data->fd[0] = fd[0];
 		waitpid(pid, NULL, 0);
 	}
-	free(data->here_doc);
-	data->here_doc = NULL;
+	data->here_doc = freedom(NULL, data->here_doc, NULL, NULL);
 }
 
 void	check_builtin(char **cmd)
@@ -141,7 +141,7 @@ void	check_builtin(char **cmd)
 	else if (ft_strncmp(cmd[0], "|", 1) == 0)
 	{
 		// this is not what bash does but we need a bad syntax error of | is first in string
-		// ft_putendl_fd("Nothing to pipe", 2); 
+		// ft_putendl_fd("Nothing to pipe", 2);
 		exit(0);
 	}
 }

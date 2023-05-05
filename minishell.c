@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 19:17:53 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 14:14:51 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,6 @@ int main()
     return 0;
 }
 
-void make_history(char *line)
-{
-	// rl_on_new_line();
-	// rl_replace_line("", 0);
-	// rl_redisplay();
-	add_history(line);
-} // we can take out probs
-
 void	keep_history(char *line, int check)
 {
 	static char **keep;
@@ -56,7 +48,7 @@ void	keep_history(char *line, int check)
 			keep = ft_split(line, 02);
 		else
 			keep = add_split(keep, line, 0);
-		make_history(line);
+		add_history(line);
 	}
 	if (check && keep)
 		hiddenfile_history(keep);
