@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/05 17:42:30 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 18:45:19 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,11 @@ void	execute(char **cmd)
 		path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
-	execve(path, cmd, environ);
+	if (execve(path, cmd, environ) == -1)
+	{
+		perror("execve");
+		freedom(cmd, path, NULL, NULL);
+	}
 }
 
 void	do_cmd(t_shell *data)
