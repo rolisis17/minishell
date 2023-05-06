@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/05 18:45:38 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/06 14:48:54 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct  s_shell
 	int		exit_flag;
 	int		pipe_flag;
 	int		out_flag;
-	int		here_flag;
 	int		exit_status;
 	char	**environ;
 	char	*kurva;
@@ -45,6 +44,7 @@ typedef struct  s_shell
 typedef struct	s_glob
 {
 	int		here_flag;
+	int		here_exit;
 	int		exit_status;
 	char	**environ;
 	char	*kurva;
@@ -69,7 +69,7 @@ void    sig_handler(void);
 void    ctrlc(int signum);
 void    quit(char *str);
 void	interupt(int signum);
-void	here_exit(int signum);
+void 	here_child_exit(int signum);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path, int safe);
@@ -96,7 +96,8 @@ void	parse_input(char *input);
 t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
-void	here_new(t_shell *data);
+int		here_doc(t_shell *data);
+void	here_child(t_shell *data, int *fd);
 // parse 2
 int		space_new(t_shell *data, char *new, int arg);
 int		quote_new(t_shell *data, char *new);
