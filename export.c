@@ -1,0 +1,108 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
+/*   Updated: 2023/05/07 19:30:50 by dcella-d         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+void	export_cmd(char **cmd)
+{
+	char	**args;
+	char	**cmp;
+	int		f;
+
+	f = 0;
+	args = copy_split(g_glob.environ, 1);
+	cmp = NULL;
+	while (cmd[++f])
+	{
+		if (!(export_varmod(cmd[f])) && export_check_equal(cmd[f]) \
+		&& export_check_args(f, cmd))
+		{
+			cmp = ft_split(" ", 02);
+			keep_history(NULL, 1);
+			args = add_split(args, cmd[f], 0);
+		}
+		if (!export_check_equal(cmd[f]))
+			export_print_error(cmd[f]);
+	}
+	export_cmd2(cmd, cmp, args);
+}
+
+void	export_cmd2(char **cmd, char **cmp, char **args)
+{
+	if (g_glob.kurva && cmp)
+	{
+		if (execve(g_glob.kurva, cmp, args) == -1)
+		{
+			perror("execve");
+			cmd = freedom("ss", cmd, args);
+		}
+	}
+	if (!cmd[1])
+		export_get_seclow(g_glob.environ, \
+		export_get_lower(g_glob.environ, NULL));
+}
+
+char	*export_get_lower(char **env, char *to_compare)
+{
+	int	f;
+
+	f = -1;
+	while (env[++f])
+	{
+		if (to_compare && ft_strncmp(env[f], to_compare, \
+		ft_strlen(to_compare)) < 0)
+			to_compare = env[f];
+		if (!to_compare)
+			to_compare = env[f];
+	}
+	very_trash(to_compare, '=', 34);
+	return (to_compare);
+}
+
+char	*export_get_seclow(char **env, char *to_compare)
+{
+	char	*low;
+	int		f;
+
+	f = -1;
+	while (env[++f] && ft_strncmp(env[f], to_compare, \
+	ft_strlen(to_compare)) < 0)
+		;
+	low = export_get_big(g_glob.environ, to_compare);
+	f = -1;
+	while (env[++f] && to_compare)
+	{
+		if (ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) > 0 && \
+		ft_strncmp(env[f], low, ft_strlen(low)) < 0)
+			low = env[f];
+	}
+	very_trash(low, '=', 34);
+	if (low != export_get_big(g_glob.environ, to_compare))
+		export_get_seclow(g_glob.environ, low);
+	return (low);
+}
+
+char	*export_get_big(char **env, char *to_compare)
+{
+	int	f;
+
+	f = -1;
+	while (env[++f])
+	{
+		if (to_compare && ft_strncmp(env[f], to_compare, \
+		ft_strlen(to_compare)) > 0)
+			to_compare = env[f];
+		if (!to_compare)
+			to_compare = env[f];
+	}
+	return (to_compare);
+}

@@ -1,7 +1,7 @@
-SRC = minishell.c cmds.c parse.c signals.c builtins.c parse_2.c splitting.c tools.c parse_3.c \
-storage.c freedom.c
+SRC = minishell.c cmds.c parse.c signals.c parse_2.c splitting.c tools.c parse_3.c \
+storage.c freedom.c cd.c echo.c env.c exit.c export.c export2.c pwd.c unset.c
 BIN = bin
-OBJ = $(SRC:%c=${BIN}/%o)
+OBJ = $(SRC:%.c=${BIN}/%.o)
 NAME = minishell
 HEADERS = minishell.h
 FLAGS = -Wall -Werror -Wextra -g -fPIE
@@ -29,7 +29,7 @@ $(LIBFT) :
 $(BIN) :
 	@mkdir -p $(BIN)
 
-$(BIN)/%o : %c
+$(BIN)/%.o : %.c
 	@$(CC) $(FLAGS) -c $< -o $@
 
 clean :

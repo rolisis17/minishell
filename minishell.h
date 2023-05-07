@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 17:25:17 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/07 20:49:03 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <term.h>
-
-// extern char	**environ;
 
 typedef struct	s_storage
 {
@@ -93,6 +91,7 @@ void	exit_status(char *msg, int check);
 int		check_status(char *msg);
 void	echo_cmd(char **cmd);
 void	export_cmd(char **cmd);
+void	export_cmd2(char **cmd, char **cmp, char **args);
 int		export_varmod(char *cmd);
 char	*export_get_lower(char **env, char *to_compare);
 char	*export_get_seclow(char **env, char *to_compare);
@@ -103,6 +102,7 @@ int		export_check_args(int f, char **cmd);
 void	very_trash(char	*str, int flag, int to_add);
 void	unset_cmd(char **cmd);
 void	set_path_env(char **envp);
+char	*env_shlvl(void);
 //parse
 void	parse_input(char *input);
 t_shell *data_init(void);
@@ -124,6 +124,7 @@ char	*remove_quotes(char *str, int qte, int arg);
 char	**add_split(char **split, char *new, int arg);
 char	**copy_split(char **split, int arg);
 char	**remove_split(char **split, char *rem, int arg);
+char	**modify_split(char **split, char *mod, int arg, int flag);
 char	*split_n_join(char *str, char **split, int spliter);
 //tools
 int		get_cmd(char *str, int arg);

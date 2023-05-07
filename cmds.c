@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 17:24:42 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/07 21:02:22 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 char	*find_path(char *cmd)
 {
@@ -53,7 +53,7 @@ void	bad_cmd(char *path, char **cmd)
 void	execute(char **cmd)
 {
 	char	*path;
-	// char	*ptr;
+	char	**new_env;
 
 	check_builtin(cmd);
 	  // need to do a exit function with free in everything for us to call everytime, Joao just fail minishell evaluation. Leaks when exit.
@@ -65,11 +65,22 @@ void	execute(char **cmd)
 		path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
-	if (execve(path, cmd, g_glob.environ) == -1)
+	new_env = modify_split(g_glob.environ, env_shlvl(), 1, '=');
+	if (execve(path, cmd, new_env) == -1)
 	{
 		perror("execve");
-		freedom("sa", cmd, path);
+		freedom("ssa", cmd, new_env, path);
 	}
+}
+
+// to change SHLVL INSIDE THE PROGRAM;
+
+char	*env_shlvl(void)
+{
+	char	*shlvl;
+
+	shlvl = ft_strjoin("SHLVL=", ft_itoa(ft_atoi(getenv("SHLVL")) + 1));
+	return (shlvl);
 }
 
 void	do_cmd(t_shell *data)
