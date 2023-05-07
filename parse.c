@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/06 14:48:45 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/07 17:18:14 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	parse_input(char *line)
 			i += space_new(data, input + i, 0);
 		if (data->exit_flag == 1 || g_glob.here_exit == 1)
 		{
-			freedom(data->cmd, data->here_doc, input, data);
+			// freedom(); // freee list
+			freedom("lsaaa", data->files, data->cmd, data->here_doc, input, data);
 			g_glob.here_exit = 0;
 			return ;
 		}
@@ -59,10 +60,10 @@ void	parse_input(char *line)
 		else
 		{
 			do_cmd(data);
-			output(data->fd);
+			output(data);
 		}
 	}
-	freedom(data->cmd, data->here_doc, input, data);
+	freedom("saaa", data->cmd, data->here_doc, input, data);
 }
 
 t_shell	*data_init(void)
@@ -78,6 +79,7 @@ t_shell	*data_init(void)
 	data->exit_flag = 0;
 	data->pipe_flag = 0;
 	data->out_flag = 0;
+	data->files = NULL;
 	g_glob.here_flag = 0;
 	return (data);
 }
@@ -107,10 +109,10 @@ int	file_in(t_shell *data, char *new)
 		if (data->fd[0] < 0)
 		{
 			perror("Error");	
-			data->cmd = freedom(data->cmd, NULL, NULL, NULL);
+			data->cmd = freedom("s", data->cmd);
 		}
 	}
-	freedom(NULL, data->res, NULL, NULL);
+	freedom("a", data->res);
 	return (data->len + flag + sp);
 }
 
@@ -134,12 +136,7 @@ int	file_out(t_shell *data, char *new)
 	else 
 	{
 		data->out_flag = 1;
-		if (flag == 1)
-			data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_APPEND, 0644);
-		else
-			data->fd[1] = open(data->res, O_RDWR | O_CREAT | O_TRUNC, 0644);
-		if (data->fd[1] < 0)
-			perror("Error");
+		store_it(data, flag);
 		free(data->res);
 	}
 	return (data->len + flag + sp);
@@ -180,7 +177,7 @@ void	here_child(t_shell *data, int *fd)
 	
 	limiter = remove_quotes(data->res, 34, 0);
 	limiter = remove_quotes(limiter, 39, 1);
-	data->res = freedom(NULL, data->res, NULL, NULL);
+	data->res = freedom("a", data->res);
 	len = ft_strlen(limiter);
 	signal(SIGINT, here_child_exit);
 	while (1)
@@ -195,8 +192,8 @@ void	here_child(t_shell *data, int *fd)
 			break ;
 		check_substr_new(data, buffer, 0);
 		ft_putendl_fd(data->res, fd[1]);
-		data->res = freedom(NULL, NULL, data->res, NULL);
+		data->res = freedom("a", data->res);
 	}
-	data->res = freedom(NULL, buffer, limiter, data->res);	
+	data->res = freedom("aaa", buffer, limiter, data->res);	
 }
 
