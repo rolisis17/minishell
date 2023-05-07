@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 15:57:27 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:25:17 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,14 @@
 
 // extern char	**environ;
 
+typedef struct	s_storage
+{
+	int					flag;
+	char				*name;
+	char				*content;
+	struct s_storage	*next;
+}				t_store;
+
 typedef struct  s_shell
 {
     int     fd[2];
@@ -36,15 +44,16 @@ typedef struct  s_shell
 	int		exit_flag;
 	int		pipe_flag;
 	int		out_flag;
-	int		here_flag;
 	int		exit_status;
 	char	**environ;
 	char	*kurva;
+	t_store	*files;
 }               t_shell;
 
 typedef struct	s_glob
 {
 	int		here_flag;
+	int		here_exit;
 	int		exit_status;
 	char	**environ;
 	char	*kurva;
@@ -69,7 +78,7 @@ void    sig_handler(void);
 void    ctrlc(int signum);
 void    quit(char *str);
 void	interupt(int signum);
-void	here_exit(int signum);
+void 	here_child_exit(int signum);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path, int safe);
@@ -99,13 +108,14 @@ void	parse_input(char *input);
 t_shell *data_init(void);
 int     file_in(t_shell *data, char *new);
 int     file_out(t_shell *data, char *new);
-void	here_new(t_shell *data);
+int		here_doc(t_shell *data);
+void	here_child(t_shell *data, int *fd);
 // parse 2
 int		space_new(t_shell *data, char *new, int arg);
 int		quote_new(t_shell *data, char *new);
 char	*env_var(char *data, int len, char *beg);
 void	pipex(t_shell *data);
-void	output(int *fd);
+void	output(t_shell *data);
 // parse 3
 int		env_var_new(t_shell *data, char *new);
 void	check_substr_new(t_shell *data, char *new, char c);
@@ -114,16 +124,24 @@ char	*remove_quotes(char *str, int qte, int arg);
 char	**add_split(char **split, char *new, int arg);
 char	**copy_split(char **split, int arg);
 char	**remove_split(char **split, char *rem, int arg);
-void	freesplit(char **splited);
 char	*split_n_join(char *str, char **split, int spliter);
 //tools
-void    *freedom(char **ted, void *ze, void *dom, void *style);
 int		get_cmd(char *str, int arg);
 char	*find_quote(char *str, int len);
 void	error(char *msg, int arg);
 char	*ft_strjoin_mod(char *str1, char *str2, int pos);
 char	*char_join(char *str, int c);
 int		strintchr(char	*str, int c);
+// storage
+void	store_it(t_shell *data, int flag);
+void	make_files(t_shell *data);
+void	get_content(t_shell *data);
+t_store	*list_last(t_store *lst);
+// freedom
+void	freesplit(char **splited);
+void    *freedom(const char *str, ...);
+void	free_check(void *freeable);
+void	freelist(t_store *list);
 
 extern t_glob	g_glob;
 

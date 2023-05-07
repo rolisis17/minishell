@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 12:55:32 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:24:57 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int main(int ac, char **av, char **envp)
 			quit(line);
 		if ((check_empty_line(line)))
         	parse_input(line);
-		freedom(NULL, line, NULL, NULL);
+		freedom("a", line);
     }
     return 0;
 }
@@ -75,7 +75,7 @@ int	new_history()
 			{
 				res = ft_strtrim(gnl, "\n");
 				keep_history(res, 0);
-				freedom (NULL, res, gnl, NULL);
+				freedom ("aa", res, gnl);
 				gnl = get_next_line(fd);
 			}
 			if (gnl)

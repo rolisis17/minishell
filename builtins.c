@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 17:10:24 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:24:31 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ void	cd_command(char **splited)
     if (chdir(prev) == -1)
 	{
         perror("chdir");
-        freedom(NULL, prev, NULL, NULL);
+        freedom("a", prev);
         return;
     }
-	freedom(NULL, prev, NULL, NULL);
+	freedom("a", prev);
 	set_pwd();
 	return;
 }
@@ -143,7 +143,7 @@ void    env_cmd(char **cmd)
 	{
         printf("%s\n", g_glob.environ[i]);
 	}
-	cmd = freedom(cmd, NULL, NULL, NULL);
+	cmd = freedom("s", cmd);
 	exit (0);
 } // env command!
 
@@ -176,7 +176,7 @@ void	echo_cmd(char **cmd)
 void	ft_exit(char **cmd)
 {
 	ft_putendl_fd("exit does not take options in this minishell", 2);
-	cmd = freedom(cmd, NULL, NULL, NULL);
+	cmd = freedom("s", cmd);
 	exit(0);
 }
 
@@ -217,8 +217,7 @@ void	export_cmd(char **cmd)
 		if (execve(g_glob.kurva, cmp, args) == -1)
 		{
 			perror("execve");
-			freedom(cmp, NULL, NULL, NULL);
-			freedom(args, NULL, NULL, NULL);
+			cmd = freedom("ss", cmd, args);
 		}
 	}
 	if (!cmd[1])

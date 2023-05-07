@@ -1,9 +1,10 @@
-SRC = minishell.c cmds.c parse.c signals.c builtins.c parse_2.c splitting.c tools.c parse_3.c
+SRC = minishell.c cmds.c parse.c signals.c builtins.c parse_2.c splitting.c tools.c parse_3.c \
+storage.c freedom.c
 BIN = bin
 OBJ = $(SRC:%c=${BIN}/%o)
 NAME = minishell
 HEADERS = minishell.h
-FLAGS = -Wall -Werror -Wextra -g
+FLAGS = -Wall -Werror -Wextra -g -fPIE
 FSAN = -fsanitize=address
 LIBFT = ./libft/libft.a
 LIBCOM = -C ./libft --no-print-directory
@@ -18,7 +19,7 @@ END=\033[0m
 all : $(NAME)
 
 $(NAME) : $(BIN) $(OBJ) | $(LIBFT)
-	@$(CC) $(OBJ) -Llibft -lft -lreadline -o $(NAME)
+	@$(CC) $(OBJ) -Llibft -lft -lreadline -fPIE -o $(NAME)
 	@echo "$(GREEN)>>>> Compiled <<<<$(END)"
 
 $(LIBFT) :

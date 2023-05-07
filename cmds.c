@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/05 19:04:43 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:24:42 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ char	*find_path(char *cmd)
 			the_path = ft_strjoin(paths[i], cmd_temp);
 			if (access(the_path, F_OK) == 0)
 			{
-				freedom(paths, cmd_temp, NULL, NULL);
+				freedom("sa", paths, cmd_temp);
 				// free(cmd_temp);
 				return (the_path);
 			}
 			free (the_path);
 		}
-		freedom(paths, cmd_temp, NULL, NULL);
+		freedom("sa", paths, cmd_temp);
 		// free (cmd_temp);
 	}
 	return (NULL);
@@ -68,7 +68,7 @@ void	execute(char **cmd)
 	if (execve(path, cmd, g_glob.environ) == -1)
 	{
 		perror("execve");
-		freedom(cmd, path, NULL, NULL);
+		freedom("sa", cmd, path);
 	}
 }
 
@@ -128,7 +128,7 @@ void	data_to_pipe(t_shell *data)
 		data->fd[0] = fd[0];
 		waitpid(pid, NULL, 0);
 	}
-	data->here_doc = freedom(NULL, data->here_doc, NULL, NULL);
+	data->here_doc = freedom("a", data->here_doc);
 }
 
 void	check_builtin(char **cmd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   splitting.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 16:59:21 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:26:26 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,19 +104,6 @@ static int word_count(char **split)
     return (i);
 }
 
-void	freesplit(char **splited)
-{
-	int	counter;
-
-	counter = 0;
-	while (splited[counter])
-	{
-		free(splited[counter]);
-		counter++;
-	}
-	free (splited);
-}
-
 char	*split_n_join(char *str, char **split, int spliter)
 {
 	char	*res;
@@ -133,6 +120,6 @@ char	*split_n_join(char *str, char **split, int spliter)
 	}
 	else 
 		res = ft_strdup(split[0]);
-	freedom(split, str, NULL, NULL);
+	freedom("sa", split, str);
 	return (res);
 }

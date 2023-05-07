@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/04 17:42:03 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:19:09 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,12 @@ char	*env_var(char *data, int len, char *beg)
 	if (res == NULL)
 	{
 		res = ft_strjoin_mod(beg, end, 0);
-		freedom(NULL, data, var, end);
+		freedom("aaa", data, var, end);
 		return(res);
 	}	
 	beg = ft_strjoin_mod(beg, res, 0);
 	beg = ft_strjoin_mod(beg, end, 0);
-	freedom(NULL, data, var, end);
+	freedom("aaa", data, var, end);
 	return (beg);
 } 
 
@@ -89,30 +89,40 @@ void	pipex(t_shell *data)
 	{
 		if (ft_strncmp("cd", data->cmd[0], 3) == 0)
 		{
-			data->cmd = freedom(data->cmd, NULL, NULL, NULL);
+			data->cmd = freedom("s", data->cmd);
 			close(data->fd[0]);
 			data->fd[0]= dup(STDIN_FILENO);	
 		}
 		else
 			do_cmd(data);
+		if (data->out_flag == 1)
+			get_content(data);
+		data->out_flag = 0;
 	}
 	else
 	{
 		data->cmd = ft_split("|", 32);
 		do_cmd(data);
 	}
-	data->cmd = freedom(data->cmd, NULL, NULL, NULL);
+	data->cmd = freedom("s", data->cmd);
 	data->cd_flag++;
 }
 
-void	output(int *fd)
+void	output(t_shell *data)
 {
 	char *buf;
 
-	buf = malloc(sizeof(char));
-	while (read(fd[0], buf, 1) > 0)
-		write(fd[1], buf, 1);
-	free(buf);
-	close(fd[0]);
-	close(fd[1]);
+	if (data->out_flag == 1)
+		get_content(data);
+	else
+	{
+		buf = malloc(sizeof(char));
+		while (read(data->fd[0], buf, 1) > 0)
+			write(data->fd[1], buf, 1);
+		free(buf);
+	}
+	if (data->files)
+		make_files(data);
+	close(data->fd[0]);
+	close(data->fd[1]);
 }
