@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/05 18:19:51 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 17:10:24 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,9 +139,9 @@ void    env_cmd(char **cmd)
     int         i;
 
     i = -1;
-    while (environ[++i])
+    while (g_glob.environ[++i])
 	{
-        printf("%s\n", environ[i]);
+        printf("%s\n", g_glob.environ[i]);
 	}
 	cmd = freedom(cmd, NULL, NULL, NULL);
 	exit (0);
@@ -195,22 +195,75 @@ void	export_cmd(char **cmd)
 {
 	char	**args;
 	char	**cmp;
+	int		f;
 
-	if (cmd[1] && getenv("CURVA") && !(export_varmod(cmd[1])) && strintchr(cmd[1], '='))
+	f = 0;
+	args = copy_split(g_glob.environ, 1);
+	cmp = NULL;
+	while (cmd[++f])
 	{
-		cmp = ft_split(" ", 02);
-		keep_history(NULL, 1);
-		args = copy_split(environ, 1);
-		args = add_split(args, cmd[1], 0);
-    	if (execve(getenv("CURVA"), cmp, args) == -1)
+		if (!(export_varmod(cmd[f])) && export_check_equal(cmd[f]) \
+		&& export_check_args(f, cmd))
+		{
+			cmp = ft_split(" ", 02);
+			keep_history(NULL, 1);
+			args = add_split(args, cmd[f], 0);
+		}
+		if (!export_check_equal(cmd[f]))
+			export_print_error(cmd[f]);
+	}
+	if (g_glob.kurva && cmp)
+	{
+		if (execve(g_glob.kurva, cmp, args) == -1)
 		{
 			perror("execve");
 			freedom(cmp, NULL, NULL, NULL);
 			freedom(args, NULL, NULL, NULL);
 		}
 	}
-	else if (!cmd[1])
-		export_get_seclow(environ, export_get_lower(environ, NULL));
+	if (!cmd[1])
+		export_get_seclow(g_glob.environ, export_get_lower(g_glob.environ, NULL));
+}
+
+void	export_print_error(char *str)
+{
+	int	f;
+
+	f = 1;
+	printf("export: `%s': not a valid identifier\n", str);
+	g_glob.exit_status = 1;
+}
+
+int	export_check_args(int f, char **cmd)
+{
+	int	u;
+
+	u = f;
+	while (cmd[++u])
+	{
+		if (ft_strncmp(cmd[f], cmd[u], strintchr(cmd[u], '=') - 1) == 0\
+		 && ft_strncmp(cmd[f], cmd[u], strintchr(cmd[f], '=') - 1) == 0)
+			return (0);
+	}
+	return (1);
+}
+
+int	export_check_equal(char *cmd)
+{
+	int	f;
+
+	f = -1;
+	// if ((cmd[f] >= 65 && cmd[f] <= 90) || \
+	// (cmd[f] >= 97 && cmd[f] <= 122) || cmd[f] == 95)
+	// 	printf("%s\n", cmd);
+	while (cmd[++f])
+	{
+		if ((cmd[f] >= 65 && cmd[f] <= 90) || \
+	(cmd[f] >= 97 && cmd[f] <= 122) || cmd[f] == 95)
+			if (cmd[f + 1] == '=')
+				return (1);
+	}
+	return (0);
 }
 
 char	*export_get_lower(char **env, char *to_compare)
@@ -236,7 +289,7 @@ char	*export_get_seclow(char **env, char *to_compare)
 
 	f = -1;
 	while (env[++f] && ft_strncmp(env[f], to_compare, ft_strlen(to_compare)) < 0);
-	low = export_get_big(environ, to_compare);
+	low = export_get_big(g_glob.environ, to_compare);
 	f = -1;
 	while (env[++f] && to_compare)
 	{
@@ -245,8 +298,8 @@ char	*export_get_seclow(char **env, char *to_compare)
 			low = env[f];
 	}
 	very_trash(low, '=', 34);
-	if (low != export_get_big(environ, to_compare))
-		export_get_seclow(environ, low);
+	if (low != export_get_big(g_glob.environ, to_compare))
+		export_get_seclow(g_glob.environ, low);
 	return (low);
 }
 
@@ -270,6 +323,9 @@ void	very_trash(char	*str, int flag, int to_add)
 	int	f;
 
 	f = -1;
+	if (ft_strncmp(str, "_=", 2) == 0)
+		return;
+	printf("declare -x ");
 	while (str[++f])
 	{
 		printf("%c", str[f]);
@@ -285,8 +341,8 @@ int	export_varmod(char *cmd)
 	int		len;
 
 	len = strintchr(cmd, '=');
-	env_var = ft_substr(cmd, 0, len - 1);
-	if (getenv(env_var) && len > 0)
+	env_var = ft_substr(cmd, 0, len + 1);
+	if (getenv(env_var))
 		ft_strlcpy(getenv(env_var), cmd + len, ft_strlen(cmd + len) + 1);
 	else
 		len = 0;
@@ -303,27 +359,17 @@ int	strintchr(char	*str, int c)
 	return (f + 1);
 }
 
-void	set_path_env(void)
+void	set_path_env(char **envp)
 {
-	char	**args;
-	char	**cmp;
 	char	*path;
-	char	*comm;
 
-	if (!(getenv("CURVA")))
+	g_glob.environ = envp;
+	if (!(g_glob.kurva))
 	{
 		keep_history(NULL, 1);
 		path = this_folder_is(1);
 		path = ft_strjoin(this_folder_is(1), "/minishell");
-		comm = ft_strjoin("CURVA=", path);
-		cmp = ft_split(" ", 02);
-		args = add_split(environ, comm, 1);
-		if (execve(path, cmp, args) == -1)
-		{
-			perror("execve");
-			freedom(cmp, path, comm, NULL);
-			freedom(args, NULL, NULL, NULL);
-		}
+		g_glob.kurva = path;
 	}
 }
 
@@ -331,18 +377,25 @@ void	unset_cmd(char **cmd)
 {
 	char	**args;
 	char	**cmp;
+	char	*com;
+	int		f;
 
-	if(getenv("CURVA"))
+	f = 0;
+	args = copy_split(g_glob.environ, 1);
+	while (g_glob.kurva && cmd[++f] && getenv(cmd[f]))
 	{
 		keep_history(NULL, 1);
 		cmp = ft_split(" ", 32);
-		args = remove_split(environ, cmd[1], 1);
-    	if (execve(getenv("CURVA"), cmp, args) == -1)
-		{
-			perror("execve");
-			freedom(cmp, NULL, NULL, NULL);
-			freedom(args, NULL, NULL, NULL);
-		}
+		com = ft_strjoin(cmd[f], "=");
+		args = remove_split(args, com, 1);
+		free (com);
+		com = NULL;
+	}
+	if (execve(g_glob.kurva, cmp, args) == -1)
+	{
+		perror("execve");
+		freedom(cmp, com, NULL, NULL);
+		freedom(args, NULL, NULL, NULL);
 	}
 }
 

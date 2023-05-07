@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/05 18:45:38 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 15:57:27 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <signal.h>
 # include <term.h>
 
-extern char	**environ;
+// extern char	**environ;
 
 typedef struct  s_shell
 {
@@ -55,7 +55,7 @@ char	*check_getenv(char	*str);
 void	make_history(char *line);
 int		check_empty_line(char *line);
 void	keep_history(char *line, int check);
-void	new_history();
+int		new_history();
 void	hiddenfile_history(char **keep);
 //cmds
 char	*find_path(char *cmd);
@@ -88,9 +88,12 @@ int		export_varmod(char *cmd);
 char	*export_get_lower(char **env, char *to_compare);
 char	*export_get_seclow(char **env, char *to_compare);
 char	*export_get_big(char **env, char *to_compare);
+int		export_check_equal(char *cmd);
+void	export_print_error(char *str);
+int		export_check_args(int f, char **cmd);
 void	very_trash(char	*str, int flag, int to_add);
 void	unset_cmd(char **cmd);
-void	set_path_env(void);
+void	set_path_env(char **envp);
 //parse
 void	parse_input(char *input);
 t_shell *data_init(void);

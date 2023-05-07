@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/05 18:12:09 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/05 19:00:02 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,58 +178,58 @@ void	here_new(t_shell *data)
 	freedom(NULL, buffer, limiter, NULL);
 }
 
-void	here_doc(t_shell *data)
-{
-	int		fd[2];
-	pid_t	pid;
+// void	here_doc(t_shell *data)
+// {
+// 	int		fd[2];
+// 	pid_t	pid;
 
-	if (data->here_doc) // protection for multi heredoc call :)
-		data->here_doc = freedom(NULL, data->here_doc, NULL, NULL); // will not need anymore
-	if (pipe(fd) == -1)
-		error("Error (pipe): ", 0);
-	pid = fork();
-	if (pid == -1)
-		error("Error (fork): ", 0);
-	else if (pid == 0)
-	{
-		close(fd[0]);
-		here_child(data, fd);
-		exit(0);
-	}
-	else
-	{
-		close(fd[1]);
-		close(data->fd[0]);
-		data->fd[0] = fd[0];
-		waitpid(pid, NULL, 0);
-	}
-}
+// 	if (data->here_doc) // protection for multi heredoc call :)
+// 		data->here_doc = freedom(NULL, data->here_doc, NULL, NULL); // will not need anymore
+// 	if (pipe(fd) == -1)
+// 		error("Error (pipe): ", 0);
+// 	pid = fork();
+// 	if (pid == -1)
+// 		error("Error (fork): ", 0);
+// 	else if (pid == 0)
+// 	{
+// 		close(fd[0]);
+// 		here_child(data, fd);
+// 		exit(0);
+// 	}
+// 	else
+// 	{
+// 		close(fd[1]);
+// 		close(data->fd[0]);
+// 		data->fd[0] = fd[0];
+// 		waitpid(pid, NULL, 0);
+// 	}
+// }
 
-void	here_child(t_shell *data, int *fd)
-{
-	char	*buffer;
-	char	*limiter;
-	int		len;
+// void	here_child(t_shell *data, int *fd)
+// {
+// 	char	*buffer;
+// 	char	*limiter;
+// 	int		len;
 	
-	limiter = remove_quotes(data->res, 34, 0);
-	limiter = remove_quotes(limiter, 39, 1);
-	len = ft_strlen(limiter);
-	signal(SIGINT, here_exit);
-	while (1)
-	{
-		buffer = readline("here_doc> ");
-		if (buffer == NULL)
-		{
-			ft_putendl_fd("WARNING: here-document delimited by end-of-file", 2);
-			break ;
-		}
-		if (ft_strncmp(buffer, limiter, len + 1) == 0)
-			break ;
-		data->here_doc = ft_strjoin_mod(data->here_doc, buffer, 0);
-		data->here_doc = ft_strjoin_mod(data->here_doc, "\n", 0);
-		free(buffer);
-	}
-	ft_putstr_fd(data->here_doc, fd[1]);
-	freedom(NULL, buffer, limiter, NULL);	
-}
+// 	limiter = remove_quotes(data->res, 34, 0);
+// 	limiter = remove_quotes(limiter, 39, 1);
+// 	len = ft_strlen(limiter);
+// 	signal(SIGINT, here_exit);
+// 	while (1)
+// 	{
+// 		buffer = readline("here_doc> ");
+// 		if (buffer == NULL)
+// 		{
+// 			ft_putendl_fd("WARNING: here-document delimited by end-of-file", 2);
+// 			break ;
+// 		}
+// 		if (ft_strncmp(buffer, limiter, len + 1) == 0)
+// 			break ;
+// 		data->here_doc = ft_strjoin_mod(data->here_doc, buffer, 0);
+// 		data->here_doc = ft_strjoin_mod(data->here_doc, "\n", 0);
+// 		free(buffer);
+// 	}
+// 	ft_putstr_fd(data->here_doc, fd[1]);
+// 	freedom(NULL, buffer, limiter, NULL);	
+// }
 

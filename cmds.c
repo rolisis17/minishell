@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/05 18:45:19 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/05 19:04:43 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	execute(char **cmd)
 		path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
-	if (execve(path, cmd, environ) == -1)
+	if (execve(path, cmd, g_glob.environ) == -1)
 	{
 		perror("execve");
 		freedom(cmd, path, NULL, NULL);

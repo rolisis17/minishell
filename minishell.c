@@ -6,20 +6,20 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/05 18:45:23 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/07 12:55:32 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// int ac, char **av, char **envp
-int main()
+int main(int ac, char **av, char **envp)
 {
     char *line;
 
-	set_path_env();
-	new_history();
-	// ft_printf("\033[2J\033[1;1H");
+	if (av && ac)
+	set_path_env(envp);
+	if (!new_history())
+		ft_printf("\033[2J\033[1;1H");
 	line = NULL;
     while (1)
 	{
@@ -53,7 +53,7 @@ void	keep_history(char *line, int check)
 		hiddenfile_history(keep);
 }
 
-void	new_history()
+int	new_history()
 {
 	char	*gnl;
 	char	*res;
@@ -61,9 +61,10 @@ void	new_history()
 	int		fd;
 
 	hist = NULL;
-	if (getenv("CURVA"))
+	fd = 0;
+	if (g_glob.kurva)
 	{
-		hist = ft_strdup(getenv("CURVA"));
+		hist = ft_strdup(g_glob.kurva);
 		hist = prev_folder(hist, 1);
 		hist = ft_strjoin_mod(hist, ".minihist", 0);
 		if (access(hist, F_OK) == 0)
@@ -87,10 +88,12 @@ void	new_history()
 					free (hist);
 				exit(EXIT_FAILURE);
 			}
+			fd = 600;
 		}
 	}
 	if (hist)
 		free (hist);
+	return (fd);
 }
 
 void	hiddenfile_history(char **keep)
