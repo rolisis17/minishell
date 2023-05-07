@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 17:04:39 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/07 17:24:42 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	execute(char **cmd)
 		path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
-	if (execve(path, cmd, environ) == -1)
+	if (execve(path, cmd, g_glob.environ) == -1)
 	{
 		perror("execve");
 		freedom("sa", cmd, path);
