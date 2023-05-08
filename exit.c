@@ -3,20 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:31:04 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/08 09:41:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exit(char **cmd)
+void	ft_exit(t_shell *data, char *input, char *line) // test what exit does in pipes ...
 {
-	ft_putendl_fd("exit does not take options in this minishell", 2);
-	cmd = freedom("s", cmd);
-	exit(0);
+	data->len = 0;
+	if (!data->cmd[1])
+	{
+		freedom("saaa", data->cmd, data->here_doc, input, data);
+		quit(line);
+	}
+	if (data->cmd[2])
+	{
+		ft_putendl_fd("exit: too many arguments", 2);
+		return ; // find right error code and add to exit status
+	}
+	while (data->cmd[1][data->len])
+	{
+		if (ft_isdigit(data->cmd[1][data->len]) == 0)
+		{
+			write(1, "exit\n", 5);
+			ft_putendl_fd("exit: numeric argument required", 2); 
+			freedom("saaaa", data->cmd, data->here_doc, input, data, line);
+    		exit (0);
+		}
+		data->len++;
+	}
+	if (data->cmd[1])
+		g_glob.exit_status = ft_atoi(data->cmd[1]);
+	else
+		g_glob.exit_status = EXIT_SUCCESS;
+	freedom("saaaa", data->cmd, data->here_doc, input, data, line);
+	write(1, "exit\n", 5);
+    exit (g_glob.exit_status);
 }
 
 int	exit_error(char *str, int check)

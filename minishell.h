@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 20:49:03 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/08 09:27:46 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char    *relative_cd(char *str);
 char	*relative_cd2(char *str);
 void	cd_command(char **splited);
 void    env_cmd(char **cmd);
-void	ft_exit(char **cmd);
+void	ft_exit(t_shell *data, char *input, char *line);
 void	exit_status(char *msg, int check);
 int		check_status(char *msg);
 void	echo_cmd(char **cmd);
@@ -114,7 +114,7 @@ void	here_child(t_shell *data, int *fd);
 int		space_new(t_shell *data, char *new, int arg);
 int		quote_new(t_shell *data, char *new);
 char	*env_var(char *data, int len, char *beg);
-void	pipex(t_shell *data);
+int		pipex(t_shell *data, char *new);
 void	output(t_shell *data);
 // parse 3
 int		env_var_new(t_shell *data, char *new);

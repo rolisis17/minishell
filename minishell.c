@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 17:24:57 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/08 09:08:08 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ int main(int ac, char **av, char **envp)
 		line = readline("> ");
 		keep_history(line, 0);
 		if (line == NULL)
-			quit(line);
-		if (ft_strncmp(line, "exit", 5) == 0)
 			quit(line);
 		if ((check_empty_line(line)))
         	parse_input(line);

@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:58:38 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 17:01:09 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/08 08:15:32 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void	freesplit(char **splited)
 	int	counter;
 
 	counter = 0;
+	if (!splited)
+		return ;
 	while (splited[counter])
 	{
 		free(splited[counter]);

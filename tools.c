@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 16:59:58 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/08 10:49:04 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,10 @@ void	error(char *msg, int arg)
 		exit(-1);
 	}
 	else if (arg == 1)
+	{
 		ft_putstr_fd("Invalid command: ", 2);
+		g_glob.exit_status = 127; // not working
+	}
 	ft_putendl_fd(msg, 2);
 }
 

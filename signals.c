@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 16:07:02 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/06 14:26:23 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/08 09:27:32 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,5 @@ void    quit(char *str)
     free(str);
 	write(1, "exit\n", 5);
 		g_glob.exit_status = EXIT_SUCCESS;
-    exit (EXIT_SUCCESS);
+    exit (g_glob.exit_status);
 }

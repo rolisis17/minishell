@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 21:10:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2022/12/28 17:32:43 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/08 10:37:17 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_putendl_fd(char *str, int fd)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (str && str[i])
 	{
 		write(fd, &str[i], 1);
 		i++;
@@ -25,7 +25,7 @@ void	ft_putendl_fd(char *str, int fd)
 	write(fd, "\n", 1);
 }
 
-/* int main()
-{
-    ft_putendl_fd(str, 1);
-} */
+// int main()
+// {
+//     ft_putendl_fd(NULL, 2);
+// } 

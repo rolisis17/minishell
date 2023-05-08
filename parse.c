@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 17:26:16 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/08 10:55:06 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	parse_input(char *line)
 		while (input[i] == 32)
 			i++;
 		if (input[i] == '|')
-			pipex(data);
+			i += pipex(data, input + i);
 		else if (input[i] == '<')
 			i += file_in(data, input + i + 1); // need to check how there work with quotes and $ does it need the checker?
 		else if (input[i] == '>')
@@ -37,18 +37,18 @@ void	parse_input(char *line)
 			i += space_new(data, input + i, 0);
 		if (data->exit_flag == 1 || g_glob.here_exit == 1)
 		{
-			// freedom(); // freee list
 			freedom("lsaaa", data->files, data->cmd, data->here_doc, input, data);
 			g_glob.here_exit = 0;
 			return ;
 		}
-		// else if (input[i] == "$?") // what even is this
 		i++;
 	}
 	// set_env(data);
 	if (data->cmd)
 	{
-		if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
+		if (ft_strncmp(data->cmd[0], "exit", 5) == 0)
+			ft_exit(data, input, line);
+		else if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
 		{
 			if (data->cd_flag == 0)
 				cd_command(data->cmd);
@@ -142,9 +142,9 @@ int	file_out(t_shell *data, char *new)
 	return (data->len + flag + sp);
 }
 
-int	here_doc(t_shell *data)
-{
-	int		fd[2];
+int	here_doc(t_shell *data) // need feature: when error dont create file out
+{ //cat << NO > out | cat << YES > out2 with ctrl+c
+	int		fd[2]; // wtf my pc ctrlc stops any file from being created in heredoc
 	pid_t	pid;
 
 	g_glob.here_flag = 1;
@@ -163,7 +163,7 @@ int	here_doc(t_shell *data)
 	{
 		close(fd[1]);
 		close(data->fd[0]);
-		data->fd[0] = fd[0]; // if heredoc already exist dont use current pipe as input
+		data->fd[0] = fd[0];
 		waitpid(pid, NULL, 0);
 	}
 	return (0);
@@ -190,7 +190,10 @@ void	here_child(t_shell *data, int *fd)
 		}
 		if (ft_strncmp(buffer, limiter, len + 1) == 0)
 			break ;
-		check_substr_new(data, buffer, 0);
+		if (ft_strlen(buffer) == 0)
+			free(buffer);
+		else
+			check_substr_new(data, buffer, 0);
 		ft_putendl_fd(data->res, fd[1]);
 		data->res = freedom("a", data->res);
 	}

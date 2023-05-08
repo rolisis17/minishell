@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 21:02:22 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/08 09:41:38 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,11 @@ char	*find_path(char *cmd)
 			if (access(the_path, F_OK) == 0)
 			{
 				freedom("sa", paths, cmd_temp);
-				// free(cmd_temp);
 				return (the_path);
 			}
 			free (the_path);
 		}
 		freedom("sa", paths, cmd_temp);
-		// free (cmd_temp);
 	}
 	return (NULL);
 }
@@ -46,8 +44,8 @@ void	bad_cmd(char *path, char **cmd)
 	ft_putstr_fd("Invalid command: ", 2);
 	ft_putendl_fd(cmd[0], 2);
 	exit(1);
-	// freesplit(cmd);
-	free(path);
+	// freesplit(cmd); 
+	free(path); // fix this... how can free after exit
 }
 
 void	execute(char **cmd)
@@ -151,12 +149,4 @@ void	check_builtin(char **cmd)
 		env_cmd(cmd);
 	else if (ft_strncmp(cmd[0], "echo", 5) == 0)
 		echo_cmd(cmd);
-	else if (ft_strncmp(cmd[0], "exit", 5) == 0)
-		ft_exit(cmd); // to say there are no options
-	else if (ft_strncmp(cmd[0], "|", 1) == 0)
-	{
-		// this is not what bash does but we need a bad syntax error of | is first in string
-		// ft_putendl_fd("Nothing to pipe", 2);
-		exit(0);
-	}
 }

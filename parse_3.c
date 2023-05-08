@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 15:43:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/06 14:45:18 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/08 09:54:55 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,12 @@ int	env_var_new(t_shell *data, char *new)
 	res = getenv(var);
 	if (res == NULL)
 	{
+		if (ft_strncmp("?", var, 2) == 0)
+			data->res = ft_strjoin_mod(data->res, ft_itoa(g_glob.exit_status), 0);
 		free(var);
 		return(var_len);
 	}
-	data->res =  ft_strjoin_mod(data->res, res, 0);
+	data->res = ft_strjoin_mod(data->res, res, 0);
 	free(var);
 	return(var_len);
 }

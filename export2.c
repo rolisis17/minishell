@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:30:47 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/08 07:47:59 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,9 @@ int	export_check_equal(char *cmd)
 
 void	export_print_error(char *str)
 {
-	int	f;
+	// int	f;
 
-	f = 1;
+	// f = 1;
 	printf("export: `%s': not a valid identifier\n", str);
 	g_glob.exit_status = 1;
 }
