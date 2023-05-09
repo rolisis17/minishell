@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/08 09:41:13 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 14:13:26 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	ft_exit(t_shell *data, char *input, char *line) // test what exit does in p
 		g_glob.exit_status = EXIT_SUCCESS;
 	freedom("saaaa", data->cmd, data->here_doc, input, data, line);
 	write(1, "exit\n", 5);
-    exit (g_glob.exit_status);
+    exit (g_glob.exit_status%255);
 }
 
 int	exit_error(char *str, int check)

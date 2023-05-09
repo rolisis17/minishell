@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/08 09:54:07 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 12:55:49 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,6 @@ int	pipex(t_shell *data, char *new)
 		ft_putendl_fd("Syntax Error", 2);
 		g_glob.exit_status = 2; // maybe also need to stop the rest of cmds
 		return (data->len - 1);
-		// data->cmd = ft_split("|", 32);
-		// printf("THIS:%s\n", data->cmd[0]);
-		// do_cmd(data);
-		// data->pipe_flag = 0;
 	}
 	if (ft_strncmp("cd", data->cmd[0], 3) == 0)
 	{

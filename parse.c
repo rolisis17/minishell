@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/08 10:55:06 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 14:15:44 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void	parse_input(char *line)
 		}
 		i++;
 	}
-	// set_env(data);
 	if (data->cmd)
 	{
 		if (ft_strncmp(data->cmd[0], "exit", 5) == 0)
@@ -164,7 +163,11 @@ int	here_doc(t_shell *data) // need feature: when error dont create file out
 		close(fd[1]);
 		close(data->fd[0]);
 		data->fd[0] = fd[0];
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &g_glob.exit_status, 0);
+		if (g_glob.exit_status%255 == 130)
+			g_glob.here_exit = 1;
+		// printf("STAT:%i\n", status);
+		// printf("33280:%i\n", (33280%255));
 	}
 	return (0);
 }

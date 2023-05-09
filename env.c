@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:31:06 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/09 14:27:19 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,15 @@ void	env_cmd(char **cmd)
 
 void	set_path_env(char **envp)
 {
-	char	*path;
+	// char	*path;
 
 	g_glob.environ = envp;
-	if (!(g_glob.kurva))
+	g_glob.exit_status = 0;
+	if (getenv("_"))
 	{
 		keep_history(NULL, 1);
-		path = this_folder_is(1);
-		path = ft_strjoin(this_folder_is(1), "/minishell");
-		g_glob.kurva = path;
+		// path = this_folder_is(1);
+		// path = ft_strjoin(this_folder_is(1), "/minishell");
+		g_glob.kurva = getenv("_");
 	}
 }
