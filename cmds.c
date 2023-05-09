@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/08 09:41:38 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:40:41 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	bad_cmd(char *path, char **cmd)
 {
 	ft_putstr_fd("Invalid command: ", 2);
 	ft_putendl_fd(cmd[0], 2);
-	exit(1);
+	exit(127);
 	// freesplit(cmd); 
 	free(path); // fix this... how can free after exit
 }
@@ -108,7 +108,7 @@ void	do_cmd(t_shell *data)
 		close(data->fd[0]);
 		close(pipe_fd[1]);
 		data->fd[0] = pipe_fd[0];
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &g_glob.exit_status, 0);
 	}
 }
 

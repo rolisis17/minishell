@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 16:07:02 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 13:26:08 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:50:31 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@ void    ctrlc(int signum)
 {
 	if (signum == SIGINT)
 	{
-		if (g_glob.here_flag == 1) // maybe no need
-		{
-			g_glob.here_exit = 1;
+		if (g_glob.here_flag == 1)
 			g_glob.exit_status = 130;
-		}
 		else
 		{
 			printf("\n");
@@ -52,7 +49,6 @@ void here_child_exit(int signum)
 {
 	if (signum == SIGINT)
 	{
-		// g_glob.here_exit = 1;
 		printf("\n");
 		exit(130);
 	}

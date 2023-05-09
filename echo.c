@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:43:00 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/09 17:32:21 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,5 @@ int	strintchr(char	*str, int c)
 
 	f = -1;
 	while (str[++f] != c);
-	return (f + 1);
+	return (f);
 }

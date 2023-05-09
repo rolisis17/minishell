@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 15:43:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/08 09:54:55 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:35:08 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	env_var_new(t_shell *data, char *new)
 	if (res == NULL)
 	{
 		if (ft_strncmp("?", var, 2) == 0)
-			data->res = ft_strjoin_mod(data->res, ft_itoa(g_glob.exit_status), 0);
+			data->res = ft_strjoin_mod(data->res, ft_itoa(g_glob.exit_status%255), 0);
 		free(var);
 		return(var_len);
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 12:55:49 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:34:50 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*env_var(char *data, int len, char *beg)
 	if (res == NULL)
 	{
 		if (ft_strncmp("?", var, 2) == 0)
-			beg = ft_strjoin_mod(beg, ft_itoa(g_glob.exit_status), 0);
+			beg = ft_strjoin_mod(beg, ft_itoa(g_glob.exit_status%255), 0);
 		res = ft_strjoin_mod(beg, end, 0);
 		freedom("aaa", data, var, end);
 		return(res);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/09 14:15:44 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 16:48:22 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,9 @@ void	parse_input(char *line)
 			i += file_out(data, input + i + 1); 
 		else if (input[i] && input[i] != 32)
 			i += space_new(data, input + i, 0);
-		if (data->exit_flag == 1 || g_glob.here_exit == 1)
+		if (data->exit_flag == 1)
 		{
 			freedom("lsaaa", data->files, data->cmd, data->here_doc, input, data);
-			g_glob.here_exit = 0;
 			return ;
 		}
 		i++;
@@ -141,9 +140,9 @@ int	file_out(t_shell *data, char *new)
 	return (data->len + flag + sp);
 }
 
-int	here_doc(t_shell *data) // need feature: when error dont create file out
-{ //cat << NO > out | cat << YES > out2 with ctrl+c
-	int		fd[2]; // wtf my pc ctrlc stops any file from being created in heredoc
+int	here_doc(t_shell *data)
+{
+	int		fd[2];
 	pid_t	pid;
 
 	g_glob.here_flag = 1;
@@ -165,9 +164,7 @@ int	here_doc(t_shell *data) // need feature: when error dont create file out
 		data->fd[0] = fd[0];
 		waitpid(pid, &g_glob.exit_status, 0);
 		if (g_glob.exit_status%255 == 130)
-			g_glob.here_exit = 1;
-		// printf("STAT:%i\n", status);
-		// printf("33280:%i\n", (33280%255));
+			data->exit_flag = 1;
 	}
 	return (0);
 }

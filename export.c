@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:30:50 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/09 19:49:28 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,33 +23,35 @@ void	export_cmd(char **cmd)
 	cmp = NULL;
 	while (cmd[++f])
 	{
-		if (!(export_varmod(cmd[f])) && export_check_equal(cmd[f]) \
+		if (export_check_equal(cmd[f]) == 1 && !(export_varmod(cmd[f])) \
 		&& export_check_args(f, cmd))
 		{
 			cmp = ft_split(" ", 02);
-			keep_history(NULL, 1);
 			args = add_split(args, cmd[f], 0);
 		}
 		if (!export_check_equal(cmd[f]))
 			export_print_error(cmd[f]);
 	}
-	export_cmd2(cmd, cmp, args);
-}
-
-void	export_cmd2(char **cmd, char **cmp, char **args)
-{
-	if (g_glob.kurva && cmp)
+	if (cmp)
 	{
+		keep_history(NULL, 1);
 		if (execve(g_glob.kurva, cmp, args) == -1)
 		{
 			perror("execve");
 			cmd = freedom("ss", cmd, args);
 		}
 	}
+	// if (cmp && args)
+	// 	strintchr("fuck", 'k');
 	if (!cmd[1])
 		export_get_seclow(g_glob.environ, \
 		export_get_lower(g_glob.environ, NULL));
+	// export_cmd2(cmd, &cmp, args);
 }
+
+// void	export_cmd2(char **cmd, char ***cmp, char **args)
+// {
+// }
 
 char	*export_get_lower(char **env, char *to_compare)
 {

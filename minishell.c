@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 12:30:49 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 20:00:05 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int main(int ac, char **av, char **envp)
     while (1)
 	{
 		sig_handler();
-		line = readline("> ");
+		line = readline("\033[0;95mminishit\033[0m > ");
 		keep_history(line, 0);
 		if (line == NULL)
 			quit(line);
@@ -96,14 +96,19 @@ int	new_history()
 
 void	hiddenfile_history(char **keep)
 {
-	int	fd;
-	int	counter;
+	int		fd;
+	int		counter;
+	char	*hist;
 
 	counter = -1;
-	fd = open(".minihist", O_RDWR | O_CREAT | O_TRUNC, 0777);
+	hist = ft_strdup(g_glob.kurva);
+	hist = prev_folder(hist, 1);
+	hist = ft_strjoin_mod(hist, ".minihist", 0);
+	fd = open(hist, O_RDWR | O_CREAT | O_TRUNC, 0777);
 	while (keep[++counter])
 		ft_putendl_fd(keep[counter], fd);
 	close(fd);
+	free (hist);
 }
 
 int	check_empty_line(char *line)

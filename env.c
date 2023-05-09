@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/09 14:27:19 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 17:43:47 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ void	set_path_env(char **envp)
 		// path = this_folder_is(1);
 		// path = ft_strjoin(this_folder_is(1), "/minishell");
 		g_glob.kurva = getenv("_");
+		printf("%s\n", g_glob.kurva);
 	}
 }

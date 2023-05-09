@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/08 09:27:46 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/09 18:40:21 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct  s_shell
 typedef struct	s_glob
 {
 	int		here_flag;
-	int		here_exit;
 	int		exit_status;
 	char	**environ;
 	char	*kurva;
@@ -91,7 +90,7 @@ void	exit_status(char *msg, int check);
 int		check_status(char *msg);
 void	echo_cmd(char **cmd);
 void	export_cmd(char **cmd);
-void	export_cmd2(char **cmd, char **cmp, char **args);
+void	export_cmd2(char **cmd, char ***cmp, char **args);
 int		export_varmod(char *cmd);
 char	*export_get_lower(char **env, char *to_compare);
 char	*export_get_seclow(char **env, char *to_compare);
