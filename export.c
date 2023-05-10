@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:44:30 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:51:13 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ void	export_cmd(char **cmd)
 			cmd = freedom("ss", cmd, args);
 		}
 	}
-	// if (cmp && args)
-	// 	strintchr("fuck", 'k');
 	if (!cmd[1])
 		export_get_seclow(g_glob.environ, \
 		export_get_lower(g_glob.environ, NULL));

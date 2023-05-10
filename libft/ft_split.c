@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/04 09:30:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/03 08:40:19 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/10 20:49:58 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	**ft_split(char const *s, char c)
 	{
 		split = ft_calloc(2, sizeof(char *));
 		split[0] = ft_calloc(1, sizeof(char));
-		return(split);
+		return (split);
 	}
 	split = (char **) malloc(sizeof(char *) * (make_str(s, NULL, c) + 1));
 	if (!split)

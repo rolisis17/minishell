@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 20:44:40 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:53:17 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,14 @@ int main(int ac, char **av, char **envp)
 			quit(line);
 		freedom("a", line); 
 		if ((check_empty_line(input))) // fix "."
-        	parse_input(input);
+			parse_input(input);
     }
-    return 0;
+	return (0);
 }
 
 void	keep_history(char *line, int check)
 {
-	static char **keep;
+	static char	**keep;
 
 	if (!check)
 	{
@@ -54,7 +54,7 @@ void	keep_history(char *line, int check)
 		hiddenfile_history(keep);
 }
 
-int	new_history()
+int	new_history(void)
 {
 	char	*gnl;
 	char	*res;

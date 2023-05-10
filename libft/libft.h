@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/02 12:16:08 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/04/27 15:24:48 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/10 20:50:46 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ int		ft_putnbr_fd(int nb, int fd);
 char	*get_next_line(int fd);
 // ft_printf
 int		ft_printf(const char *input, ...);
-
-
 
 // Bonus
 typedef struct s_list
