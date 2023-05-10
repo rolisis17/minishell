@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 15:58:38 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:44:24 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	cd_command(char **splited)
 	oldpwd = set_oldpwd();
 	prev = NULL;
 	if (splited[1] && splited[2])
-		error("cd: too many arguments", 0);
+		error("cd: too many arguments", 0); // find error code to send as second param!
 	prev = relative_cd(splited[1]);
 	if (chdir(prev) == -1)
 	{

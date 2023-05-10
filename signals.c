@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 16:07:02 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 16:50:31 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 11:48:40 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    sig_handler(void)
+void	sig_handler(void)
 {
-    signal(SIGINT, ctrlc);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, ctrlc);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-void    ctrlc(int signum)
+void	ctrlc(int signum)
 {
 	if (signum == SIGINT)
 	{
@@ -45,7 +45,7 @@ void	interupt(int signum)
 	}
 }
 
-void here_child_exit(int signum)
+void	here_child_exit(int signum)
 {
 	if (signum == SIGINT)
 	{
@@ -54,10 +54,11 @@ void here_child_exit(int signum)
 	}
 }
 
-void    quit(char *str)
+void	quit(char *str)
 {
-    free(str);
+	if (str)
+		free(str);
 	write(1, "exit\n", 5);
 		g_glob.exit_status = EXIT_SUCCESS;
-    exit (g_glob.exit_status);
+	exit (g_glob.exit_status);
 }

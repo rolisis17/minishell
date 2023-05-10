@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 10:54:42 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/07 17:15:20 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/10 11:35:28 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 static void	add_back(t_store **lst, t_store *new);
 
-
 void	store_it(t_shell *data, int flag)
 {
 	t_store	*node;
 
 	node = ft_calloc(1, sizeof(t_store));
 	if (!node)
-		return ; // probs need malloc error
+		return ;// probs need malloc error
 	node->flag = flag;
 	node->name = ft_strdup(data->res);
 	add_back(&data->files, node);
@@ -48,17 +47,16 @@ void	make_files(t_shell *data)
 {
 	t_store	*temp;
 	int		fd;
-	
-	while(data->files)
+
+	while (data->files)
 	{
 		temp = data->files;
-		// printf("HERE\n");
 		if (data->files->flag == 1)
 			fd = open(data->files->name, O_RDWR | O_CREAT | O_APPEND, 0644);
 		else
 			fd = open(data->files->name, O_RDWR | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
-			perror("Error");
+			error("Error", 1);
 		if (data->files->content != NULL)
 		{
 			ft_putstr_fd(data->files->content, fd);
