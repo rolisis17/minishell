@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:20:51 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:47:25 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	env_cmd(char **cmd)
 void	set_path_env(char **envp)
 {
 	g_glob.environ = envp;
-	printf("%s\n", this_folder_is(1));
 	g_glob.exit_status = 0;
 	if (getenv("_"))
 	{

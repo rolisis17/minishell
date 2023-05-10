@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 20:44:58 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:46:27 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,16 +71,13 @@ void 	here_child_exit(int signum);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path, int safe);
-char	*set_oldpwd(void);
-char	*set_pwd(void);
 void	set_pwd_noenv(char *newpwd, char *oldpwd);
-char    *relative_cd(char *str);
 void	here_child_exit(int signum);
 void	quit(char *str);
 //pwd
 char	*this_folder_is(int check);
-void	set_oldpwd(void);
-void	set_pwd(void);
+char	*set_oldpwd(void);
+char	*set_pwd(void);
 //cd
 char	*relative_cd(char *str);
 char	*relative_cd2(char *str);
