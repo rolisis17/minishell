@@ -3,60 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   parse_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 15:43:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 16:35:08 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 15:42:07 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-int	env_var_new(t_shell *data, char *new)
+int	env_var(t_shell *data, char *new)
 {
 	char	*var;
 	char	*res;
 	int		var_len;
-	
-	var_len = get_cmd(new, -1);
-	var = ft_substr(new, 1, var_len - 1);
+
+	var = get_var(data, new);
+	if (var == NULL)
+		return(2);
+	var_len = ft_strlen(var);
+	if (ft_strncmp(var, "$", 2) == 0)
+	{
+		data->res = ft_strjoin_mod(data->res, var, 0);
+		return (1);
+	}
 	res = getenv(var);
 	if (res == NULL)
 	{
-		if (ft_strncmp("?", var, 2) == 0)
-			data->res = ft_strjoin_mod(data->res, ft_itoa(g_glob.exit_status%255), 0);
 		free(var);
-		return(var_len);
+		return (var_len + 1);
 	}
 	data->res = ft_strjoin_mod(data->res, res, 0);
 	free(var);
-	return(var_len);
+	return (var_len + 1);
 }
 
-void	check_substr_new(t_shell *data, char *new, char c)
+void	check_substr(t_shell *data, char *new, char c)
 {
-	char	*beg;
 	int		len;
 
+	len = 0;
 	if (c == 39)
 	{
 		data->res = ft_strjoin_mod(data->res, new, 0);
 		free(new);
 		return ;
 	}
-	while(ft_strchr(new, 36) != NULL)
+	if (ft_strchr(new, 36) != NULL)
 	{
-		len = ft_strlen(new);
-		beg = NULL;
-		if (new[0] != 36)
+		while (new[len])
 		{
-			beg = ft_strchr(new, 36);
-			beg = ft_substr(new, 0, len - ft_strlen(beg));
+			if (new[len] == '$')
+				len += env_var(data, new + len);
+			else
+			{
+				data->res = char_join(data->res, new[len]);
+				len++;
+			}
 		}
-		new = env_var(new, len, beg);
 	}
-	if (len != 0)
+	if (len == 0)
 		data->res = ft_strjoin_mod(data->res, new, 0);
 	free(new);
 }
@@ -67,7 +73,7 @@ char	*remove_quotes(char *str, int qte, int arg)
 	char	*ptr;
 	char	*start;
 	char	*end;
-	
+
 	ptr = str;
 	res = NULL;
 	start = ft_strchr(ptr, qte);
@@ -79,7 +85,7 @@ char	*remove_quotes(char *str, int qte, int arg)
 		res = ft_strjoin_mod(res, ptr, 0);
 		if (end)
 			free(ptr);
-		ptr = end + 1;	
+		ptr = end + 1;
 		start = ft_strchr(end, qte);
 	}
 	if (!res)
@@ -87,4 +93,28 @@ char	*remove_quotes(char *str, int qte, int arg)
 	if (arg == 1)
 		free(str);
 	return (res);
+}
+
+char	*get_var(t_shell *data, char *str)
+{
+	int		f;
+	char	*var;
+
+	f = 0;
+	if (str[1] == '?')
+	{
+		data->res = ft_strjoin_mod(data->res, \
+		ft_itoa(g_glob.exit_status % 255), 0);
+		return (NULL);
+	}
+	while (str[++f])
+	{
+		if (ft_isalnum(str[f]) == 0 && str[f] != 95)
+			break;
+	}
+	if (f == 1)
+		var = ft_substr(str, 0, f);
+	else
+		var = ft_substr(str, 1, f - 1);
+	return (var);
 }

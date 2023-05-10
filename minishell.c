@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 20:00:05 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 09:43:05 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int main(int ac, char **av, char **envp)
 {
     char *line;
+	char	*input;
+
 
 	if (av && ac)
 	set_path_env(envp);
@@ -25,12 +27,13 @@ int main(int ac, char **av, char **envp)
 	{
 		sig_handler();
 		line = readline("\033[0;95mminishit\033[0m > ");
+		input = ft_strtrim(line, " ");
 		keep_history(line, 0);
 		if (line == NULL)
 			quit(line);
-		if ((check_empty_line(line)))
-        	parse_input(line);
-		freedom("a", line);
+		freedom("a", line); 
+		if ((check_empty_line(input))) // fix "."
+        	parse_input(input);
     }
     return 0;
 }

@@ -6,26 +6,11 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 15:10:54 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/08 10:49:04 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/10 12:19:05 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void *freedom(char **ted, void *ze, void *dom, void *style)
-// {
-// 	if (ted)
-//     	freesplit(ted);
-//     if (ze)
-//         free(ze);
-//     if (dom)
-// 	{
-//     	free(dom);
-// 	}
-// 	if (style)
-// 		free(style);
-// 	return(NULL);
-// }
 
 int	get_cmd(char *str, int arg)
 {
@@ -47,44 +32,22 @@ int	get_cmd(char *str, int arg)
 	return (i);
 }
 
-char	*find_quote(char *str, int len)
-{
-	int		i;
-	
-	i = 0;
-	while (i != len)
-	{
-		if (str[i] == 34)
-			return (&str[i]);
-		if (str[i] == 39)
-			return (&str[i]);
-		i++;
-	}
-	return (NULL);
-}
-
 void	error(char *msg, int arg)
 {
+	g_glob.exit_status = arg;
+	if (arg == 1)
+	{
+		perror(msg);
+		return ;
+	}
 	if (arg == 0)
 	{
 		ft_putendl_fd(msg, 2);
-		exit(-1);
+		exit(arg);
 	}
-	else if (arg == 1)
-	{
+	else if (arg == 127)
 		ft_putstr_fd("Invalid command: ", 2);
-		g_glob.exit_status = 127; // not working
-	}
 	ft_putendl_fd(msg, 2);
-}
-
-void	exit_status(char *msg, int check)
-{
-	static int	status;
-
-	status = check_status(msg);
-	if (check)
-		printf("%d\n", status);
 }
 
 int	check_status(char *msg)
@@ -124,12 +87,12 @@ char	*ft_strjoin_mod(char *str1, char *str2, int pos)
 	return (res);
 }
 
-char *char_join(char *str, int c)
+char	*char_join(char *str, int c)
 {
 	char	*res;
 	size_t	len;
 	int		i;
-	
+
 	i = 0;
 	len = ft_strlen(str);
 	res = ft_calloc(sizeof(char), (len + 2));
@@ -140,30 +103,10 @@ char *char_join(char *str, int c)
 		while (str[i])
 		{
 			res[i] = str[i];
-			i++;			
+			i++;
 		}
 		free (str);
 	}
 	res[i] = c;
-	return(res);
+	return (res);
 }
-
-// int	word_count(char const *str, char c)
-// {
-// 	int	words;
-// 	int	len;
-
-// 	words = 0;
-// 	while (*str != '\0')
-// 	{
-// 		while (*str == c && *str != '\0')
-// 			str++;
-// 		if (*str != '\0')
-// 			words++;
-// 		len = 0;
-// 		while (str[len] != c && str[len] != '\0')
-// 			len++;
-// 		str += len;
-// 	}
-// 	return (words);
-// }

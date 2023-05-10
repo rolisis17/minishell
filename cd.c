@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:31:17 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 10:15:18 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	cd_command(char **splited)
 
 	prev = NULL;
 	if (splited[1] && splited[2])
-		error("cd: too many arguments", 0);
+		error("cd: too many arguments", 0); // find error code to send as second param!
 	prev = relative_cd(splited[1]);
 	set_oldpwd();
 	if (getenv("PWD"))

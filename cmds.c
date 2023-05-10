@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 16:40:41 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 16:01:42 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,9 @@ void	execute(char **cmd)
 	new_env = modify_split(g_glob.environ, env_shlvl(), 1, '=');
 	if (execve(path, cmd, new_env) == -1)
 	{
-		perror("execve");
-		freedom("ssa", cmd, new_env, path);
+		error("no such file or directory", 127);
+		freedom("a", path);
+		exit(127);
 	}
 }
 
@@ -86,12 +87,11 @@ void	do_cmd(t_shell *data)
 	pid_t	pid;
 	int		pipe_fd[2];
 
-	data_to_pipe(data);
 	if (pipe(pipe_fd) == -1)
-		error("Error (pipe)", 0);
+		error("Error (pipe)", 0); // should this error just exit...
 	pid = fork();
 	if (pid == -1)
-		error("Error (fork)", 0);
+		error("Error (fork)", 0); // end this?
 	if (pid == 0)
 	{
 		dup2(data->fd[0], STDIN_FILENO);
@@ -101,6 +101,7 @@ void	do_cmd(t_shell *data)
 			dup2(pipe_fd[1], STDOUT_FILENO);
 		close(pipe_fd[0]);	
 		execute(data->cmd);
+		data->cmd = freedom("s", data->cmd);
 	}
 	else
 	{
@@ -110,34 +111,6 @@ void	do_cmd(t_shell *data)
 		data->fd[0] = pipe_fd[0];
 		waitpid(pid, &g_glob.exit_status, 0);
 	}
-}
-
-void	data_to_pipe(t_shell *data)
-{
-	int		fd[2];
-	pid_t	pid;
-
-	if (!data->here_doc)
-		return ;
-	if (pipe(fd) == -1)
-		error("Error (pipe): ", 0);
-	pid = fork();
-	if (pid == -1)
-		error("Error (fork): ", 0);
-	else if (pid == 0)
-	{
-		close(fd[0]);
-		ft_putstr_fd(data->here_doc, fd[1]);
-		exit(0);
-	}
-	else
-	{
-		close(fd[1]);
-		close(data->fd[0]);
-		data->fd[0] = fd[0];
-		waitpid(pid, NULL, 0);
-	}
-	data->here_doc = freedom("a", data->here_doc);
 }
 
 void	check_builtin(char **cmd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/09 19:49:28 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 12:18:26 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,7 @@ void	export_cmd(char **cmd)
 	if (!cmd[1])
 		export_get_seclow(g_glob.environ, \
 		export_get_lower(g_glob.environ, NULL));
-	// export_cmd2(cmd, &cmp, args);
 }
-
-// void	export_cmd2(char **cmd, char ***cmp, char **args)
-// {
-// }
 
 char	*export_get_lower(char **env, char *to_compare)
 {
