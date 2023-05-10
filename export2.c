@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/09 19:48:34 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:29:44 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ int	export_varmod(char *cmd)
 
 	len = strintchr(cmd, '=');
 	env_var = ft_substr(cmd, 0, len);
-	printf("%s\n", env_var);
+	// printf("%s\n", env_var);
 	if (getenv(env_var))
 		ft_strlcpy(getenv(env_var), cmd + len + 1, ft_strlen(cmd + len));
 	else
 		len = 0;
-	printf("%s\n", getenv(env_var));
+	// printf("%s\n", getenv(env_var));
 	free (env_var);
 	return (len);
 }
@@ -78,7 +78,9 @@ int	export_check_equal(char *cmd)
 
 void	export_print_error(char *str)
 {
-	printf("export: `%s': not a valid identifier\n", str);
+	ft_putstr_fd("export: `", 2);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd("': not a valid identifier\n", 2);
 	g_glob.exit_status = 1;
 }
 

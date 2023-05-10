@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/09 20:00:05 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:21:48 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int main(int ac, char **av, char **envp)
 {
     char *line;
 
-	if (av && ac)
+	if (av || ac)
 	set_path_env(envp);
 	if (!new_history())
 		ft_printf("\033[2J\033[1;1H");
@@ -101,14 +101,17 @@ void	hiddenfile_history(char **keep)
 	char	*hist;
 
 	counter = -1;
-	hist = ft_strdup(g_glob.kurva);
-	hist = prev_folder(hist, 1);
-	hist = ft_strjoin_mod(hist, ".minihist", 0);
-	fd = open(hist, O_RDWR | O_CREAT | O_TRUNC, 0777);
-	while (keep[++counter])
-		ft_putendl_fd(keep[counter], fd);
-	close(fd);
-	free (hist);
+	if (g_glob.kurva)
+	{
+		hist = ft_strdup(g_glob.kurva);
+		hist = prev_folder(hist, 1);
+		hist = ft_strjoin_mod(hist, ".minihist", 0);
+		fd = open(hist, O_RDWR | O_CREAT | O_TRUNC, 0777);
+		while (keep[++counter])
+			ft_putendl_fd(keep[counter], fd);
+		close(fd);
+		free (hist);
+	}
 }
 
 int	check_empty_line(char *line)

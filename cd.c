@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:31:17 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 15:58:38 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,16 @@
 
 char	*relative_cd(char *str)
 {
-	if (!str)
+	if (!str || ft_strncmp("~", str, 2) == 0)
 	{
 		if (getenv("HOME"))
 			return (ft_strdup(getenv("HOME")));
 		else
-			return (this_folder_is(1));
-	}
+			ft_putendl_fd("cd: HOME not set", 2);
+		return (this_folder_is(1));
+	}	
+	else if (ft_strncmp("-", str, 2) == 0 && getenv("OLDPWD"))
+		return (ft_strdup(getenv("OLDPWD")));
 	else if (ft_strncmp(".", str, 2) == 0)
 		return (this_folder_is(1));
 	else if (ft_strncmp("./", str, 3) == 0)
@@ -55,22 +58,22 @@ char	*relative_cd2(char *str)
 void	cd_command(char **splited)
 {
 	char	*prev;
+	char	*oldpwd;
 
+	oldpwd = set_oldpwd();
 	prev = NULL;
 	if (splited[1] && splited[2])
 		error("cd: too many arguments", 0);
 	prev = relative_cd(splited[1]);
-	set_oldpwd();
-	if (getenv("PWD"))
-		ft_strlcpy(getenv("PWD"), prev, ft_strlen(prev));
 	if (chdir(prev) == -1)
 	{
-		perror("chdir");
+		perror("cd");
 		freedom("a", prev);
+		g_glob.exit_status = 1;
 		return ;
 	}
 	freedom("a", prev);
-	set_pwd();
+	set_pwd_noenv(set_pwd(), oldpwd);
 	return ;
 }
 

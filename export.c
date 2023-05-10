@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/09 19:49:28 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:35:06 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	export_cmd(char **cmd)
 	if (cmp)
 	{
 		keep_history(NULL, 1);
-		if (execve(g_glob.kurva, cmp, args) == -1)
+		if (!g_glob.kurva || execve(g_glob.kurva, cmp, args) == -1)
 		{
 			perror("execve");
 			cmd = freedom("ss", cmd, args);

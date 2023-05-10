@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/07 19:31:42 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:10:35 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,56 @@ char	*this_folder_is(int check)
 	return (res);
 }
 
-void	set_oldpwd(void)
+char	*set_oldpwd(void)
 {
 	char	*oldpwd;
 
 	oldpwd = this_folder_is(1);
 	if (getenv("OLDPWD"))
+	{
 		ft_strlcpy(getenv("OLDPWD"), oldpwd, ft_strlen(oldpwd) + 1);
-	free (oldpwd);
+		free (oldpwd);
+		oldpwd = NULL;
+	}
+	return (oldpwd);
 }
 
-void	set_pwd(void)
+char	*set_pwd(void)
 {
 	char	*newpwd;
 
 	newpwd = this_folder_is(1);
 	if (getenv("PWD"))
+	{
 		ft_strlcpy(getenv("PWD"), newpwd, ft_strlen(newpwd) + 1);
-	free (newpwd);
+		free (newpwd);
+		newpwd = NULL;
+	}
+	return (newpwd);
+}
+
+void	set_pwd_noenv(char *newpwd, char *oldpwd)
+{
+	char	*export;
+	char	**cmd;
+
+	export = ft_strdup("export");
+	if (oldpwd)
+	{
+		oldpwd = ft_strjoin(" OLDPWD=", oldpwd);
+		export = ft_strjoin_mod(export, oldpwd, 0);
+	}
+	if (newpwd)
+	{
+		newpwd = ft_strjoin(" PWD=", newpwd);
+		export = ft_strjoin_mod(export, newpwd, 0);
+	}
+	printf("%s\n%s\n%s\n", newpwd, oldpwd, export);
+	if (newpwd)
+		free(newpwd);
+	if (oldpwd)
+		free(oldpwd);
+	cmd = ft_split(export, 32);
+	if (oldpwd || newpwd)
+		export_cmd(cmd);
 }

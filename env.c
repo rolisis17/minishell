@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/09 17:43:47 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:20:51 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,12 @@ void	env_cmd(char **cmd)
 
 void	set_path_env(char **envp)
 {
-	// char	*path;
-
 	g_glob.environ = envp;
+	printf("%s\n", this_folder_is(1));
 	g_glob.exit_status = 0;
 	if (getenv("_"))
 	{
 		keep_history(NULL, 1);
-		// path = this_folder_is(1);
-		// path = ft_strjoin(this_folder_is(1), "/minishell");
 		g_glob.kurva = getenv("_");
-		printf("%s\n", g_glob.kurva);
 	}
 }
