@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 16:01:42 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/11 15:03:19 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	execute(char **cmd)
 	char	*path;
 	char	**new_env;
 
+	if (cmd == NULL)
+		exit(0);
 	check_builtin(cmd);
 	  // need to do a exit function with free in everything for us to call everytime, Joao just fail minishell evaluation. Leaks when exit.
 	 // or exit? or exit inside the command func to get out of the fork but here we need to free everything

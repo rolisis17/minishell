@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 20:46:27 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/11 22:24:06 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,13 @@ typedef struct s_shell
 	int		len;
 	char	**cmd;
 	char	*res;
-	int		cd_flag;
 	int		exit_flag;
 	int		pipe_flag;
 	int		out_flag;
+	int		op;
+	int		op_char;
+	char	*op_data;
+	int		op_flag;
 	t_store	*files;
 }				t_shell;
 
@@ -113,6 +116,8 @@ void	output(t_shell *data);
 int		space(t_shell *data, char *new, int arg);
 int		quote(t_shell *data, char *new);
 int		pipex(t_shell *data, char *new);
+int		pipex_new(t_shell *data, char *new);
+void	pipex_2(t_shell *data, int arg);
 // parse 3
 int		env_var(t_shell *data, char *new);
 void	check_substr(t_shell *data, char *new, char c);
@@ -138,6 +143,8 @@ void	error(char *msg, int arg);
 char	*ft_strjoin_mod(char *str1, char *str2, int pos);
 char	*char_join(char *str, int c);
 int		check_status(char *msg);
+//tools 2
+int		end_search(int c);
 // storage
 void	store_it(t_shell *data, int flag);
 void	make_files(t_shell *data);
@@ -148,6 +155,12 @@ void	freesplit(char **splited);
 void	*freedom(const char *str, ...);
 void	free_check(void *freeable);
 void	freelist(t_store *list);
+//bonus
+int		bonus(t_shell *data, char *new);
+int		start_op(t_shell *data, char *new, char *ptr);
+void	execution(t_shell *data, char *new);
+void	clear_pipe(t_shell *data);
+int		op_check(t_shell *data);
 
 extern t_glob	g_glob;
 

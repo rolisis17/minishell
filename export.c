@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:51:13 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/11 11:19:22 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	export_cmd(char **cmd)
 	char	**cmp;
 	int		f;
 
-	f = 0;
+	f = 0;	
 	args = copy_split(g_glob.environ, 1);
 	cmp = NULL;
 	while (cmd[++f])

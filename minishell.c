@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 20:53:17 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/11 18:06:45 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int main(int ac, char **av, char **envp)
     char *line;
 	char	*input;
 
-
+	if (ac > 1)
+		error("minishell doesn't take arguments", 0);
 	if (av || ac)
 	set_path_env(envp);
 	if (!new_history())
@@ -31,8 +32,8 @@ int main(int ac, char **av, char **envp)
 		keep_history(line, 0);
 		if (line == NULL)
 			quit(line);
-		freedom("a", line); 
-		if ((check_empty_line(input))) // fix "."
+		freedom("a", line);
+		if ((check_empty_line(input))) // fix ".", fixed i think...
 			parse_input(input);
     }
 	return (0);
@@ -124,7 +125,13 @@ int	check_empty_line(char *line)
 	f = -1;
 	while (line[++f])
 	{
-		if (line[f] != '\n' && line[f] != 32 && line[f] != '.') // if its just a . should return an error
+		if (line[f] == '|' || line[f] == '&')
+		{
+			error("Syntax Error", 2);
+			freedom("a", line);
+			return (0);
+		}
+		if (line[f] != '\n' && line[f] != 32)
 			return (1);
 	}
 	return (0);

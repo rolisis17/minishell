@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 10:54:42 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 11:35:28 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/11 14:57:12 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	get_content(t_shell *data)
 	free(buf);
 	data->fd[0] = dup(STDIN_FILENO);
 	data->fd[1] = dup(STDOUT_FILENO);
+	data->out_flag = 0;
 }
 
 t_store	*list_last(t_store *lst)

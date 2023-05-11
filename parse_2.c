@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 15:38:03 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/11 22:24:47 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ int	space(t_shell *data, char *new, int arg)
 
 	i = 0;
 	data->res = NULL;
-	while (new[i] && new[i] != '|' && new[i] != '<' && \
-		new[i] != '>' && new[i] != 32)
+	while (end_search(new[i]) == 0)
 	{
 		if (new[i] == 34 || new[i] == 39)
 			i += quote(data, new + i);
@@ -28,6 +27,7 @@ int	space(t_shell *data, char *new, int arg)
 		else
 			data->res = char_join(data->res, new[i++]);
 	}
+	// HERE YOU CAN PUT YOUR CHECKER
 	if (arg == 1)
 		return (i);
 	if (data->cmd)
@@ -58,30 +58,45 @@ int	quote(t_shell *data, char *new)
 	return (data->len + 2);
 }
 
-int	pipex(t_shell *data, char *new)
+int	pipex_new(t_shell *data, char *new)
 {
 	data->pipe_flag = 1;
 	data->len = 0;
-	if (!data->cmd || new[1] == '|')
-	{
-		while (new[data->len] == '|')
+
+	if (g_glob.exit_status != 0)
+		data->cmd = freedom("s", data->cmd);
+	while (new[data->len] == '|')
 			data->len++;
-		error("Syntax Error", 2);
+	if (data->len > 2)
+	{
+		error("Syntax Error", 2); // might need to store the error message until the end
 		data->exit_flag = 1;
 		return (data->len - 1);
 	}
-	if (ft_strncmp("cd", data->cmd[0], 3) == 0)
+	pipex_2(data, 0);
+	if (data->out_flag == 1)
+		get_content(data);
+	data->cmd = freedom("s", data->cmd);
+	return (0);
+}
+
+
+void	pipex_2(t_shell *data, int arg)
+{
+	if (!data->cmd)
+		do_cmd(data);
+	else if (ft_strncmp(data->cmd[0], "cd", 3) == 0 \
+		|| ft_strncmp(data->cmd[0], "export", 7) == 0 \
+		|| ft_strncmp(data->cmd[0], "unset", 6) == 0)
 	{
 		data->cmd = freedom("s", data->cmd);
 		close(data->fd[0]);
 		data->fd[0] = dup(STDIN_FILENO);
 	}
 	else
+	{
 		do_cmd(data);
-	if (data->out_flag == 1)
-		get_content(data);
-	data->out_flag = 0;
-	data->cmd = freedom("s", data->cmd);
-	data->cd_flag++;
-	return (0);
+		if (arg == 1)
+			output(data);	
+	}
 }
