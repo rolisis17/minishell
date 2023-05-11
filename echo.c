@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/09 17:32:21 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/11 17:06:48 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,29 @@ int	strintchr(char	*str, int c)
 	f = -1;
 	while (str[++f] != c);
 	return (f);
+}
+
+char	**read_folder(char *str)
+{
+	char			**folder;
+	DIR				*dir;
+	struct dirent	*entry;
+	int				f;
+
+	dir = opendir(".");
+	folder = NULL;
+	if (dir)
+	{
+		f = strintchr(str, '*');
+		entry = readdir(dir);
+		while (entry != NULL)
+		{
+			if (ft_strncmp(entry->d_name, str, f) == 0)
+			folder = ft_addsplit(folder, entry->d_name, 0);
+		}
+        closedir(dir);
+		return (folder);
+    }
+	else
+        return (NULL);
 }
