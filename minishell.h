@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 22:24:06 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 17:19:48 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <term.h>
+# include <dirent.h>
 
 typedef struct s_storage
 {
@@ -136,7 +137,9 @@ char	**add_split(char **split, char *new, int arg);
 char	**copy_split(char **split, int arg);
 char	**remove_split(char **split, char *rem, int arg);
 char	**modify_split(char **split, char *mod, int arg, int flag);
+char	**merge_split(char **split, char **to_merge, int arg, int flag);
 char	*split_n_join(char *str, char **split, int spliter);
+int		word_count(char **split);
 //tools
 int		get_cmd(char *str, int arg);
 void	error(char *msg, int arg);
@@ -164,7 +167,7 @@ void	clear_pipe(t_shell *data);
 int		op_check(t_shell *data);
 void	data_to_pipe(t_shell *data);
 void	get_op_data(t_shell *data);
-
+char	**wild_cards(char **cmd);
 
 extern t_glob	g_glob;
 

@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   splitting.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 11:46:42 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 17:23:28 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	word_count(char **split);
 
 char	**add_split(char **split, char *new, int arg)
 {
@@ -35,6 +33,10 @@ char	**add_split(char **split, char *new, int arg)
 	}
 	len = ft_strlen(new);
 	new_split[i] = ft_calloc(len + 1, sizeof(char));
+	if (!new_split[i])
+	{
+		return (0);
+	}
 	if (len > 0)
 		ft_strlcpy(new_split[i], new, len + 1);
 	new_split[++i] = NULL;
@@ -97,34 +99,58 @@ char	**remove_split(char **split, char *rem, int arg)
 char	**modify_split(char **split, char *mod, int arg, int flag)
 {
 	int		i;
-	int		f;
 	int		len;
 	char	**new_split;
 
 	i = word_count(split);
-	new_split = (char **) malloc(sizeof(char *) * i);
+	new_split = (char **) malloc(sizeof(char *) * (i + 1));
 	if (!new_split)
 		return (0);
 	i = -1;
-	f = -1;
 	while (split[++i])
 	{
 		if ((ft_strncmp(split[i], mod, strintchr(mod, flag) - 1) != 0))
 		{
 			len = ft_strlen(split[i]);
-			new_split[++f] = ft_calloc(len + 1, sizeof(char));
-			ft_strlcpy(new_split[f], split[i], len + 1);
+			new_split[++i] = ft_calloc(len + 1, sizeof(char));
+			ft_strlcpy(new_split[i], split[i], len + 1);
 		}
 		else
-			new_split[++f] = mod;
+			new_split[++i] = mod;
 	}
-	new_split[++f] = NULL;
+	new_split[++i] = NULL;
 	if (!arg)
 		freesplit(split);
 	return (new_split);
 }
 
-static int	word_count(char **split)
+char	**merge_split(char **split, char **to_merge, int arg, int flag)
+{
+	int		i;
+	int		f;
+	char	**new_split;
+
+	i = -1;
+	f = -1;
+	new_split = NULL;
+	while (split[++i] && i != flag)
+	{
+		if (!new_split)
+			new_split = ft_split(split[i], 1);
+		else
+			new_split = add_split(new_split, split[i], 0);
+	}
+	while (to_merge[++f])
+		new_split = add_split(new_split, to_merge[f], 0);
+	while (split[++i])
+		new_split = add_split(new_split, split[i], 0);
+	if (!arg)
+		freedom("ss", split, to_merge);
+	f = -1;
+	return (new_split);
+}
+
+int	word_count(char **split)
 {
 	int	i;
 

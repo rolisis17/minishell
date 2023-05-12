@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:01:53 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 22:35:55 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 14:43:47 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	priority(t_shell *data, char *new)
 
 void	execution(t_shell *data, char *new)
 {
-	if ((data->cmd && data->pipe_flag == 0) || data->cmd && data->op_flag == 1)
+	if ((data->cmd && data->pipe_flag == 0) || (data->cmd && data->op_flag == 1))
 		do_cmd(data);
 	data->pipe_flag = 1;
 	if (data->op_char == 0 && g_glob.exit_status == 0)
