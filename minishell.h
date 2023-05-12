@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/05/12 15:59:44 by mstiedl          ###   ########.fr       */
-=======
-/*   Updated: 2023/05/12 17:19:48 by dcella-d         ###   ########.fr       */
->>>>>>> 69a60ebeac32b16d60229414417aaabc4c1d50a4
+/*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
+/*   Updated: 2023/05/12 18:35:20 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +149,7 @@ char	*char_join(char *str, int c);
 int		check_status(char *msg);
 //tools 2
 int		end_search(int c);
+int		back_check(char *str, char *check);
 // storage
 void	store_it(t_shell *data, int flag);
 void	make_files(t_shell *data);

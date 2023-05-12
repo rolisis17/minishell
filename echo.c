@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/12 17:30:50 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:01:22 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,11 @@ int	strintchr(char	*str, int c)
 {
 	int	f;
 
-	f = -1;
-	while (str[++f] != c);
+	f = 0;
+	while (str[f] && str[f] != c)
+		f++;
+	if (!str[f])
+		f = 0;
 	return (f);
 }
 
@@ -65,7 +68,8 @@ char	**read_folder(char *str)
 		while ((entry = readdir(dir)) != NULL)
 		{
 			ft_strlcpy(ass, entry->d_name, ft_strlen(entry->d_name) + 1);
-			if (ft_strncmp(ass, str, f) == 0)
+			// ft_putendl_fd(str + f + 1, 2);
+			if (ft_strncmp(ass, str, f) == 0 && back_check(ass, str) == 0)
 			{
 				if (!folder)
 					folder = ft_split(ass, 1);
@@ -93,24 +97,44 @@ char	**wild_cards(char **cmd)
 	int		f;
 	int i = -1;
 
-	f = 0;
+	f = -1;
 	folder = NULL;
 	res = NULL;
 	while (cmd[++f])
 	{
-		if (strintchr(cmd[f], '*'))
+		if (ft_strchr(cmd[f], '*') != NULL)
 		{
-			ft_putendl_fd("MAIAS", 2);
 			folder = read_folder(cmd[f]);
-			if (!res)
-				res = merge_split(cmd, folder, 0, f);
-			else
-				res = merge_split(res, folder, 0, word_count(res));
+			if (folder)
+			{
+				if (!res)
+					res = merge_split(cmd, folder, 0, f);
+				else
+					res = merge_split(res, folder, 0, word_count(res));
+			}
 		}
 		i = -1;
 	}
-	// while (res[++i])
 	if (!res)
 		return (cmd);
 	return (res);
+}
+
+int	back_check(char *str, char *check)
+{
+	int	i;
+	int	f;
+
+	i = ft_strlen(check);
+	f = ft_strlen(str);
+	while (i > 0)
+	{
+		if (check[i] == '*')
+			break ;
+		if (check[i] != str[f])
+			return (i);
+		i--;
+		f--;
+	}
+	return (0);
 }
