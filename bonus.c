@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 16:01:53 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 22:35:55 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 16:03:29 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,29 @@ int	bonus(t_shell *data, char *new)
 	else
 		execution(data, new);
 	return (data->len);
+}
+
+int	priority_new(t_shell *data, char* new)
+{
+	char	*ptr;
+	char	*input;
+	char	*res;
+	
+	res = NULL;
+	ptr = ft_strrchr(new, new[0]);
+	if (ptr == new)
+	{
+		error("Syntax error", 2);
+		data->exit_flag = 1;
+		return (data->len);
+	}
+	input = ft_substr(new, 1, ptr - new);
+	if (check_empty_line(input) == 0)
+		// res = parse_input(input, 1);
+	if (res == NULL)
+		data->op_flag = -1;
+	freedom("a", input);
+	return (ft_strlen(input));
 }
 
 int	priority(t_shell *data, char *new)
@@ -58,16 +81,18 @@ int	priority(t_shell *data, char *new)
 
 void	execution(t_shell *data, char *new)
 {
-	if ((data->cmd && data->pipe_flag == 0) || data->cmd && data->op_flag == 1)
-		do_cmd(data);
+	// if ((data->cmd && data->pipe_flag == 0) || data->cmd)
 	data->pipe_flag = 1;
-	if (data->op_char == 0 && g_glob.exit_status == 0)
+	if (data->op_char == 0 || g_glob.exit_status == 0)
 	{
+		do_cmd(data);
 		output(data);
 		data->op = 1;
 	}
 	else if (data->op_char == '&')
 	{
+		if (data->cmd)
+			do_cmd(data);
 		if (g_glob.exit_status == 0 && data->op == 1)
 			output(data);
 		else
@@ -75,13 +100,28 @@ void	execution(t_shell *data, char *new)
 	}
 	else if (data->op_char == '|')
 	{
-		if (g_glob.exit_status != 0)
-			data->op = -1;
-		else if (data->op == -1)
+		if (data->op == -1)
+		// 	data->op = 1;
+		// else
 		{
-			output(data);
-			data->op = 1;
+			printf("here\n");
+			if (data->cmd)
+				do_cmd(data);
+			if (g_glob.exit_status == 0)
+			{
+				output(data);
+				data->op = 1;
+			}
 		}
+		else
+			data->cmd = freedom("s", data->cmd);
+		// else if (g_glob.exit_status != 0)
+		// 	data->op = -1;
+		// else if (data->op == -1)
+		// {
+		// 	output(data);
+		// 	data->op = 1;
+		// }
 	}
 	else 
 		data->op = -1;

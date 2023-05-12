@@ -6,16 +6,21 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 22:18:29 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 22:23:28 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 16:27:56 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	end_search(int c, int op)
+int	end_search(int c)
 {
-	if (c == '|' || c == '<' || c == '>' || c == 32 || c == '\0' || c == ')')
+	if (c == '|' || c == '<' || c == '>' || c == 32 || c == '\0')
 		return (1);
-	if (c == '(' && op == 1)
-		return (0);
+	// if (c == '(' && op == 1)
+	// 	return (0);
 	else
 		return (0);
 }
+
+// int	syntax_checker(char *str)
+// {
+// 	char *bracket = "(";
+// }

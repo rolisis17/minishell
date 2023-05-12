@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/11 22:10:48 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 16:07:47 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void	parse_input(char *input)
 	{
 		while (input[i] == 32)
 			i++;
-		if ( input[i]== ')' || input[i] == '(')
-			i += priority(data, input + i);
-		else if (ft_strncmp(input + i, "&&", 2) == 0 || ft_strncmp(input + i, "||", 2) == 0)
-			i += bonus(data, input + i); // fix get_cmd len to search for ( too 
+		// if (ft_strncmp(input + i, "&&", 2) == 0 || ft_strncmp(input + i, "||", 2) == 0)
+		// 	i += bonus(data, input + i); // fix get_cmd len to search for ( too 
+		// if ( input[i]== ')' || input[i] == '(')
+		// 	i += priority(data, input + i);
 		if (input[i] == '|')
 			i += pipex_new(data, input + i);
 		else if (input[i] == '<')
@@ -43,8 +43,8 @@ void	parse_input(char *input)
 			return ;
 		}
 	}
-	if (op_check(data) == 0)
-		parse_input_two(data, input);
+	// if (op_check(data) == 0)
+	parse_input_two(data, input);
 	freedom("saa", data->cmd, input, data);
 }
 
@@ -83,10 +83,10 @@ t_shell	*data_init(void)
 	data->exit_flag = 0;
 	data->pipe_flag = 0;
 	data->out_flag = 0;
-	data->op_char = 0;
-	data->op = 0;
-	data->op_data = NULL;
-	data->op_flag = 0;
+	// data->op_char = 0;
+	// data->op = 0;
+	// data->op_data = NULL;
+	// data->op_flag = 0;
 	data->files = NULL;
 	g_glob.here_flag = 0;
 	return (data);
@@ -96,11 +96,11 @@ void	output(t_shell *data)
 {
 	char	*buf;
 
-	if (data->op_flag == 1)
-	{
-		get_op_data(data);
-		return ; // test if should make files
-	}
+	// if (data->op_flag == 1)
+	// {
+	// 	get_op_data(data);
+	// 	return ; // test if should make files
+	// }
 	if (data->out_flag == 1)
 		get_content(data);
 	else

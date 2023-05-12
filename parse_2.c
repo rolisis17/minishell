@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 22:24:47 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 16:30:09 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	space(t_shell *data, char *new, int arg)
 		else
 			data->res = char_join(data->res, new[i++]);
 	}
-	// HERE YOU CAN PUT YOUR CHECKER
 	if (arg == 1)
 		return (i);
 	if (data->cmd)
@@ -63,9 +62,9 @@ int	pipex_new(t_shell *data, char *new)
 	data->pipe_flag = 1;
 	data->len = 0;
 
-	if (g_glob.exit_status != 0)
+	if (g_glob.exit_status != 0) //??
 		data->cmd = freedom("s", data->cmd);
-	while (new[data->len] == '|')
+	while (new[data->len] == '|') // check syntax error |  | eg
 			data->len++;
 	if (data->len > 2)
 	{
@@ -73,10 +72,10 @@ int	pipex_new(t_shell *data, char *new)
 		data->exit_flag = 1;
 		return (data->len - 1);
 	}
-	if (data->op_data != NULL && data->op_flag == 0)
-		data_to_pipe(data);
-	else
-		pipex_2(data, 0);
+	// if (data->op_data != NULL && data->op_flag == 0)
+	// 	data_to_pipe(data);
+	// else
+	pipex_2(data, 0);
 	if (data->out_flag == 1)
 		get_content(data);
 	data->cmd = freedom("s", data->cmd);

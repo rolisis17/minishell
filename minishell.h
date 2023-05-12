@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:29:24 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 22:24:06 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 15:59:44 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_shell
 	int		op_char;
 	char	*op_data;
 	int		op_flag;
+	int		new_line; // if 0 nothing in current line has been executed ?
 	t_store	*files;
 }				t_shell;
 
