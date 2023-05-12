@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:10:35 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/12 19:57:27 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	set_pwd_noenv(char *newpwd, char *oldpwd)
 		newpwd = ft_strjoin(" PWD=", newpwd);
 		export = ft_strjoin_mod(export, newpwd, 0);
 	}
-	printf("%s\n%s\n%s\n", newpwd, oldpwd, export);
+	// printf("%s\n%s\n%s\n", newpwd, oldpwd, export);
 	if (newpwd)
 		free(newpwd);
 	if (oldpwd)
