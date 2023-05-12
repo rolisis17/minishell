@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 10:54:42 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 14:57:12 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 22:37:02 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,13 @@ void	store_it(t_shell *data, int flag)
 {
 	t_store	*node;
 
-	node = ft_calloc(1, sizeof(t_store));
+	node = malloc(1 * sizeof(t_store));
 	if (!node)
-		return ;// probs need malloc error
+		return ;
+	node->content = NULL;
 	node->flag = flag;
 	node->name = ft_strdup(data->res);
+	node->next = NULL;
 	add_back(&data->files, node);
 }
 

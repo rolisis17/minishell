@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmds.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/12 19:49:40 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/12 23:18:36 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	execute(char **cmd)
 		path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
-	new_env = modify_split(g_glob.environ, env_shlvl(), 1, '=');
+	new_env = modify_split(g_glob.environ, env_shlvl(), 1, '='); // THIS IS THE PROBLEM!!!
 	if (execve(path, cmd, new_env) == -1)
 	{
 		error("no such file or directory", 127);

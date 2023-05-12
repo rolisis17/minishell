@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/12 19:48:25 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/12 22:00:33 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,7 @@ typedef struct s_shell
 	int		exit_flag;
 	int		pipe_flag;
 	int		out_flag;
-	int		op;
-	int		op_char;
-	char	*op_data;
-	int		op_flag;
+	int		file_err;
 	int		new_line; // if 0 nothing in current line has been executed ?
 	t_store	*files;
 }				t_shell;

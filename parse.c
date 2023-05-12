@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/12 16:07:47 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/12 22:59:29 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,6 @@ void	parse_input(char *input)
 	{
 		while (input[i] == 32)
 			i++;
-		// if (ft_strncmp(input + i, "&&", 2) == 0 || ft_strncmp(input + i, "||", 2) == 0)
-		// 	i += bonus(data, input + i); // fix get_cmd len to search for ( too 
-		// if ( input[i]== ')' || input[i] == '(')
-		// 	i += priority(data, input + i);
 		if (input[i] == '|')
 			i += pipex_new(data, input + i);
 		else if (input[i] == '<')
@@ -43,33 +39,28 @@ void	parse_input(char *input)
 			return ;
 		}
 	}
-	// if (op_check(data) == 0)
 	parse_input_two(data, input);
 	freedom("saa", data->cmd, input, data);
 }
 
 void	parse_input_two(t_shell *data, char *input)
 {
-	if (data->cmd)
+	if (data->cmd && data->file_err == 0)
 	{
 		if (ft_strncmp(data->cmd[0], "exit", 5) == 0)
 			ft_exit(data, input);
 		else if (data->pipe_flag == 1)
 			pipex_2(data, 1);
-		else if (g_glob.exit_status == 0 && ft_strncmp(data->cmd[0], "cd", 3) == 0)
+		else if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
 			cd_command(data->cmd);
-		else if (g_glob.exit_status == 0 && ft_strncmp(data->cmd[0], "export", 7) == 0)
+		else if (ft_strncmp(data->cmd[0], "export", 7) == 0)
 			export_cmd(data->cmd);
-		else if (g_glob.exit_status == 0 && ft_strncmp(data->cmd[0], "unset", 6) == 0)
+		else if (ft_strncmp(data->cmd[0], "unset", 6) == 0)
 			unset_cmd(data->cmd);
 		else
-		{
-			if (g_glob.exit_status % 255 == 1)
-				data->cmd = freedom("s", data->cmd);
 			do_cmd(data);
-			output(data);
-		}	
 	}
+	output(data);
 }
 
 t_shell	*data_init(void)
@@ -83,10 +74,7 @@ t_shell	*data_init(void)
 	data->exit_flag = 0;
 	data->pipe_flag = 0;
 	data->out_flag = 0;
-	// data->op_char = 0;
-	// data->op = 0;
-	// data->op_data = NULL;
-	// data->op_flag = 0;
+	data->file_err = 0;
 	data->files = NULL;
 	g_glob.here_flag = 0;
 	return (data);
@@ -96,14 +84,9 @@ void	output(t_shell *data)
 {
 	char	*buf;
 
-	// if (data->op_flag == 1)
-	// {
-	// 	get_op_data(data);
-	// 	return ; // test if should make files
-	// }
-	if (data->out_flag == 1)
+	if (data->out_flag == 1 && data->file_err == 0)
 		get_content(data);
-	else
+	else if (data->file_err == 0)
 	{
 		buf = malloc(sizeof(char));
 		while (read(data->fd[0], buf, 1) > 0)
