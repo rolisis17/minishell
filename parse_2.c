@@ -73,7 +73,10 @@ int	pipex_new(t_shell *data, char *new)
 		data->exit_flag = 1;
 		return (data->len - 1);
 	}
-	pipex_2(data, 0);
+	if (data->op_data != NULL && data->op_flag == 0)
+		data_to_pipe(data);
+	else
+		pipex_2(data, 0);
 	if (data->out_flag == 1)
 		get_content(data);
 	data->cmd = freedom("s", data->cmd);

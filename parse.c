@@ -35,7 +35,7 @@ void	parse_input(char *input)
 			i += file_in(data, input + i + 1); // fix $_
 		else if (input[i] == '>')
 			i += file_out(data, input + i + 1);
-		else if (input[i] && input[i] != 32)
+		else if (input[i] && input[i] != 32 && data->exit_flag == 0)
 			i += space(data, input + i, 0);
 		if (data->exit_flag == 1)
 		{
@@ -64,7 +64,7 @@ void	parse_input_two(t_shell *data, char *input)
 			unset_cmd(data->cmd);
 		else
 		{
-			if (g_glob.exit_status != 0)
+			if (g_glob.exit_status % 255 == 1)
 				data->cmd = freedom("s", data->cmd);
 			do_cmd(data);
 			output(data);
@@ -85,7 +85,7 @@ t_shell	*data_init(void)
 	data->out_flag = 0;
 	data->op_char = 0;
 	data->op = 0;
-	data->op_char = NULL;
+	data->op_data = NULL;
 	data->op_flag = 0;
 	data->files = NULL;
 	g_glob.here_flag = 0;

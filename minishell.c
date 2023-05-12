@@ -125,7 +125,7 @@ int	check_empty_line(char *line)
 	f = -1;
 	while (line[++f])
 	{
-		if (line[f] == '|' || line[f] == '&')
+		if (line[f] == '|' || line[f] == '&' || line[f] == ')')
 		{
 			error("Syntax Error", 2);
 			freedom("a", line);

@@ -47,27 +47,27 @@ int	strintchr(char	*str, int c)
 	return (f);
 }
 
-char	**read_folder(char *str)
-{
-	char			**folder;
-	DIR				*dir;
-	struct dirent	*entry;
-	int				f;
+// char	**read_folder(char *str)
+// {
+// 	char			**folder;
+// 	DIR				*dir;
+// 	struct dirent	*entry;
+// 	int				f;
 
-	dir = opendir(".");
-	folder = NULL;
-	if (dir)
-	{
-		f = strintchr(str, '*');
-		entry = readdir(dir);
-		while (entry != NULL)
-		{
-			if (ft_strncmp(entry->d_name, str, f) == 0)
-			folder = ft_addsplit(folder, entry->d_name, 0);
-		}
-        closedir(dir);
-		return (folder);
-    }
-	else
-        return (NULL);
-}
+// 	dir = opendir(".");
+// 	folder = NULL;
+// 	if (dir)
+// 	{
+// 		f = strintchr(str, '*');
+// 		entry = readdir(dir);
+// 		while (entry != NULL)
+// 		{
+// 			if (ft_strncmp(entry->d_name, str, f) == 0)
+// 			folder = ft_addsplit(folder, entry->d_name, 0);
+// 		}
+//         closedir(dir);
+// 		return (folder);
+//     }
+// 	else
+//         return (NULL);
+// }

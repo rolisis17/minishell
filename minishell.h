@@ -157,10 +157,14 @@ void	free_check(void *freeable);
 void	freelist(t_store *list);
 //bonus
 int		bonus(t_shell *data, char *new);
-int		start_op(t_shell *data, char *new, char *ptr);
+int		priority(t_shell *data, char *new);
+void	get_op_data(t_shell *data);
 void	execution(t_shell *data, char *new);
 void	clear_pipe(t_shell *data);
 int		op_check(t_shell *data);
+void	data_to_pipe(t_shell *data);
+void	get_op_data(t_shell *data);
+
 
 extern t_glob	g_glob;
 
