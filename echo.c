@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/11 17:06:48 by marvin           ###   ########.fr       */
+/*   Updated: 2023/05/12 17:30:50 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,70 @@ int	strintchr(char	*str, int c)
 	return (f);
 }
 
-// char	**read_folder(char *str)
-// {
-// 	char			**folder;
-// 	DIR				*dir;
-// 	struct dirent	*entry;
-// 	int				f;
+char	**read_folder(char *str)
+{
+	char			**folder;
+	DIR				*dir;
+	struct dirent	*entry;
+	char	ass[256];
+	int				f;
 
-// 	dir = opendir(".");
-// 	folder = NULL;
-// 	if (dir)
-// 	{
-// 		f = strintchr(str, '*');
-// 		entry = readdir(dir);
-// 		while (entry != NULL)
-// 		{
-// 			if (ft_strncmp(entry->d_name, str, f) == 0)
-// 			folder = ft_addsplit(folder, entry->d_name, 0);
-// 		}
-//         closedir(dir);
-// 		return (folder);
-//     }
-// 	else
-//         return (NULL);
-// }
+	dir = opendir(ft_strjoin_mod(this_folder_is(1), "/", 0));
+	// ft_putendl_fd(this_folder_is(1), 2);
+	folder = NULL;
+	if (dir)
+	{
+		f = strintchr(str, '*');
+		// entry = readdir(dir);
+		while ((entry = readdir(dir)) != NULL)
+		{
+			ft_strlcpy(ass, entry->d_name, ft_strlen(entry->d_name) + 1);
+			if (ft_strncmp(ass, str, f) == 0)
+			{
+				if (!folder)
+					folder = ft_split(ass, 1);
+				else
+					folder = add_split(folder, ass, 0);
+				// ft_putendl_fd(folder[0], 2);
+			}
+			// ft_putendl_fd(ass, 2);
+			
+			// free (ass);
+			// entry = readdir(dir);
+		}
+        closedir(dir);
+		// f = -1;
+		return (folder);
+    }
+	else
+        return (NULL);
+}
+
+char	**wild_cards(char **cmd)
+{
+	char	**folder;
+	char	**res;
+	int		f;
+	int i = -1;
+
+	f = 0;
+	folder = NULL;
+	res = NULL;
+	while (cmd[++f])
+	{
+		if (strintchr(cmd[f], '*'))
+		{
+			ft_putendl_fd("MAIAS", 2);
+			folder = read_folder(cmd[f]);
+			if (!res)
+				res = merge_split(cmd, folder, 0, f);
+			else
+				res = merge_split(res, folder, 0, word_count(res));
+		}
+		i = -1;
+	}
+	// while (res[++i])
+	if (!res)
+		return (cmd);
+	return (res);
+}
