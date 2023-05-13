@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/12 23:18:36 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/13 12:40:36 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ void	bad_cmd(char *path, char **cmd)
 void	execute(char **cmd)
 {
 	char	*path;
-	char	**new_env;
+	// char	**new_env;
 
 	if (cmd == NULL)
 		exit(0);
 	// check * merge all iterate **cmd 
-	cmd = wild_cards(cmd);
+	// cmd = wild_cards(cmd);
 	check_builtin(cmd);
 	  // need to do a exit function with free in everything for us to call everytime, Joao just fail minishell evaluation. Leaks when exit.
 	 // or exit? or exit inside the command func to get out of the fork but here we need to free everything
@@ -67,8 +67,8 @@ void	execute(char **cmd)
 		path = find_path(cmd[0]);
 	if (!path)
 		bad_cmd(path, cmd);
-	new_env = modify_split(g_glob.environ, env_shlvl(), 1, '='); // THIS IS THE PROBLEM!!!
-	if (execve(path, cmd, new_env) == -1)
+	// new_env = modify_split(g_glob.environ, env_shlvl(), 1, '='); // THIS IS THE PROBLEM!!!
+	if (execve(path, cmd, g_glob.environ) == -1)
 	{
 		error("no such file or directory", 127);
 		freedom("a", path);

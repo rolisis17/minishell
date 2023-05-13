@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   splitting.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/12 17:23:28 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/13 12:56:54 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ char	**merge_split(char **split, char **to_merge, int arg, int flag)
 	while (split[++i])
 		new_split = add_split(new_split, split[i], 0);
 	if (!arg)
-		freedom("ss", split, to_merge);
+		split = freedom("ss", split, to_merge);
 	f = -1;
 	return (new_split);
 }
@@ -177,5 +177,33 @@ char	*split_n_join(char *str, char **split, int spliter)
 	else
 		res = ft_strdup(split[0]);
 	freedom("sa", split, str);
+	return (res);
+}
+
+char	**merge_split_new(char **og, char **new)
+{
+	int		len;
+	int		word;
+	int		i;
+	char 	**res;
+	
+	i = -1;
+	len = word_count(og) + word_count(new);
+	res = (char **) malloc(sizeof(char *) * (len + 1));
+	while (og[++i])
+	{
+		word = ft_strlen(og[i]);
+		res[i] = ft_calloc(word + 1, sizeof(char));
+		ft_strlcpy(res[i], og[i], word + 1);
+	}
+	len = 0;
+	while (new[len])
+	{
+		word = ft_strlen(new[len]);
+		res[i] = ft_calloc(word + 1, sizeof(char));
+		ft_strlcpy(res[i++], new[len++], word + 1);
+	}
+	res[i] = NULL;
+	og = freedom("ss", og, new);
 	return (res);
 }

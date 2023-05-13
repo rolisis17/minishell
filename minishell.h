@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/12 22:00:33 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/13 12:59:58 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_shell
 	int		exit_flag;
 	int		pipe_flag;
 	int		out_flag;
+	int		q_flag;
 	int		file_err;
 	int		new_line; // if 0 nothing in current line has been executed ?
 	t_store	*files;
@@ -158,15 +159,10 @@ void	*freedom(const char *str, ...);
 void	free_check(void *freeable);
 void	freelist(t_store *list);
 //bonus
-int		bonus(t_shell *data, char *new);
-int		priority(t_shell *data, char *new);
-void	get_op_data(t_shell *data);
-void	execution(t_shell *data, char *new);
-void	clear_pipe(t_shell *data);
-int		op_check(t_shell *data);
-void	data_to_pipe(t_shell *data);
-void	get_op_data(t_shell *data);
 char	**wild_cards(char **cmd);
+char	**read_folder(char *str);
+void	how_split(t_shell *data, char **wild);
+char	**merge_split_new(char **og, char **new);
 
 extern t_glob	g_glob;
 

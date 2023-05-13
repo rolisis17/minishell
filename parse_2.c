@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/12 23:02:58 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/13 13:01:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 int	space(t_shell *data, char *new, int arg)
 {
 	int	i;
+	char	**wild;
 
 	i = 0;
 	data->res = NULL;
+	wild = NULL;
 	while (end_search(new[i]) == 0)
 	{
 		if (new[i] == 34 || new[i] == 39)
@@ -27,17 +29,34 @@ int	space(t_shell *data, char *new, int arg)
 		else
 			data->res = char_join(data->res, new[i++]);
 	}
+	if (ft_strchr(data->res, '*') != NULL && data->q_flag == 0)
+		wild = read_folder(data->res);
+	data->q_flag = 0;
 	if (arg == 1)
 		return (i);
-	if (data->cmd)
+	how_split(data, wild);
+	data->res = freedom("a", data->res);
+	return (i - 1);
+}
+
+void	how_split(t_shell *data, char **wild)
+{
+	if (data->cmd && wild)
+	// {
+		// printf("%s\n", wild[0]);
+		data->cmd = merge_split_new(data->cmd, wild);
+	// }
+	else if (data->cmd)
 		data->cmd = add_split(data->cmd, data->res, 0);
 	else if (ft_strlen(data->res) == 0)
 		error("Command '' not found", 127);
 	else
-		data->cmd = ft_split(data->res, 1);
-	if (data->res)
-		free(data->res);
-	return (i - 1);
+	{
+		if (wild)
+			data->cmd = copy_split(wild, 0);
+		else
+			data->cmd = ft_split(data->res, 1);
+	}
 }
 
 int	quote(t_shell *data, char *new)
@@ -54,6 +73,7 @@ int	quote(t_shell *data, char *new)
 	temp = ft_substr(new, 1, ptr - new - 1);
 	data->len = ft_strlen(temp);
 	check_substr(data, temp, new[0]);
+	data->q_flag = 1;
 	return (data->len + 2);
 }
 

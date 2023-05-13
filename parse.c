@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/12 22:59:29 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/13 11:15:15 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ t_shell	*data_init(void)
 	data->exit_flag = 0;
 	data->pipe_flag = 0;
 	data->out_flag = 0;
+	data->q_flag = 0;
 	data->file_err = 0;
 	data->files = NULL;
 	g_glob.here_flag = 0;
