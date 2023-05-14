@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/13 13:01:13 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/14 12:04:06 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	space(t_shell *data, char *new, int arg)
 	i = 0;
 	data->res = NULL;
 	wild = NULL;
+	data->here_limiter = 0;
 	while (end_search(new[i]) == 0)
 	{
 		if (new[i] == 34 || new[i] == 39)
@@ -42,10 +43,7 @@ int	space(t_shell *data, char *new, int arg)
 void	how_split(t_shell *data, char **wild)
 {
 	if (data->cmd && wild)
-	// {
-		// printf("%s\n", wild[0]);
 		data->cmd = merge_split_new(data->cmd, wild);
-	// }
 	else if (data->cmd)
 		data->cmd = add_split(data->cmd, data->res, 0);
 	else if (ft_strlen(data->res) == 0)
@@ -70,6 +68,7 @@ int	quote(t_shell *data, char *new)
 		data->res = ft_strjoin_mod(data->res, new, 0);
 		return (ft_strlen(new));
 	}
+	data->here_limiter = 1;
 	temp = ft_substr(new, 1, ptr - new - 1);
 	data->len = ft_strlen(temp);
 	check_substr(data, temp, new[0]);
@@ -105,7 +104,8 @@ void	pipex_2(t_shell *data, int arg)
 {
 	if (ft_strncmp(data->cmd[0], "cd", 3) == 0 \
 		|| ft_strncmp(data->cmd[0], "export", 7) == 0 \
-		|| ft_strncmp(data->cmd[0], "unset", 6) == 0)
+		|| ft_strncmp(data->cmd[0], "unset", 6) == 0 \
+		|| ft_strncmp(data->cmd[0], "exit", 5) == 0)
 	{
 		data->cmd = freedom("s", data->cmd);
 		close(data->fd[0]);

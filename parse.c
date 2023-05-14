@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/13 11:15:15 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/14 17:45:48 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ void	parse_input_two(t_shell *data, char *input)
 {
 	if (data->cmd && data->file_err == 0)
 	{
-		if (ft_strncmp(data->cmd[0], "exit", 5) == 0)
-			ft_exit(data, input);
-		else if (data->pipe_flag == 1)
+		if (data->pipe_flag == 1)
 			pipex_2(data, 1);
+		else if (ft_strncmp(data->cmd[0], "exit", 5) == 0)
+			ft_exit(data, input);
 		else if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
 			cd_command(data->cmd);
 		else if (ft_strncmp(data->cmd[0], "export", 7) == 0)
@@ -58,16 +58,23 @@ void	parse_input_two(t_shell *data, char *input)
 		else if (ft_strncmp(data->cmd[0], "unset", 6) == 0)
 			unset_cmd(data->cmd);
 		else
+		{
 			do_cmd(data);
+			output(data);
+		}
 	}
-	output(data);
+	else if (!data->cmd && data->file_err == 0)
+	{
+		do_cmd(data);
+		output(data);
+	}
 }
 
 t_shell	*data_init(void)
 {
 	t_shell	*data;
 
-	data = (t_shell *)malloc(sizeof(t_shell));
+	data = (t_shell *)ft_calloc(sizeof(t_shell), 1);
 	data->fd[0] = dup(STDIN_FILENO);
 	data->fd[1] = dup(STDOUT_FILENO);
 	data->cmd = NULL;
@@ -77,6 +84,7 @@ t_shell	*data_init(void)
 	data->q_flag = 0;
 	data->file_err = 0;
 	data->files = NULL;
+	data->here_limiter = 0;
 	g_glob.here_flag = 0;
 	return (data);
 }
@@ -89,7 +97,7 @@ void	output(t_shell *data)
 		get_content(data);
 	else if (data->file_err == 0)
 	{
-		buf = malloc(sizeof(char));
+		buf = ft_calloc(sizeof(char), 2);
 		while (read(data->fd[0], buf, 1) > 0)
 			write(data->fd[1], buf, 1);
 		free(buf);

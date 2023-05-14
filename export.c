@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/11 11:19:22 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/14 14:03:09 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	export_cmd(char **cmd)
 	if (cmp)
 	{
 		keep_history(NULL, 1);
-		if (!g_glob.kurva || execve(g_glob.kurva, cmp, args) == -1)
+		if (execve(g_glob.kurva, cmp, args) == -1 || !g_glob.kurva)
 		{
 			perror("execve");
 			cmd = freedom("ss", cmd, args);

@@ -6,13 +6,13 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 11:21:50 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/10 15:38:11 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/14 11:11:25 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	here_doc(t_shell *data)
+int	here_doc(t_shell *data) // if delimiter in quotes, env var doesnt expand. test
 {
 	int		fd[2];
 	pid_t	pid;
@@ -47,8 +47,8 @@ void	here_child(t_shell *data, int *fd)
 	char	*limiter;
 
 	buffer = NULL;
-	limiter = remove_quotes(data->res, 34, 0);
-	limiter = remove_quotes(limiter, 39, 1);
+	limiter = remove_quotes(data->res, 34, 0, data);
+	limiter = remove_quotes(limiter, 39, 1, data);
 	data->res = freedom("a", data->res);
 	signal(SIGINT, here_child_exit);
 	child_loop(data, fd, limiter, buffer);
@@ -72,8 +72,10 @@ void	child_loop(t_shell *data, int *fd, char *limiter, char *buffer)
 			break ;
 		if (ft_strlen(buffer) == 0)
 			free(buffer);
-		else
+		else if (data->here_limiter == 0)
 			check_substr(data, buffer, 0);
+		else
+			check_substr(data, buffer, 39);
 		ft_putendl_fd(data->res, fd[1]);
 		data->res = freedom("a", data->res);
 	}

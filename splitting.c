@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/13 12:56:54 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/14 15:05:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**add_split(char **split, char *new, int arg)
 	if (split[0] == NULL)
 		return (ft_split(new, 32));
 	i = word_count(split);
-	new_split = (char **) malloc(sizeof(char *) * (i + 2));
+	new_split = (char **) ft_calloc(sizeof(char *), (i + 2));
 	if (!new_split)
 		return (0);
 	i = -1;
@@ -98,30 +98,34 @@ char	**remove_split(char **split, char *rem, int arg)
 
 char	**modify_split(char **split, char *mod, int arg, int flag)
 {
-	int		i;
-	int		len;
-	char	**new_split;
+    int     i;
+	int		f;
+    int     len;
+    char    **new_split;
 
-	i = word_count(split);
-	new_split = (char **) malloc(sizeof(char *) * (i + 1));
-	if (!new_split)
+	if (!mod)
+		return (split);
+    i = word_count(split);
+	new_split = (char **) ft_calloc(sizeof(char *), i + 1);
+    if (!new_split)
 		return (0);
-	i = -1;
-	while (split[++i])
-	{
+    i = -1;
+	f = -1;
+    while (split[++i])
+    {
 		if ((ft_strncmp(split[i], mod, strintchr(mod, flag) - 1) != 0))
 		{
 			len = ft_strlen(split[i]);
-			new_split[++i] = ft_calloc(len + 1, sizeof(char));
+			new_split[i] = ft_calloc(len + 1, sizeof(char));
 			ft_strlcpy(new_split[i], split[i], len + 1);
 		}
 		else
-			new_split[++i] = mod;
-	}
-	new_split[++i] = NULL;
+			new_split[i] = ft_strdup(mod);
+    }
+    // new_split[++i] = NULL;
 	if (!arg)
-		freesplit(split);
-	return (new_split);
+    	freesplit(split);
+    return(new_split);
 }
 
 char	**merge_split(char **split, char **to_merge, int arg, int flag)

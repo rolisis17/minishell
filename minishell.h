@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/13 12:59:58 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/14 17:16:41 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,15 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
 # include <term.h>
 # include <dirent.h>
+# include <errno.h>
 
 typedef struct s_storage
 {
@@ -43,7 +46,7 @@ typedef struct s_shell
 	int		out_flag;
 	int		q_flag;
 	int		file_err;
-	int		new_line; // if 0 nothing in current line has been executed ?
+	int		here_limiter;
 	t_store	*files;
 }				t_shell;
 
@@ -66,6 +69,8 @@ void	execute(char **cmd);
 char	*env_shlvl(void);
 void	do_cmd(t_shell *data);
 void	check_builtin(char **cmd);
+char	*exable(char **cmd);
+int		file_checker(char *path);
 //signals
 void	sig_handler(void);
 void	ctrlc(int signum);
@@ -121,7 +126,7 @@ void	pipex_2(t_shell *data, int arg);
 // parse 3
 int		env_var(t_shell *data, char *new);
 void	check_substr(t_shell *data, char *new, char c);
-char	*remove_quotes(char *str, int qte, int arg);
+char	*remove_quotes(char *str, int qte, int arg, t_shell *data);
 char	*get_var(t_shell *data, char *str);
 // redirect
 int		file_in(t_shell *data, char *new);

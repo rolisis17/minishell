@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/11 18:06:45 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/14 15:59:42 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,15 @@ int main(int ac, char **av, char **envp)
 	{
 		sig_handler();
 		line = readline("\033[0;95mminishit\033[0m > ");
-		input = ft_strtrim(line, " ");
 		keep_history(line, 0);
 		if (line == NULL)
 			quit(line);
+		input = ft_strtrim(line, " ");
 		freedom("a", line);
 		if ((check_empty_line(input))) // fix ".", fixed i think...
 			parse_input(input);
     }
+	rl_clear_history();
 	return (0);
 }
 
@@ -51,6 +52,8 @@ void	keep_history(char *line, int check)
 			keep = add_split(keep, line, 0);
 		add_history(line);
 	}
+	if (ft_strncmp(line, "exit", 4) == 0)
+		keep = freedom("s", keep);
 	if (check && keep)
 		hiddenfile_history(keep);
 }
@@ -114,7 +117,7 @@ void	hiddenfile_history(char **keep)
 		while (keep[++counter])
 			ft_putendl_fd(keep[counter], fd);
 		close(fd);
-		free (hist);
+		keep = freedom ("sa", keep, hist);
 	}
 }
 

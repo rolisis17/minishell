@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:44:24 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/14 17:59:15 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,11 @@ void	cd_command(char **splited)
 	oldpwd = set_oldpwd();
 	prev = NULL;
 	if (splited[1] && splited[2])
-		error("cd: too many arguments", 0); // find error code to send as second param!
+	{
+		ft_putendl_fd("cd: too many arguments", 2);
+		g_glob.exit_status = 1;
+		return ;
+	}
 	prev = relative_cd(splited[1]);
 	if (chdir(prev) == -1)
 	{
@@ -83,6 +87,8 @@ char	*prev_folder(char *path, int safe)
 	char	*new;
 
 	f = ft_strlen(path);
+	if (ft_strncmp(path, "/", 2) == 0)
+		return (path);
 	while ((path[--f - 1] != '/') && (ft_strncmp("/", path, 1) == 0))
 		;
 	new = ft_calloc(f + 1, sizeof(char));
