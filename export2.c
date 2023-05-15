@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:29:44 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/15 18:03:47 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ int	export_varmod(char *cmd)
 
 	len = strintchr(cmd, '=');
 	env_var = ft_substr(cmd, 0, len);
-	// printf("%s\n", env_var);
 	if (getenv(env_var))
 		ft_strlcpy(getenv(env_var), cmd + len + 1, ft_strlen(cmd + len));
 	else
 		len = 0;
-	// printf("%s\n", getenv(env_var));
 	free (env_var);
 	return (len);
 }
@@ -42,20 +40,6 @@ int	export_check_args(int f, char **cmd)
 	}
 	return (1);
 }
-
-// int	export_check_equal(char *cmd)
-// {
-// 	int	f;
-
-// 	f = -1;
-// 	while (cmd[++f])
-// 	{
-// 		if (ft_isalnum(cmd[f]) || cmd[f] == 95 || (cmd[f] == '='))
-// 			if (cmd[f] == '=')
-// 				return (1);
-// 	}
-// 	return (0);
-// }
 
 int	export_check_equal(char *cmd)
 {

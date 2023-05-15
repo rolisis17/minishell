@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 09:24:52 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/14 10:38:54 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:55:18 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	file_in(t_shell *data, char *new)
 		g_glob.here_flag = here_doc(data);
 	else
 		open_it(data);
-	freedom("a", data->res);
+	data->res = freedom("a", data->res);
 	return (data->len + flag + sp);
 }
 
@@ -68,7 +68,10 @@ void	open_it(t_shell *data)
 	data->fd[0] = open(data->res, O_RDONLY);
 	if (data->fd[0] < 0)
 	{
-		error("Error", 1);
+		if (data->file_err == 0)
+			error("Error", 1);
+		else 
+			g_glob.exit_status = 1;
 		data->cmd = freedom("s", data->cmd);
 		data->file_err = 1;
 	}

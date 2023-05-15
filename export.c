@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/14 14:03:09 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 16:44:33 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	export_cmd(char **cmd)
 		&& export_check_args(f, cmd))
 		{
 			cmp = ft_split(" ", 02);
-			args = add_split(args, cmd[f], 0);
+			args = add_split(args, cmd[f]);
 		}
 		if (!export_check_equal(cmd[f]))
 			export_print_error(cmd[f]);

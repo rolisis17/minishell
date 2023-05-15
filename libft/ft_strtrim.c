@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/03 12:03:10 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/02/22 16:43:21 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:50:01 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,15 @@ char	*ft_strtrim(char const *str, char const *set)
 	return (res);
 }
 
-/* int main()
-{
-    char str[] = "";
-    char set[] = "";
+// int main()
+// {
+//     char str[] = "  ls | ";
+//     char set[] = " ";
+// 	char *res;
 
-    printf("Start: %i\n", check_start(str, set));
-    printf("End: %i\n", check_end(str, set));
-    printf("String: $%s$\n", ft_strtrim(str, set));
-} */
+//     // printf("Start: %i\n", check_start(str, set));
+//     // printf("End: %i\n", check_end(str, set));
+// 	res = ft_strtrim(str, set);
+//     printf("String: $%s$\n", res);
+// 	free(res);
+// }

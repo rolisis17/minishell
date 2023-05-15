@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/14 17:45:48 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 19:08:24 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,21 @@ void	parse_input(char *input)
 		while (input[i] == 32)
 			i++;
 		if (input[i] == '|')
-			i += pipex_new(data, input + i);
+			i += pipex(data, input + i);
 		else if (input[i] == '<')
-			i += file_in(data, input + i + 1); // fix $_
+			i += file_in(data, input + i + 1);
 		else if (input[i] == '>')
 			i += file_out(data, input + i + 1);
 		else if (input[i] && input[i] != 32 && data->exit_flag == 0)
 			i += space(data, input + i, 0);
 		if (data->exit_flag == 1)
 		{
-			freedom("lsaa", data->files, data->cmd, input, data);
+			freedom("da", data, input); // problem might be data->res and closing fds
 			return ;
 		}
 	}
 	parse_input_two(data, input);
-	freedom("saa", data->cmd, input, data);
+	freedom("da", data, input);
 }
 
 void	parse_input_two(t_shell *data, char *input)
@@ -56,7 +56,7 @@ void	parse_input_two(t_shell *data, char *input)
 		else if (ft_strncmp(data->cmd[0], "export", 7) == 0)
 			export_cmd(data->cmd);
 		else if (ft_strncmp(data->cmd[0], "unset", 6) == 0)
-			unset_cmd(data->cmd);
+			unset_cmd(data->cmd, 0);
 		else
 		{
 			do_cmd(data);
@@ -104,6 +104,4 @@ void	output(t_shell *data)
 	}
 	if (data->files)
 		make_files(data);
-	close(data->fd[0]);
-	close(data->fd[1]);
 }

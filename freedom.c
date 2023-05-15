@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:58:38 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/08 08:15:32 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:43:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,20 @@ void	freesplit(char **splited)
 	splited = NULL;
 }
 
+void	clear_data(t_shell *data)
+{
+	if (data)
+	{
+		close(data->fd[0]);
+		close(data->fd[1]);
+		freesplit(data->cmd);
+		free_check(data->res);
+		if (data->files)
+			freelist(data->files);
+		free(data);	
+	}
+}
+
 void	*freedom(const char *str, ...)
 {
 	va_list	args;
@@ -69,6 +83,8 @@ void	*freedom(const char *str, ...)
 			freelist(va_arg(args, t_store *));
 		else if (str[i] == 'a')
 			free_check(va_arg(args, void *));
+		else if (str[i] == 'd')
+			clear_data(va_arg(args, t_shell *));
 		i++;
 	}
 	va_end(args);

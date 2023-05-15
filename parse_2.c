@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/14 12:04:06 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 16:53:13 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ int	space(t_shell *data, char *new, int arg)
 void	how_split(t_shell *data, char **wild)
 {
 	if (data->cmd && wild)
-		data->cmd = merge_split_new(data->cmd, wild);
+		data->cmd = merge_split(data->cmd, wild);
 	else if (data->cmd)
-		data->cmd = add_split(data->cmd, data->res, 0);
+		data->cmd = add_split(data->cmd, data->res);
 	else if (ft_strlen(data->res) == 0)
 		error("Command '' not found", 127);
 	else
@@ -76,18 +76,17 @@ int	quote(t_shell *data, char *new)
 	return (data->len + 2);
 }
 
-int	pipex_new(t_shell *data, char *new)
+int	pipex(t_shell *data, char *new)
 {
 	data->pipe_flag = 1;
 	data->len = 0;
 
-	if (data->file_err == 1) //??
+	if (data->file_err == 1)
 		data->cmd = freedom("s", data->cmd);
-	while (new[data->len] == '|') // check syntax error |  | eg
-			data->len++;
-	if (data->len > 2)
+	data->len = syntax_check(new);
+	if (data->len > 1)
 	{
-		error("Syntax Error", 2); // might need to store the error message until the end
+		error("Syntax Error", 2);
 		data->exit_flag = 1;
 		return (data->len - 1);
 	}
@@ -99,7 +98,6 @@ int	pipex_new(t_shell *data, char *new)
 	return (0);
 }
 
-
 void	pipex_2(t_shell *data, int arg)
 {
 	if (ft_strncmp(data->cmd[0], "cd", 3) == 0 \
@@ -109,7 +107,7 @@ void	pipex_2(t_shell *data, int arg)
 	{
 		data->cmd = freedom("s", data->cmd);
 		close(data->fd[0]);
-		data->fd[0] = dup(STDIN_FILENO); // clear pipe?
+		data->fd[0] = dup(STDIN_FILENO);
 	}
 	else
 	{

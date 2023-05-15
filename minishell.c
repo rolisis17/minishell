@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/14 15:59:42 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:27:19 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ int main(int ac, char **av, char **envp)
 	line = NULL;
     while (1)
 	{
-		sig_handler();
+		sig_handler(0);
 		line = readline("\033[0;95mminishit\033[0m > ");
 		keep_history(line, 0);
 		if (line == NULL)
 			quit(line);
 		input = ft_strtrim(line, " ");
 		freedom("a", line);
-		if ((check_empty_line(input))) // fix ".", fixed i think...
+		if ((check_empty_line(input)))
 			parse_input(input);
     }
 	rl_clear_history();
@@ -49,7 +49,7 @@ void	keep_history(char *line, int check)
 		if (!keep)
 			keep = ft_split(line, 02);
 		else
-			keep = add_split(keep, line, 0);
+			keep = add_split(keep, line);
 		add_history(line);
 	}
 	if (ft_strncmp(line, "exit", 4) == 0)
@@ -60,8 +60,6 @@ void	keep_history(char *line, int check)
 
 int	new_history(void)
 {
-	char	*gnl;
-	char	*res;
 	char	*hist;
 	int		fd;
 
@@ -74,31 +72,39 @@ int	new_history(void)
 		hist = ft_strjoin_mod(hist, ".minihist", 0);
 		if (access(hist, F_OK) == 0)
 		{
-			fd = open(hist, O_RDWR);
-			gnl = get_next_line(fd);
-			while (gnl)
-			{
-				res = ft_strtrim(gnl, "\n");
-				keep_history(res, 0);
-				freedom ("aa", res, gnl);
-				gnl = get_next_line(fd);
-			}
-			if (gnl)
-				free (gnl);
-			close (fd);
+			new_history_2(hist);
 			if (unlink(hist) == -1)
 			{
 				perror("unlink");
-				if (hist)
-					free (hist);
+				freedom("a", hist);
 				exit(EXIT_FAILURE);
 			}
 			fd = 600;
 		}
 	}
-	if (hist)
-		free (hist);
+	freedom("a", hist);
 	return (fd);
+}
+
+void	new_history_2(char *hist)
+{
+	char	*gnl;
+	char	*res;
+	int		fd;
+
+	fd = open(hist, O_RDWR);
+	if (fd < 0)
+		error("Error", 1);
+	gnl = get_next_line(fd);
+	while (gnl)
+	{
+		res = ft_strtrim(gnl, "\n");
+		keep_history(res, 0);
+		freedom ("aa", res, gnl);
+		gnl = get_next_line(fd);
+	}
+	freedom("a", gnl);
+	close (fd);
 }
 
 void	hiddenfile_history(char **keep)
@@ -119,23 +125,4 @@ void	hiddenfile_history(char **keep)
 		close(fd);
 		keep = freedom ("sa", keep, hist);
 	}
-}
-
-int	check_empty_line(char *line)
-{
-	int	f;
-
-	f = -1;
-	while (line[++f])
-	{
-		if (line[f] == '|' || line[f] == '&' || line[f] == ')')
-		{
-			error("Syntax Error", 2);
-			freedom("a", line);
-			return (0);
-		}
-		if (line[f] != '\n' && line[f] != 32)
-			return (1);
-	}
-	return (0);
 }

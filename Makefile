@@ -1,6 +1,6 @@
 SRC = minishell.c cmds.c parse.c signals.c parse_2.c splitting.c tools.c parse_3.c \
 storage.c freedom.c cd.c echo.c env.c exit.c export.c export2.c pwd.c unset.c redirect.c \
-here_doc.c tools_2.c
+here_doc.c tools_2.c cmd_tools.c
 BIN = bin
 OBJ = $(SRC:%.c=${BIN}/%.o)
 NAME = minishell

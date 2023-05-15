@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/14 17:34:26 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 17:54:40 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_exit(t_shell *data, char *input) // test what exit does in pipes ...
 	data->len = 0;
 	if (!data->cmd[1])
 	{
-		freedom("saa", data->cmd, input, data);
+		freedom("da", data, input);
 		quit(NULL);
 	}
 	while (data->cmd[1][data->len])
@@ -26,33 +26,39 @@ void	ft_exit(t_shell *data, char *input) // test what exit does in pipes ...
 		{
 			write(1, "exit\n", 5);
 			ft_putendl_fd("exit: numeric argument required", 2); 
-			freedom("saa", data->cmd, input, data);
+			freedom("da", data, input);
+			rl_clear_history();
     		exit (0);
 		}
 		data->len++;
 	}
+	ft_exit_part2(data, input);
+}
+
+void	ft_exit_part2(t_shell *data, char *input)
+{
 	if (data->cmd[2])
 	{
 		ft_putendl_fd("exit: too many arguments", 2);
-		return ; // find right error code and add to exit status
+		g_glob.exit_status = 1;
+		return ;
 	}
 	if (data->cmd[1])
 		g_glob.exit_status = ft_atoi(data->cmd[1]);
 	else
 		g_glob.exit_status = EXIT_SUCCESS;
-	freedom("saa", data->cmd, input, data);
+	freedom("ad", input, data);
 	write(1, "exit\n", 5);
 	rl_clear_history();
-    exit (g_glob.exit_status%255);
+    exit (g_glob.exit_status % 255);
 }
 
-// int	exit_error(char *str, int check) // not used
-// {
-// 	static int	exit;
-
-// 	if (check)
-// 		return (exit);
-// 	if (ft_strncmp("cd", str, 2) == 0)
-// 		exit = 126;
-// 	return (0);
-// }
+void	quit(char *str)
+{
+	if (str)
+		free(str);
+	write(1, "exit\n", 5);
+		g_glob.exit_status = EXIT_SUCCESS;
+	rl_clear_history();
+	exit (g_glob.exit_status);
+}

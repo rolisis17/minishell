@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 15:43:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/14 10:51:25 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 16:26:54 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	check_substr(t_shell *data, char *new, char c)
 	free(new);
 }
 
-char	*remove_quotes(char *str, int qte, int arg, t_shell *data) // this might be fucked if "S"T'O"P'"
+char	*remove_quotes(char *str, int qte, int arg, t_shell *data)
 {
 	char	*res;
 	char	*ptr;

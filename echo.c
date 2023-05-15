@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/14 14:02:51 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:01:02 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,10 @@ int	strintchr(char	*str, int c)
 	int	f;
 
 	f = 0;
-	// ft_putendl_fd(str, 2);
 	while (str[f] && str[f] != c)
 		f++;
 	if (!str[f])
 		f = 0;
-	// ft_putnbr_fd(f, 2);
 	return (f);
 }
 
@@ -57,7 +55,6 @@ char	**read_folder(char *str)
 	char			**folder;
 	DIR				*dir;
 	struct dirent	*entry;
-	// char	ass[256];
 	int				f;
 
 	dir = opendir(ft_strjoin_mod(this_folder_is(1), "/", 0));
@@ -65,19 +62,8 @@ char	**read_folder(char *str)
 	if (dir)
 	{
 		f = strintchr(str, '*');
-		// entry = readdir(dir);
 		while ((entry = readdir(dir)) != NULL)
-		{
-			// ft_strlcpy(ass, entry->d_name, ft_strlen(entry->d_name) + 1);
-			if (ft_strncmp(entry->d_name, str, f) == 0 && back_check(entry->d_name, str) == 0)
-			{
-				if (!folder)
-					folder = ft_split(entry->d_name, 1);
-				else
-					folder = add_split(folder, entry->d_name, 0);
-			}
-			// entry = readdir(dir);
-		}
+			folder = read_folder_2(entry, str, folder, f);
         closedir(dir);
 		return (folder);
     }
@@ -85,31 +71,17 @@ char	**read_folder(char *str)
         return (NULL);
 }
 
-char	**wild_cards(char **cmd)
+char	**read_folder_2(struct dirent *entry, char *str, char **folder, int f)
 {
-	char	**folder;
-	// char	**res;
-	int		f;
-
-	f = -1;
-	// res = NULL;
-	while (cmd[++f])
+	if (ft_strncmp(entry->d_name, str, f) == 0 \
+		&& back_check(entry->d_name, str) == 0)
 	{
-		if (ft_strchr(cmd[f], '*') != NULL)
-		{
-			folder = read_folder(cmd[f]);
-			if (folder)
-			{
-				// if (!res)
-				cmd = merge_split(cmd, folder, 0, f);
-				// else
-				// 	cmd = merge_split(res, folder, 0, word_count(res));
-			}
-		}
+		if (!folder)
+			folder = ft_split(entry->d_name, 1);
+		else
+			folder = add_split(folder, entry->d_name);
 	}
-	// if (!res)
-	return (cmd);
-	// return (res);
+	return (folder);
 }
 
 int	back_check(char *str, char *check)

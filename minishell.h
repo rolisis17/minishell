@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/14 17:16:41 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/15 18:25:40 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,28 +60,30 @@ typedef struct s_glob
 
 void	keep_history(char *line, int check);
 int		new_history(void);
+void	new_history_2(char *hist);
 void	hiddenfile_history(char **keep);
-int		check_empty_line(char *line);
 //cmds
+void	do_cmd(t_shell *data);
+void	cmd_child(t_shell *data, int *pipe_fd);
+void	execute(char **cmd);
+char	*exable(char **cmd);
+void	check_builtin(char **cmd);
+//cmd_tools
 char	*find_path(char *cmd);
 void	bad_cmd(char *path, char **cmd);
-void	execute(char **cmd);
 char	*env_shlvl(void);
-void	do_cmd(t_shell *data);
-void	check_builtin(char **cmd);
-char	*exable(char **cmd);
 int		file_checker(char *path);
 //signals
-void	sig_handler(void);
+void	sig_handler(int arg);
 void	ctrlc(int signum);
 void	interupt(int signum);
+void	child_quit(int signum);
 void 	here_child_exit(int signum);
 //builtins
 char	*this_folder_is(int	check);
 char	*prev_folder(char *path, int safe);
 void	set_pwd_noenv(char *newpwd, char *oldpwd);
 void	here_child_exit(int signum);
-void	quit(char *str);
 //pwd
 char	*this_folder_is(int check);
 char	*set_oldpwd(void);
@@ -96,9 +98,14 @@ void	env_cmd(char **cmd);
 void	set_path_env(char **envp);
 // exit
 void	ft_exit(t_shell *data, char *input);
+void	quit(char *str);
+void	ft_exit_part2(t_shell *data, char *input);
 //echo
 void	echo_cmd(char **cmd);
 int		strintchr(char	*str, int c);
+char	**read_folder(char *str);
+char	**read_folder_2(struct dirent *entry, char *str, char **folder, int f);
+int		back_check(char *str, char *check);
 //export
 void	export_cmd(char **cmd);
 char	*export_get_lower(char **env, char *to_compare);
@@ -111,7 +118,7 @@ int		export_check_equal(char *cmd);
 void	export_print_error(char *str);
 void	very_trash(char	*str, int flag, int to_add);
 // unset
-void	unset_cmd(char **cmd);
+void	unset_cmd(char **cmd, int f);
 //parse
 void	parse_input(char *input);
 void	parse_input_two(t_shell *data, char *input);
@@ -121,8 +128,8 @@ void	output(t_shell *data);
 int		space(t_shell *data, char *new, int arg);
 int		quote(t_shell *data, char *new);
 int		pipex(t_shell *data, char *new);
-int		pipex_new(t_shell *data, char *new);
 void	pipex_2(t_shell *data, int arg);
+void	how_split(t_shell *data, char **wild);
 // parse 3
 int		env_var(t_shell *data, char *new);
 void	check_substr(t_shell *data, char *new, char c);
@@ -137,13 +144,11 @@ int		here_doc(t_shell *data);
 void	here_child(t_shell *data, int *fd);
 void	child_loop(t_shell *data, int *fd, char *limiter, char *buffer);
 //splitting
-char	**add_split(char **split, char *new, int arg);
+char	**add_split(char **split, char *new);
 char	**copy_split(char **split, int arg);
 char	**remove_split(char **split, char *rem, int arg);
 char	**modify_split(char **split, char *mod, int arg, int flag);
-char	**merge_split(char **split, char **to_merge, int arg, int flag);
-char	*split_n_join(char *str, char **split, int spliter);
-int		word_count(char **split);
+char	**merge_split(char **og, char **new);
 //tools
 int		get_cmd(char *str, int arg);
 void	error(char *msg, int arg);
@@ -152,7 +157,10 @@ char	*char_join(char *str, int c);
 int		check_status(char *msg);
 //tools 2
 int		end_search(int c);
-int		back_check(char *str, char *check);
+int		syntax_check(char *str);
+int		word_count(char **split);
+char	*split_n_join(char *str, char **split, int spliter);
+int		check_empty_line(char *line);
 // storage
 void	store_it(t_shell *data, int flag);
 void	make_files(t_shell *data);
@@ -163,11 +171,7 @@ void	freesplit(char **splited);
 void	*freedom(const char *str, ...);
 void	free_check(void *freeable);
 void	freelist(t_store *list);
-//bonus
-char	**wild_cards(char **cmd);
-char	**read_folder(char *str);
-void	how_split(t_shell *data, char **wild);
-char	**merge_split_new(char **og, char **new);
+void	clear_data(t_shell *data);
 
 extern t_glob	g_glob;
 
