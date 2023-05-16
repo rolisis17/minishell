@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:47:25 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:30:17 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,12 @@ void	set_path_env(char **envp)
 		keep_history(NULL, 1);
 		g_glob.kurva = getenv("_");
 	}
+	if (back_check(g_glob.kurva, "minishell") == 0)
+		return ;
+	else
+	{
+		ft_strlcpy(getenv("_"), g_glob.kurva, ft_strlen(g_glob.kurva) + 1);
+		g_glob.kurva = getenv("_");
+	}
 }
+
