@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 13:44:17 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 20:46:25 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	parse_input_two(t_shell *data)
 		else if (ft_strncmp(data->cmd[0], "cd", 3) == 0)
 			cd_command(data->cmd);
 		else if (ft_strncmp(data->cmd[0], "export", 7) == 0)
-			export_cmd(data->cmd, data->fd);
+			export_cmd(data->cmd);
 		else if (ft_strncmp(data->cmd[0], "unset", 6) == 0)
 			unset_cmd(data->cmd, 0);
 		else

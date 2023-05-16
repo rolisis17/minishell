@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 15:07:31 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 21:10:39 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(int ac, char **av, char **envp)
 	if (ac > 1)
 	{
 		// printf("%s\n", av[1]);
-		if (ft_strncmp("12e9f3a64d2cdca9b7af7dd3143cf794cd4435f7", av[1], 40) == 0)
+		if (ft_strncmp("de3ac21778e51de199438300e1a9f816c618d33a", av[1], 40) == 0)
 			exit(ft_atoi(av[2]));
 		else
 			error("minishell doesn't take arguments", 0);

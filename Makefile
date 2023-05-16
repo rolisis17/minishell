@@ -2,6 +2,7 @@ SRC = minishell.c cmds.c parse.c signals.c parse_2.c splitting.c tools.c parse_3
 storage.c freedom.c cd.c echo.c env.c exit.c export.c export2.c pwd.c unset.c redirect.c \
 here_doc.c tools_2.c cmd_tools.c
 BIN = bin
+VAL = suppress
 OBJ = $(SRC:%.c=${BIN}/%.o)
 NAME = minishell
 HEADERS = minishell.h
@@ -33,19 +34,21 @@ $(BIN) :
 $(BIN)/%.o : %.c
 	@$(CC) $(FLAGS) -c $< -o $@
 
-valgrind : 
-	@touch suppress
-	@echo { \
-	ignore_readline_conditional_jump_errors \
-	Memcheck:Leak \
-	... \
-	obj:/usr/lib/x86_64-linux-gnu/libreadline.so.* \
-	} > suppress
+valgrind : $(VAL)
 	@valgrind --leak-check=full --show-leak-kinds=all --suppressions=suppress ./$(NAME)
-	@rm suppress
+
+$(VAL) :
+	@echo '{' > suppress
+	@echo '	ignore_readline_conditional_jump_errors' >> suppress
+	@echo '	Memcheck:Leak' >> suppress
+	@echo '	...' >> suppress
+	@echo '	obj:/usr/lib/x86_64-linux-gnu/libreadline.so.*' >> suppress
+	@echo '}' >> suppress
+
 
 clean :
 	@$(RM) $(BIN)
+	@rm $(VAL)
 	@echo "$(RED)>>>> Cleaned <<<<$(END)"
 
 fclean : clean

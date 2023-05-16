@@ -6,13 +6,13 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 12:27:29 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 20:46:00 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	export_cmd(char **cmd, int *fds)
+void	export_cmd(char **cmd)
 {
 	char	**args;
 	char	**cmp;
@@ -35,8 +35,7 @@ void	export_cmd(char **cmd, int *fds)
 	if (cmp)
 	{
 		keep_history(NULL, 1);
-		close(fds[0]);
-		close(fds[1]);
+		cmd = freedom("s", cmd);
 		if (execve(g_glob.kurva, cmp, args) == -1 || !g_glob.kurva)
 		{
 			perror("execve");

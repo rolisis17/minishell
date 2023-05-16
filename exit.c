@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 15:06:46 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 21:10:49 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	exiting(int arg)
 	char *exit[4];
 	
 	exit[0] = "";
-	exit[1] = "12e9f3a64d2cdca9b7af7dd3143cf794cd4435f7";
+	exit[1] = "de3ac21778e51de199438300e1a9f816c618d33a";
 	if (arg != 0)
 		exit[2] = ft_itoa(arg);
 	else 

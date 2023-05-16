@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 14:59:09 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 20:46:15 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char	**read_folder(char *str);
 char	**read_folder_2(struct dirent *entry, char *str, char **folder, int f);
 int		back_check(char *str, char *check);
 //export
-void	export_cmd(char **cmd, int *fds);
+void	export_cmd(char **cmd);
 char	*export_get_lower(char **env, char *to_compare);
 char	*export_get_seclow(char **env, char *to_compare);
 char	*export_get_big(char **env, char *to_compare);
