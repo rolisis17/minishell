@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 11:21:50 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 09:37:43 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 15:52:54 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ void	here_child(t_shell *data, int *fd)
 	data->res = freedom("a", data->res);
 	signal(SIGINT, here_child_exit);
 	child_loop(data, fd, limiter, buffer);
-	data->res = freedom("aaa", buffer, limiter, data->res);
+	keep_history(NULL, 2);
+	data = freedom("aada", buffer, limiter, data, data);
 	exit(0);
 }
 

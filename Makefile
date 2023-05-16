@@ -33,6 +33,17 @@ $(BIN) :
 $(BIN)/%.o : %.c
 	@$(CC) $(FLAGS) -c $< -o $@
 
+valgrind : 
+	@touch suppress
+	@echo { \
+	ignore_readline_conditional_jump_errors \
+	Memcheck:Leak \
+	... \
+	obj:/usr/lib/x86_64-linux-gnu/libreadline.so.* \
+	} > suppress
+	@valgrind --leak-check=full --show-leak-kinds=all --suppressions=suppress ./$(NAME)
+	@rm suppress
+
 clean :
 	@$(RM) $(BIN)
 	@echo "$(RED)>>>> Cleaned <<<<$(END)"

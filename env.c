@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 15:11:39 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 15:23:08 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	env_cmd(t_shell *data)
 
 void	set_path_env(char **envp)
 {
+	char	*str;
+
 	g_glob.environ = envp;
 	g_glob.exit_status = 0;
 	if (getenv("_"))
@@ -39,7 +41,9 @@ void	set_path_env(char **envp)
 		return ;
 	else
 	{
-		g_glob.kurva = ft_strjoin(this_folder_is(1), "/minishell");;
+		str = this_folder_is(1);
+		g_glob.kurva = ft_strjoin(str, "/minishell");
+		free (str);
 		ft_strlcpy(getenv("_"), g_glob.kurva, ft_strlen(g_glob.kurva) + 1);
 		free (g_glob.kurva);
 		g_glob.kurva = getenv("_");
