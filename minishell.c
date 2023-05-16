@@ -6,37 +6,43 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 18:27:19 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 15:07:31 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(int ac, char **av, char **envp)
+int	main(int ac, char **av, char **envp)
 {
-    char *line;
-	char	*input;
+	char	*line;
+	t_shell	*data;
 
 	if (ac > 1)
-		error("minishell doesn't take arguments", 0);
+	{
+		// printf("%s\n", av[1]);
+		if (ft_strncmp("12e9f3a64d2cdca9b7af7dd3143cf794cd4435f7", av[1], 40) == 0)
+			exit(ft_atoi(av[2]));
+		else
+			error("minishell doesn't take arguments", 0);
+	}
 	if (av || ac)
-	set_path_env(envp);
+		set_path_env(envp);
 	if (!new_history())
 		ft_printf("\033[2J\033[1;1H");
 	line = NULL;
-    while (1)
+	data = ft_calloc(sizeof(t_shell), 1);
+	while (1)
 	{
 		sig_handler(0);
 		line = readline("\033[0;95mminishit\033[0m > ");
 		keep_history(line, 0);
 		if (line == NULL)
-			quit(line);
-		input = ft_strtrim(line, " ");
+			quit(data, line);
+		data->input = ft_strtrim(line, " ");
 		freedom("a", line);
-		if ((check_empty_line(input)))
-			parse_input(input);
-    }
-	rl_clear_history();
+		if ((check_empty_line(data->input)))
+			parse_input(data);
+	}
 	return (0);
 }
 
@@ -52,8 +58,12 @@ void	keep_history(char *line, int check)
 			keep = add_split(keep, line);
 		add_history(line);
 	}
-	if (ft_strncmp(line, "exit", 4) == 0)
+	if (ft_strncmp(line, "exit", 4) == 0 || check == 2)
+	{
 		keep = freedom("s", keep);
+		rl_clear_history();
+		return ;
+	}
 	if (check && keep)
 		hiddenfile_history(keep);
 }

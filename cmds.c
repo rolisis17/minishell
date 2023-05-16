@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 18:35:30 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 13:54:22 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ void	cmd_child(t_shell *data, int *pipe_fd)
 		close (pipe_fd[1]);
 	else
 		dup2(pipe_fd[1], STDOUT_FILENO);
-	execute(data->cmd);
+	execute(data, data->cmd);
 }
 
-void	execute(char **cmd)
+void	execute(t_shell *data, char **cmd)
 {
 	char		*path;
 	char		**new_env;
@@ -59,10 +59,10 @@ void	execute(char **cmd)
 	new_env = NULL;
 	if (cmd == NULL)
 		exit(0);
-	check_builtin(cmd);
+	check_builtin(data, cmd);
 	path = exable(cmd);
 	if (!path)
-		bad_cmd(path, cmd);
+		bad_cmd(data, path);
 	new_env = modify_split(g_glob.environ, env_shlvl(), 1, '=');
 	if (file_checker(path) == 1)
 	{
@@ -80,7 +80,7 @@ void	execute(char **cmd)
 char	*exable(char **cmd)
 {
 	char	*path;
-	
+
 	path = NULL;
 	if (ft_strncmp("/", cmd[0], 1) == 0)
 		path = ft_strdup(cmd[0]);
@@ -99,17 +99,23 @@ char	*exable(char **cmd)
 	return (path);
 }
 
-void	check_builtin(char **cmd)
+void	check_builtin(t_shell *data, char **cmd)
 {
 	if (ft_strncmp(cmd[0], "pwd", 4) == 0)
+	{
 		this_folder_is(0);
+		keep_history(NULL, 2);
+		data = freedom("da", data, data);
+		exit (0);
+	}
 	else if (ft_strncmp(cmd[0], "env", 4) == 0)
-		env_cmd(cmd);
+		env_cmd(data);
 	else if (ft_strncmp(cmd[0], "echo", 5) == 0)
-		echo_cmd(cmd);
+		echo_cmd(data, cmd);
 	if (ft_strncmp(cmd[0], "exit", 5) == 0)
 	{
-		cmd = freedom("s", cmd);
+		keep_history(NULL, 2);
+		data = freedom("da", data, data);
 		exit(0);
 	}
 }

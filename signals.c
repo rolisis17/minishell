@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 16:07:02 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 16:38:18 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 09:32:24 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ void	sig_handler(int arg)
 	if (arg == 0)
 	{
 		signal(SIGINT, ctrlc);
-		signal(SIGQUIT, SIG_IGN);	
+		signal(SIGQUIT, SIG_IGN);
 	}
 	else if (arg == 1)
 	{
 		signal(SIGINT, interupt);
-    	signal(SIGQUIT, interupt);
+		signal(SIGQUIT, interupt);
 	}
 }
 

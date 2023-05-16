@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 15:43:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 16:26:54 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 09:30:58 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	env_var(t_shell *data, char *new)
 
 	var = get_var(data, new);
 	if (var == NULL)
-		return(2);
+		return (2);
 	var_len = ft_strlen(var);
 	if (ft_strncmp(var, "$", 2) == 0)
 	{
@@ -111,7 +111,7 @@ char	*get_var(t_shell *data, char *str)
 	while (str[++f])
 	{
 		if (ft_isalnum(str[f]) == 0 && str[f] != 95)
-			break;
+			break ;
 	}
 	if (f == 1)
 		var = ft_substr(str, 0, f);

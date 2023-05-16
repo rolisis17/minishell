@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 11:21:50 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 18:06:42 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 09:37:43 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void	here_child(t_shell *data, int *fd)
 
 void	child_loop(t_shell *data, int *fd, char *limiter, char *buffer)
 {
-	int len;
-	
+	int	len;
+
 	len = ft_strlen(limiter);
 	while (1)
 	{

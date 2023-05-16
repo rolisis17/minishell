@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/15 18:03:47 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 09:31:12 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	export_check_equal(char *cmd)
 		if (ft_isalnum(cmd[f]) || cmd[f] == 95)
 			f++;
 		else
-			break;
+			break ;
 	}
 	if (cmd[f] == '=')
 		return (1);

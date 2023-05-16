@@ -6,36 +6,37 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/15 17:54:40 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 15:06:46 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_exit(t_shell *data, char *input) // test what exit does in pipes ...
+void	ft_exit(t_shell *data)
 {
 	data->len = 0;
 	if (!data->cmd[1])
 	{
-		freedom("da", data, input);
-		quit(NULL);
+		freedom("d", data);
+		quit(data, NULL);
 	}
 	while (data->cmd[1][data->len])
 	{
 		if (ft_isdigit(data->cmd[1][data->len]) == 0)
 		{
 			write(1, "exit\n", 5);
-			ft_putendl_fd("exit: numeric argument required", 2); 
-			freedom("da", data, input);
-			rl_clear_history();
-    		exit (0);
+			ft_putendl_fd("exit: numeric argument required", 2);
+			keep_history(NULL, 2);
+			data = freedom("da", data, data);
+			exiting(2);
+			// exit(0);
 		}
 		data->len++;
 	}
-	ft_exit_part2(data, input);
+	ft_exit_part2(data);
 }
 
-void	ft_exit_part2(t_shell *data, char *input)
+void	ft_exit_part2(t_shell *data)
 {
 	if (data->cmd[2])
 	{
@@ -47,18 +48,34 @@ void	ft_exit_part2(t_shell *data, char *input)
 		g_glob.exit_status = ft_atoi(data->cmd[1]);
 	else
 		g_glob.exit_status = EXIT_SUCCESS;
-	freedom("ad", input, data);
+	data = freedom("da", data, data);
+	keep_history(NULL, 2);
 	write(1, "exit\n", 5);
-	rl_clear_history();
-    exit (g_glob.exit_status % 255);
+	// exit (g_glob.exit_status % 255);
+	exiting(g_glob.exit_status % 255);
 }
 
-void	quit(char *str)
+void	quit(t_shell *data, char *str)
 {
-	if (str)
-		free(str);
+	data = freedom("aa", data, str);
 	write(1, "exit\n", 5);
 		g_glob.exit_status = EXIT_SUCCESS;
-	rl_clear_history();
-	exit (g_glob.exit_status);
+	keep_history(NULL, 2);
+	// exit (g_glob.exit_status);
+	exiting(g_glob.exit_status % 255);
+}
+
+void	exiting(int arg)
+{
+	char *exit[4];
+	
+	exit[0] = "";
+	exit[1] = "12e9f3a64d2cdca9b7af7dd3143cf794cd4435f7";
+	if (arg != 0)
+		exit[2] = ft_itoa(arg);
+	else 
+		exit[2] = ft_itoa(0);
+	exit[3] = NULL;
+
+	execve(g_glob.kurva, exit, g_glob.environ);
 }

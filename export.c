@@ -6,19 +6,19 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/15 16:44:33 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 12:27:29 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	export_cmd(char **cmd)
+void	export_cmd(char **cmd, int *fds)
 {
 	char	**args;
 	char	**cmp;
 	int		f;
 
-	f = 0;	
+	f = 0;
 	args = copy_split(g_glob.environ, 1);
 	cmp = NULL;
 	while (cmd[++f])
@@ -35,10 +35,12 @@ void	export_cmd(char **cmd)
 	if (cmp)
 	{
 		keep_history(NULL, 1);
+		close(fds[0]);
+		close(fds[1]);
 		if (execve(g_glob.kurva, cmp, args) == -1 || !g_glob.kurva)
 		{
 			perror("execve");
-			cmd = freedom("ss", cmd, args);
+			cmd = freedom("sss", cmd, args, cmp);
 		}
 	}
 	if (!cmd[1])

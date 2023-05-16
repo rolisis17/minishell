@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/10 20:47:25 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/16 13:33:41 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	env_cmd(char **cmd)
+void	env_cmd(t_shell *data)
 {
 	int	i;
 
@@ -21,7 +21,8 @@ void	env_cmd(char **cmd)
 	{
 		printf("%s\n", g_glob.environ[i]);
 	}
-	cmd = freedom("s", cmd);
+	keep_history(NULL, 2);
+	data = freedom("da", data, data);
 	exit (0);
 }
 

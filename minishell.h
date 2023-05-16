@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 18:25:40 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 14:59:09 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_shell
 	int		len;
 	char	**cmd;
 	char	*res;
+	char	*input;
 	int		exit_flag;
 	int		pipe_flag;
 	int		out_flag;
@@ -65,12 +66,12 @@ void	hiddenfile_history(char **keep);
 //cmds
 void	do_cmd(t_shell *data);
 void	cmd_child(t_shell *data, int *pipe_fd);
-void	execute(char **cmd);
+void	execute(t_shell *data, char **cmd);
 char	*exable(char **cmd);
-void	check_builtin(char **cmd);
+void	check_builtin(t_shell *data, char **cmd);
 //cmd_tools
 char	*find_path(char *cmd);
-void	bad_cmd(char *path, char **cmd);
+void	bad_cmd(t_shell *data, char *path);
 char	*env_shlvl(void);
 int		file_checker(char *path);
 //signals
@@ -78,9 +79,9 @@ void	sig_handler(int arg);
 void	ctrlc(int signum);
 void	interupt(int signum);
 void	child_quit(int signum);
-void 	here_child_exit(int signum);
+void	here_child_exit(int signum);
 //builtins
-char	*this_folder_is(int	check);
+char	*this_folder_is(int check);
 char	*prev_folder(char *path, int safe);
 void	set_pwd_noenv(char *newpwd, char *oldpwd);
 void	here_child_exit(int signum);
@@ -94,20 +95,21 @@ char	*relative_cd2(char *str);
 void	cd_command(char **splited);
 char	*prev_folder(char *path, int safe);
 //env
-void	env_cmd(char **cmd);
+void	env_cmd(t_shell *data);
 void	set_path_env(char **envp);
 // exit
-void	ft_exit(t_shell *data, char *input);
-void	quit(char *str);
-void	ft_exit_part2(t_shell *data, char *input);
+void	ft_exit(t_shell *data);
+void	quit(t_shell *data, char *str);
+void	ft_exit_part2(t_shell *data);
+void	exiting(int arg);
 //echo
-void	echo_cmd(char **cmd);
+void	echo_cmd(t_shell *data, char **cmd);
 int		strintchr(char	*str, int c);
 char	**read_folder(char *str);
 char	**read_folder_2(struct dirent *entry, char *str, char **folder, int f);
 int		back_check(char *str, char *check);
 //export
-void	export_cmd(char **cmd);
+void	export_cmd(char **cmd, int *fds);
 char	*export_get_lower(char **env, char *to_compare);
 char	*export_get_seclow(char **env, char *to_compare);
 char	*export_get_big(char **env, char *to_compare);
@@ -120,9 +122,9 @@ void	very_trash(char	*str, int flag, int to_add);
 // unset
 void	unset_cmd(char **cmd, int f);
 //parse
-void	parse_input(char *input);
-void	parse_input_two(t_shell *data, char *input);
-t_shell	*data_init(void);
+void	parse_input(t_shell *data);
+void	parse_input_two(t_shell *data);
+t_shell	*data_init(t_shell	*data);
 void	output(t_shell *data);
 // parse 2
 int		space(t_shell *data, char *new, int arg);

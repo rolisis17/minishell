@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 16:53:55 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 12:10:36 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,19 +94,19 @@ char	**remove_split(char **split, char *rem, int arg)
 
 char	**modify_split(char **split, char *mod, int arg, int flag)
 {
-    int     i;
-    int     len;
-    char    **new_split;
+	int		i;
+	int		len;
+	char	**new_split;
 
 	if (!mod)
 		return (split);
-    i = word_count(split);
+	i = word_count(split);
 	new_split = (char **) ft_calloc(sizeof(char *), i + 1);
-    if (!new_split)
+	if (!new_split)
 		return (0);
-    i = -1;
-    while (split[++i])
-    {
+	i = -1;
+	while (split[++i])
+	{
 		if ((ft_strncmp(split[i], mod, strintchr(mod, flag) - 1) != 0))
 		{
 			len = ft_strlen(split[i]);
@@ -115,10 +115,10 @@ char	**modify_split(char **split, char *mod, int arg, int flag)
 		}
 		else
 			new_split[i] = ft_strdup(mod);
-    }
+	}
 	if (!arg)
-    	freesplit(split);
-    return(new_split);
+		freesplit(split);
+	return (new_split);
 }
 
 char	**merge_split(char **og, char **new)
@@ -126,8 +126,8 @@ char	**merge_split(char **og, char **new)
 	int		len;
 	int		word;
 	int		i;
-	char 	**res;
-	
+	char	**res;
+
 	i = -1;
 	len = word_count(og) + word_count(new);
 	res = (char **) malloc(sizeof(char *) * (len + 1));
@@ -148,3 +148,8 @@ char	**merge_split(char **og, char **new)
 	og = freedom("ss", og, new);
 	return (res);
 }
+
+// char	**split_init(char *new)
+// {
+	
+// }

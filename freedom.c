@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:58:38 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 18:43:13 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 12:51:49 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	freelist(t_store *list)
 {
 	t_store	*temp;
-	
-	while(list)
+
+	while (list)
 	{
 		temp = list;
 		list = list->next;
@@ -64,7 +64,8 @@ void	clear_data(t_shell *data)
 		free_check(data->res);
 		if (data->files)
 			freelist(data->files);
-		free(data);	
+		free_check(data->input);
+		// free(data);
 	}
 }
 

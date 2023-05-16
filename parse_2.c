@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 16:53:13 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 12:09:09 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	space(t_shell *data, char *new, int arg)
 {
-	int	i;
+	int		i;
 	char	**wild;
 
 	i = 0;
@@ -80,7 +80,6 @@ int	pipex(t_shell *data, char *new)
 {
 	data->pipe_flag = 1;
 	data->len = 0;
-
 	if (data->file_err == 1)
 		data->cmd = freedom("s", data->cmd);
 	data->len = syntax_check(new);
@@ -113,6 +112,6 @@ void	pipex_2(t_shell *data, int arg)
 	{
 		do_cmd(data);
 		if (arg == 1)
-			output(data);	
+			output(data);
 	}
 }

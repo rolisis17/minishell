@@ -6,13 +6,13 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/15 18:01:02 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 13:32:24 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	echo_cmd(char **cmd)
+void	echo_cmd(t_shell *data, char **cmd)
 {
 	int	f;
 	int	checker;
@@ -35,6 +35,8 @@ void	echo_cmd(char **cmd)
 	}
 	if (!checker)
 		printf("\n");
+	keep_history(NULL, 2);
+	data = freedom("da", data, data);
 	exit (0);
 }
 
@@ -56,19 +58,22 @@ char	**read_folder(char *str)
 	DIR				*dir;
 	struct dirent	*entry;
 	int				f;
+	char			*dir_name;
 
-	dir = opendir(ft_strjoin_mod(this_folder_is(1), "/", 0));
+	dir_name = ft_strjoin_mod(this_folder_is(1), "/", 0);
+	dir = opendir(dir_name);
+	free (dir_name);
 	folder = NULL;
 	if (dir)
 	{
 		f = strintchr(str, '*');
 		while ((entry = readdir(dir)) != NULL)
 			folder = read_folder_2(entry, str, folder, f);
-        closedir(dir);
+		closedir(dir);
 		return (folder);
-    }
+	}
 	else
-        return (NULL);
+		return (NULL);
 }
 
 char	**read_folder_2(struct dirent *entry, char *str, char **folder, int f)

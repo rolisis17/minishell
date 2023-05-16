@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 22:18:29 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 18:10:02 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 10:09:03 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	syntax_check(char *str)
 {
 	int	i;
 	int	j;
-	
+
 	i = 0;
 	j = 0;
 	while (str[i] == '|')
@@ -32,7 +32,7 @@ int	syntax_check(char *str)
 	while (str[i + j] == 32)
 		j++;
 	if (str[i + j] == '|')
-		return(i + j);
+		return (i + j);
 	else
 		return (i);
 }
@@ -77,11 +77,11 @@ int	check_empty_line(char *line)
 		if (line[f] == '|')
 		{
 			error("Syntax Error", 2);
-			freedom("a", line);
-			return (0);
+			break ;
 		}
 		if (line[f] != '\n' && line[f] != 32)
 			return (1);
 	}
+	freedom("a", line);
 	return (0);
 }

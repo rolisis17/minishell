@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 17:08:04 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/15 17:11:06 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/16 13:48:01 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 char	*find_path(char *cmd)
 {
 	char	*the_path;
-    char    *cmd_temp;
-    char    **paths;
-    int     i;
+	char	*cmd_temp;
+	char	**paths;
+	int		i;
 
-    i = -1;
+	i = -1;
 	if (getenv("PATH"))
 	{
 		cmd_temp = ft_strjoin("/", cmd);
@@ -39,11 +39,12 @@ char	*find_path(char *cmd)
 	return (NULL);
 }
 
-void	bad_cmd(char *path, char **cmd)
+void	bad_cmd(t_shell *data, char *path)
 {
 	ft_putstr_fd("Invalid command: ", 2);
-	ft_putendl_fd(cmd[0], 2);
-	cmd = freedom("sa", cmd, path);
+	ft_putendl_fd(data->cmd[0], 2);
+	keep_history(NULL, 2);
+	data = freedom("daa", data, path, data);
 	exit(127);
 }
 
@@ -59,11 +60,11 @@ char	*env_shlvl(void)
 
 int	file_checker(char *path)
 {
-    struct stat	isreal;
+	struct stat	isreal;
 
 	if (stat(path, &isreal) == 0)
 	{
-        if (S_ISDIR(isreal.st_mode))
+		if (S_ISDIR(isreal.st_mode))
 		{
 			ft_putstr_fd(path, 2);
 			error(": Is a directory", 126);
