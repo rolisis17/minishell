@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 11:21:50 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 15:52:54 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 13:58:16 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,34 +40,34 @@ int	here_doc(t_shell *data)
 void	here_child(t_shell *data, int *fd)
 {
 	char	*buffer;
-	char	*limiter;
 
 	buffer = NULL;
 	close(fd[0]);
-	limiter = remove_quotes(data->res, 34, 0, data);
-	limiter = remove_quotes(limiter, 39, 1, data);
+	data->limiter = remove_quotes(data->res, 34, 0, data);
+	data->limiter = remove_quotes(data->limiter, 39, 1, data);
 	data->res = freedom("a", data->res);
 	signal(SIGINT, here_child_exit);
-	child_loop(data, fd, limiter, buffer);
+	child_loop(data, fd, buffer);
 	keep_history(NULL, 2);
-	data = freedom("aada", buffer, limiter, data, data);
+	data = freedom("ada", buffer, data, data);
 	exit(0);
 }
 
-void	child_loop(t_shell *data, int *fd, char *limiter, char *buffer)
+void	child_loop(t_shell *data, int *fd, char *buffer)
 {
 	int	len;
 
-	len = ft_strlen(limiter);
+	len = ft_strlen(data->limiter);
 	while (1)
 	{
+		child_exit(data);
 		buffer = readline("here_doc> ");
 		if (buffer == NULL)
 		{
 			ft_putendl_fd("WARNING: here_doc delimited by EOF", 2);
 			break ;
 		}
-		if (ft_strncmp(buffer, limiter, len + 1) == 0)
+		if (ft_strncmp(buffer, data->limiter, len + 1) == 0)
 			break ;
 		if (ft_strlen(buffer) == 0)
 			free(buffer);

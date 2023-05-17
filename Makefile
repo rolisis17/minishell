@@ -1,6 +1,6 @@
 SRC = minishell.c cmds.c parse.c signals.c parse_2.c splitting.c tools.c parse_3.c \
 storage.c freedom.c cd.c echo.c env.c exit.c export.c export2.c pwd.c unset.c redirect.c \
-here_doc.c tools_2.c cmd_tools.c
+here_doc.c tools_2.c cmd_tools.c history.c
 BIN = bin
 VAL = suppress
 OBJ = $(SRC:%.c=${BIN}/%.o)
@@ -21,7 +21,7 @@ END=\033[0m
 all : $(NAME)
 
 $(NAME) : $(BIN) $(OBJ) | $(LIBFT)
-	@$(CC) $(OBJ) -Llibft -lft -lreadline -fPIE -o $(NAME)
+	@$(CC) $(OBJ) $(FLAGS) -Llibft -lft -lreadline -fPIE -o $(NAME)
 	@echo "$(GREEN)>>>> Compiled <<<<$(END)"
 
 $(LIBFT) :
@@ -34,10 +34,11 @@ $(BIN) :
 $(BIN)/%.o : %.c
 	@$(CC) $(FLAGS) -c $< -o $@
 
-valgrind : $(VAL)
+valgrind :  $(NAME) $(VAL)
 	@valgrind --leak-check=full --show-leak-kinds=all --suppressions=suppress ./$(NAME)
+	@rm $(VAL)
 
-$(VAL) :
+$(VAL) : 
 	@echo '{' > suppress
 	@echo '	ignore_readline_conditional_jump_errors' >> suppress
 	@echo '	Memcheck:Leak' >> suppress
@@ -48,7 +49,7 @@ $(VAL) :
 
 clean :
 	@$(RM) $(BIN)
-	@rm $(VAL)
+	@if test -f $(VAL); then rm suppress; fi
 	@echo "$(RED)>>>> Cleaned <<<<$(END)"
 
 fclean : clean

@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 21:10:49 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 11:02:51 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_exit(t_shell *data)
 			keep_history(NULL, 2);
 			data = freedom("da", data, data);
 			exiting(2);
-			// exit(0);
+			// exit(2);
 		}
 		data->len++;
 	}
@@ -67,15 +67,30 @@ void	quit(t_shell *data, char *str)
 
 void	exiting(int arg)
 {
-	char *exit[4];
-	
+	char	*exit[4];
+
 	exit[0] = "";
 	exit[1] = "de3ac21778e51de199438300e1a9f816c618d33a";
 	if (arg != 0)
+	{
 		exit[2] = ft_itoa(arg);
-	else 
+		printf("THIS: %s\n", exit[2]);
+	}
+	else
 		exit[2] = ft_itoa(0);
 	exit[3] = NULL;
-
 	execve(g_glob.kurva, exit, g_glob.environ);
+}
+
+void	child_exit(t_shell *data)
+{
+	static t_shell	*keep;
+
+	if (data)
+		keep = data;
+	else
+	{
+		keep_history(NULL, 2);
+		keep = freedom("da", keep, keep);
+	}
 }

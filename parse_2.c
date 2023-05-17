@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 12:09:09 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 11:08:01 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,11 @@ void	how_split(t_shell *data, char **wild)
 	else if (data->cmd)
 		data->cmd = add_split(data->cmd, data->res);
 	else if (ft_strlen(data->res) == 0)
+	{
+		data->empty = 1;
+		data->res = freedom("a", data->res);
 		error("Command '' not found", 127);
+	}
 	else
 	{
 		if (wild)
@@ -78,6 +82,12 @@ int	quote(t_shell *data, char *new)
 
 int	pipex(t_shell *data, char *new)
 {
+	if (data->empty == 1)
+	{
+		data->cmd = freedom("s", data->cmd);
+		data->empty = 0;
+		return (0);
+	}
 	data->pipe_flag = 1;
 	data->len = 0;
 	if (data->file_err == 1)

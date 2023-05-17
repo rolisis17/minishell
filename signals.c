@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 16:07:02 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 09:32:24 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 08:58:16 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	here_child_exit(int signum)
 {
 	if (signum == SIGINT)
 	{
+		child_exit(NULL);
 		g_glob.exit_status = 130;
 		printf("\n");
 		exit(130);

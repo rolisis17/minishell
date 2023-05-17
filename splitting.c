@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 12:10:36 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 11:09:12 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,8 +148,3 @@ char	**merge_split(char **og, char **new)
 	og = freedom("ss", og, new);
 	return (res);
 }
-
-// char	**split_init(char *new)
-// {
-	
-// }

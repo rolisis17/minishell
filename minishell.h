@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 20:46:15 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 11:12:52 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ typedef struct s_shell
 	int		out_flag;
 	int		q_flag;
 	int		file_err;
+	int		empty;
 	int		here_limiter;
+	char	*limiter;
 	t_store	*files;
 }				t_shell;
 
@@ -59,6 +61,8 @@ typedef struct s_glob
 	char	*kurva;
 }				t_glob;
 
+void	dont_do(char **av);
+//history
 void	keep_history(char *line, int check);
 int		new_history(void);
 void	new_history_2(char *hist);
@@ -102,6 +106,7 @@ void	ft_exit(t_shell *data);
 void	quit(t_shell *data, char *str);
 void	ft_exit_part2(t_shell *data);
 void	exiting(int arg);
+void	child_exit(t_shell *data);
 //echo
 void	echo_cmd(t_shell *data, char **cmd);
 int		strintchr(char	*str, int c);
@@ -144,7 +149,7 @@ void	open_it(t_shell *data);
 //here_doc
 int		here_doc(t_shell *data);
 void	here_child(t_shell *data, int *fd);
-void	child_loop(t_shell *data, int *fd, char *limiter, char *buffer);
+void	child_loop(t_shell *data, int *fd, char *buffer);
 //splitting
 char	**add_split(char **split, char *new);
 char	**copy_split(char **split, int arg);

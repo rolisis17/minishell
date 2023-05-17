@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 17:08:04 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 13:48:01 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 09:22:00 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,15 @@ void	bad_cmd(t_shell *data, char *path)
 char	*env_shlvl(void)
 {
 	char	*shlvl;
+	char	*itoa;
 
 	shlvl = NULL;
 	if (getenv("SHLVL"))
-		shlvl = ft_strjoin("SHLVL=", ft_itoa(ft_atoi(getenv("SHLVL")) + 1));
+	{
+		itoa = ft_itoa(ft_atoi(getenv("SHLVL")) + 1);
+		shlvl = ft_strjoin("SHLVL=", itoa);
+		free (itoa);
+	}
 	return (shlvl);
 }
 

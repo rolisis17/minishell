@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 18:19:54 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 20:46:25 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 11:09:59 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ t_glob	g_glob;
 void	parse_input(t_shell *data)
 {
 	int		i;
-	// t_shell	*data;
 
 	data = data_init(data);
 	i = -1;
@@ -35,7 +34,7 @@ void	parse_input(t_shell *data)
 			i += space(data, data->input + i, 0);
 		if (data->exit_flag == 1)
 		{
-			freedom("d", data); // problem might be data->res and closing fds
+			freedom("d", data);
 			return ;
 		}
 	}
@@ -45,7 +44,7 @@ void	parse_input(t_shell *data)
 
 void	parse_input_two(t_shell *data)
 {
-	if (data->cmd && data->file_err == 0)
+	if (data->cmd && data->file_err == 0 && data->empty == 0)
 	{
 		if (data->pipe_flag == 1)
 			pipex_2(data, 1);
@@ -63,7 +62,7 @@ void	parse_input_two(t_shell *data)
 			output(data);
 		}
 	}
-	else if (!data->cmd && data->file_err == 0)
+	else if (!data->cmd && data->file_err == 0 && data->empty == 0)
 	{
 		do_cmd(data);
 		output(data);
@@ -72,7 +71,6 @@ void	parse_input_two(t_shell *data)
 
 t_shell	*data_init(t_shell	*data)
 {
-	// t_shell	*data;
 	data->fd[0] = dup(STDIN_FILENO);
 	data->fd[1] = dup(STDOUT_FILENO);
 	data->cmd = NULL;
@@ -81,9 +79,11 @@ t_shell	*data_init(t_shell	*data)
 	data->pipe_flag = 0;
 	data->out_flag = 0;
 	data->q_flag = 0;
+	data->empty = 0;
 	data->file_err = 0;
 	data->files = NULL;
 	data->here_limiter = 0;
+	data->limiter = NULL;
 	g_glob.here_flag = 0;
 	return (data);
 }

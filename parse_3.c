@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 15:43:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 09:30:58 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 09:20:25 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,14 @@ char	*get_var(t_shell *data, char *str)
 {
 	int		f;
 	char	*var;
+	char	*exit_str;
 
 	f = 0;
 	if (str[1] == '?')
 	{
-		data->res = ft_strjoin_mod(data->res, \
-		ft_itoa(g_glob.exit_status % 255), 0);
+		exit_str = ft_itoa(g_glob.exit_status % 255);
+		data->res = ft_strjoin_mod(data->res, exit_str, 0);
+		free(exit_str);
 		return (NULL);
 	}
 	while (str[++f])

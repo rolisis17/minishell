@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 15:23:08 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 11:08:20 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,3 @@ void	set_path_env(char **envp)
 		g_glob.kurva = NULL;
 	printf("%s\n", g_glob.kurva);
 }
-

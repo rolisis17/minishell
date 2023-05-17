@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:58:38 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 12:51:49 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 11:10:59 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	clear_data(t_shell *data)
 		if (data->files)
 			freelist(data->files);
 		free_check(data->input);
-		// free(data);
+		free_check(data->limiter);
 	}
 }
 
