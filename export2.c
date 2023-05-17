@@ -3,39 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 09:31:12 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 17:13:51 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	export_varmod(char *cmd)
+int	export_varmod(char *cmd, int check)
 {
 	char	*env_var;
 	int		len;
 
 	len = strintchr(cmd, '=');
 	env_var = ft_substr(cmd, 0, len);
-	if (getenv(env_var))
+	if (!getenv(env_var))
+		return (0);
+	if (!check)
 		ft_strlcpy(getenv(env_var), cmd + len + 1, ft_strlen(cmd + len));
-	else
-		len = 0;
 	free (env_var);
 	return (len);
 }
 
-int	export_check_args(int f, char **cmd)
+int	export_check_args(char *to_compare, char **cmd)
 {
 	int	u;
 
-	u = f;
+	u = 0;
 	while (cmd[++u])
 	{
-		if (ft_strncmp(cmd[f], cmd[u], strintchr(cmd[u], '=') - 1) == 0 \
-		&& ft_strncmp(cmd[f], cmd[u], strintchr(cmd[f], '=') - 1) == 0)
+		if (ft_strncmp(to_compare, cmd[u], strintchr(cmd[u], '=')) == 0 \
+		&& ft_strncmp(to_compare, cmd[u], strintchr(to_compare, '=')) == 0)
 			return (0);
 	}
 	return (1);

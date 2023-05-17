@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 21:03:48 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 17:24:07 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,10 @@ void	set_pwd_noenv(char *newpwd, char *oldpwd)
 		newpwd = ft_strjoin(" PWD=", newpwd);
 		export = ft_strjoin_mod(export, newpwd, 0);
 	}
-	// if (newpwd)
-	// 	free(newpwd);
-	// if (oldpwd)
-	// 	free(oldpwd);
 	cmd = ft_split(export, 32);
-	freedom("aaa", oldpwd, newpwd, export); // does this fuck shit up
+	freedom("aaa", oldpwd, newpwd, export);
 	if (oldpwd || newpwd)
-	// {
-		// printf("YES\n");
 		export_cmd(cmd);
-	// }
 	else
 		cmd = freedom("s", cmd);
 }

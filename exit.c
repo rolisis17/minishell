@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/17 11:02:51 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 17:17:36 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	ft_exit(t_shell *data)
 			keep_history(NULL, 2);
 			data = freedom("da", data, data);
 			exiting(2);
-			// exit(2);
 		}
 		data->len++;
 	}
@@ -51,7 +50,6 @@ void	ft_exit_part2(t_shell *data)
 	data = freedom("da", data, data);
 	keep_history(NULL, 2);
 	write(1, "exit\n", 5);
-	// exit (g_glob.exit_status % 255);
 	exiting(g_glob.exit_status % 255);
 }
 
@@ -61,7 +59,6 @@ void	quit(t_shell *data, char *str)
 	write(1, "exit\n", 5);
 		g_glob.exit_status = EXIT_SUCCESS;
 	keep_history(NULL, 2);
-	// exit (g_glob.exit_status);
 	exiting(g_glob.exit_status % 255);
 }
 

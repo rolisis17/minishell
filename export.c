@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 20:46:00 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 17:17:14 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,35 +16,40 @@ void	export_cmd(char **cmd)
 {
 	char	**args;
 	char	**cmp;
-	int		f;
 
-	f = 0;
-	args = copy_split(g_glob.environ, 1);
-	cmp = NULL;
-	while (cmd[++f])
+	if (!cmd[1])
+		export_get_seclow(g_glob.environ, \
+		export_get_lower(g_glob.environ, NULL));
+	else
 	{
-		if (export_check_equal(cmd[f]) == 1 && !(export_varmod(cmd[f])) \
-		&& export_check_args(f, cmd))
-		{
-			cmp = ft_split(" ", 02);
-			args = add_split(args, cmd[f]);
-		}
-		if (!export_check_equal(cmd[f]))
-			export_print_error(cmd[f]);
-	}
-	if (cmp)
-	{
+		cmp = ft_split(" ", 32);
+		mod_env_export(cmd);
+		args = new_export_env(cmd);
 		keep_history(NULL, 1);
-		cmd = freedom("s", cmd);
-		if (execve(g_glob.kurva, cmp, args) == -1 || !g_glob.kurva)
+		if (!g_glob.kurva || execve(g_glob.kurva, cmp, args) == -1)
 		{
 			perror("execve");
 			cmd = freedom("sss", cmd, args, cmp);
 		}
 	}
-	if (!cmd[1])
-		export_get_seclow(g_glob.environ, \
-		export_get_lower(g_glob.environ, NULL));
+}
+
+char	**new_export_env(char **cmd)
+{
+	char	**args;
+	int		f;
+
+	f = 0;
+	args = copy_split(g_glob.environ, 1);
+	while (cmd[++f])
+	{
+		if (export_check_equal(cmd[f]) == 1 && export_check_args(cmd[f], \
+		cmd + f) && !(export_varmod(cmd[f], 1)))
+			args = add_split(args, cmd[f]);
+		if (!export_check_equal(cmd[f]))
+			export_print_error(cmd[f]);
+	}
+	return (args);
 }
 
 char	*export_get_lower(char **env, char *to_compare)

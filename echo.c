@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/16 13:32:24 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 17:19:26 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,12 @@ char	**read_folder(char *str)
 	if (dir)
 	{
 		f = strintchr(str, '*');
-		while ((entry = readdir(dir)) != NULL)
+		entry = readdir(dir);
+		while (entry != NULL)
+		{
 			folder = read_folder_2(entry, str, folder, f);
+			entry = readdir(dir);
+		}
 		closedir(dir);
 		return (folder);
 	}

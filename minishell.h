@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:36:43 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/17 11:12:52 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 17:59:02 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ void	cd_command(char **splited);
 char	*prev_folder(char *path, int safe);
 //env
 void	env_cmd(t_shell *data);
-void	set_path_env(char **envp);
+void	set_path_env(char **envp, char *av1);
+void	set_under_noenv(void);
 // exit
 void	ft_exit(t_shell *data);
 void	quit(t_shell *data, char *str);
@@ -118,14 +119,18 @@ void	export_cmd(char **cmd);
 char	*export_get_lower(char **env, char *to_compare);
 char	*export_get_seclow(char **env, char *to_compare);
 char	*export_get_big(char **env, char *to_compare);
+void	mod_env_export(char **cmd);
 //export 2
-int		export_varmod(char *cmd);
-int		export_check_args(int f, char **cmd);
+int		export_varmod(char *cmd, int check);
+int		export_check_args(char *to_compare, char **cmd);
 int		export_check_equal(char *cmd);
 void	export_print_error(char *str);
 void	very_trash(char	*str, int flag, int to_add);
+char	**new_export_env(char **cmd);
 // unset
 void	unset_cmd(char **cmd, int f);
+char	**new_unset_env(char **cmd);
+int		unset_check_args(char *to_compare, char **cmd);
 //parse
 void	parse_input(t_shell *data);
 void	parse_input_two(t_shell *data);

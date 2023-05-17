@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/17 11:08:20 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/17 18:02:47 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	env_cmd(t_shell *data)
 	exit (0);
 }
 
-void	set_path_env(char **envp)
+void	set_path_env(char **envp, char *av1)
 {
 	char	*str;
 
@@ -37,18 +37,48 @@ void	set_path_env(char **envp)
 		keep_history(NULL, 1);
 		g_glob.kurva = getenv("_");
 	}
-	if (back_check(g_glob.kurva, "minishell") == 0)
+	if (g_glob.kurva && back_check(g_glob.kurva, "minishell") == 0)
 		return ;
 	else
 	{
 		str = this_folder_is(1);
-		g_glob.kurva = ft_strjoin(str, "/minishell");
+		g_glob.kurva = ft_strjoin(str, av1 + 1);
 		free (str);
-		ft_strlcpy(getenv("_"), g_glob.kurva, ft_strlen(g_glob.kurva) + 1);
+		if (getenv("_"))
+			ft_strlcpy(getenv("_"), g_glob.kurva, ft_strlen(g_glob.kurva) + 1);
+		else
+			set_under_noenv();
 		free (g_glob.kurva);
 		g_glob.kurva = getenv("_");
 	}
 	if (access(g_glob.kurva, F_OK) == -1)
 		g_glob.kurva = NULL;
-	printf("%s\n", g_glob.kurva);
+}
+
+void	mod_env_export(char **cmd)
+{
+	int	f;
+
+	f = 0;
+	while (cmd[++f])
+	{
+		if (export_check_equal(cmd[f]) == 1 && export_check_args(cmd[f], \
+		cmd + f))
+			export_varmod(cmd[f], 0);
+	}
+}
+
+void	set_under_noenv()
+{
+	char	**cmd;
+	char	*args[2];
+	
+	args[0] = ft_strjoin("_=", g_glob.kurva);
+	args[1] = NULL;
+	cmd = ft_split(" ", 32);
+	if (execve(g_glob.kurva, cmd, args) == -1)
+	{
+		perror("execve");
+		cmd = freedom("sss", cmd, args);
+	}
 }
