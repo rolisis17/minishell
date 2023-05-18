@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/18 10:19:20 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/18 14:10:21 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	mod_env_export(char **cmd)
 	}
 }
 
-void	set_under_noenv(void)
+void	set_under_noenv()
 {
 	char	**cmd;
 	char	*args[2];

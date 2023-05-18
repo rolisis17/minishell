@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/17 17:17:14 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 13:33:35 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	export_cmd(char **cmd)
 	else
 	{
 		cmp = ft_split(" ", 32);
-		mod_env_export(cmd);
 		args = new_export_env(cmd);
 		keep_history(NULL, 1);
 		if (!g_glob.kurva || execve(g_glob.kurva, cmp, args) == -1)
@@ -44,8 +43,10 @@ char	**new_export_env(char **cmd)
 	while (cmd[++f])
 	{
 		if (export_check_equal(cmd[f]) == 1 && export_check_args(cmd[f], \
-		cmd + f) && !(export_varmod(cmd[f], 1)))
+		cmd + f) && !(export_varmod(cmd[f])))
 			args = add_split(args, cmd[f]);
+		else if (export_varmod(cmd[f]))
+			args = modify_split(args, cmd[f], 0, '=');
 		if (!export_check_equal(cmd[f]))
 			export_print_error(cmd[f]);
 	}

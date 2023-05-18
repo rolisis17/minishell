@@ -6,24 +6,32 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/17 17:13:51 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 13:20:00 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	export_varmod(char *cmd, int check)
+int	export_varmod(char *cmd)
 {
 	char	*env_var;
 	int		len;
 
 	len = strintchr(cmd, '=');
 	env_var = ft_substr(cmd, 0, len);
+	// if (getenv(env_var))
+	// {
+	// 	env_var = freedom ("a", env_var);
+	// 	return (10);
+	// }
 	if (!getenv(env_var))
+	{
+		env_var = freedom ("a", env_var);
 		return (0);
-	if (!check)
-		ft_strlcpy(getenv(env_var), cmd + len + 1, ft_strlen(cmd + len));
-	free (env_var);
+	}
+	// if (check == 0 && getenv(env_var))
+		// ft_strlcpy(getenv(env_var), cmd + len + 1, ft_strlen(cmd + len));
+	env_var = freedom ("a", env_var);
 	return (len);
 }
 
