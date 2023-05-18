@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 13:49:09 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 13:54:22 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/18 15:04:46 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void	execute(t_shell *data, char **cmd)
 
 	new_env = NULL;
 	if (cmd == NULL)
+	{
+		data = freedom("dah", data, data);
 		exit(0);
+	}
 	check_builtin(data, cmd);
 	path = exable(cmd);
 	if (!path)

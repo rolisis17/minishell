@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/18 13:33:35 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 15:08:54 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,21 @@
 void	export_cmd(char **cmd)
 {
 	char	**args;
-	char	**cmp;
+	char	*cmp[3];
 
+	g_glob.exit_status = 0;
 	if (!cmd[1])
 		export_get_seclow(g_glob.environ, \
 		export_get_lower(g_glob.environ, NULL));
 	else
 	{
-		cmp = ft_split(" ", 32);
 		args = new_export_env(cmd);
+		cmp[0] = "";
+		if (g_glob.exit_status == 1)
+			cmp[1] = "e5fa44f2b31c1fb553b6021e7360d07d5d91ff5e";
+		else
+			cmp[1] = "6ca52a340915a306c116baccfd959717fcb1c651";
+		cmp[2] = NULL;
 		keep_history(NULL, 1);
 		if (!g_glob.kurva || execve(g_glob.kurva, cmp, args) == -1)
 		{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/18 13:20:00 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:14:56 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,11 @@ int	export_varmod(char *cmd)
 
 	len = strintchr(cmd, '=');
 	env_var = ft_substr(cmd, 0, len);
-	// if (getenv(env_var))
-	// {
-	// 	env_var = freedom ("a", env_var);
-	// 	return (10);
-	// }
 	if (!getenv(env_var))
 	{
 		env_var = freedom ("a", env_var);
 		return (0);
 	}
-	// if (check == 0 && getenv(env_var))
-		// ft_strlcpy(getenv(env_var), cmd + len + 1, ft_strlen(cmd + len));
 	env_var = freedom ("a", env_var);
 	return (len);
 }

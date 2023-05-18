@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 15:58:38 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/17 11:10:59 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/18 15:04:25 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	*freedom(const char *str, ...)
 			free_check(va_arg(args, void *));
 		else if (str[i] == 'd')
 			clear_data(va_arg(args, t_shell *));
+		else if (str[i] == 'h')
+			keep_history(NULL, 2);
 		i++;
 	}
 	va_end(args);
