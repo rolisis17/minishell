@@ -6,7 +6,7 @@
 /*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/17 18:02:47 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 13:18:39 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,6 @@ void	set_path_env(char **envp, char *av1)
 	}
 	if (access(g_glob.kurva, F_OK) == -1)
 		g_glob.kurva = NULL;
-}
-
-void	mod_env_export(char **cmd)
-{
-	int	f;
-
-	f = 0;
-	while (cmd[++f])
-	{
-		if (export_check_equal(cmd[f]) == 1 && export_check_args(cmd[f], \
-		cmd + f))
-			export_varmod(cmd[f], 0);
-	}
 }
 
 void	set_under_noenv()

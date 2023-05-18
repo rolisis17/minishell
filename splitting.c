@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   splitting.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
+/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/15 06:48:55 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/17 11:09:12 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/18 13:31:34 by dcella-d         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char	**modify_split(char **split, char *mod, int arg, int flag)
 	i = -1;
 	while (split[++i])
 	{
-		if ((ft_strncmp(split[i], mod, strintchr(mod, flag) - 1) != 0))
+		if ((ft_strncmp(split[i], mod, strintchr(mod, flag)) != 0))
 		{
 			len = ft_strlen(split[i]);
 			new_split[i] = ft_calloc(len + 1, sizeof(char));
