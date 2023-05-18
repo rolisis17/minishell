@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 09:13:51 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/17 11:08:01 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/18 10:38:19 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ int	quote(t_shell *data, char *new)
 	ptr = ft_strchr(new + 1, new[0]);
 	if (ptr == NULL || new[1] == '\0')
 	{
-		data->res = ft_strjoin_mod(data->res, new, 0);
-		return (ft_strlen(new));
+		data->res = char_join(data->res, new[0]);
+		return (1);
 	}
 	data->here_limiter = 1;
 	temp = ft_substr(new, 1, ptr - new - 1);

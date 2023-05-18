@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 15:28:58 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/17 18:02:52 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 10:18:48 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	main(int ac, char **av, char **envp)
 	if (av || ac)
 		set_path_env(envp, av[0]);
 	if (!new_history())
-		// ft_printf("\033[2J\033[1;1H");
+		printf("\033[2J\033[1;1H");
 	line = NULL;
 	data = ft_calloc(sizeof(t_shell), 1);
 	while (1)

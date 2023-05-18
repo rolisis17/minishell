@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 09:24:52 by mstiedl           #+#    #+#             */
-/*   Updated: 2023/05/16 09:50:00 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/18 10:53:47 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	open_it(t_shell *data)
 	data->fd[0] = open(data->res, O_RDONLY);
 	if (data->fd[0] < 0)
 	{
+		data->fd[0] = dup(STDIN_FILENO);
 		if (data->file_err == 0)
 			error("Error", 1);
 		else

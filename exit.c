@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/17 17:17:36 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 10:23:19 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,7 @@ void	exiting(int arg)
 	exit[0] = "";
 	exit[1] = "de3ac21778e51de199438300e1a9f816c618d33a";
 	if (arg != 0)
-	{
 		exit[2] = ft_itoa(arg);
-		printf("THIS: %s\n", exit[2]);
-	}
 	else
 		exit[2] = ft_itoa(0);
 	exit[3] = NULL;

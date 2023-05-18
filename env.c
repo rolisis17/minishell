@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dcella-d <dcella-d@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/17 18:02:47 by dcella-d         ###   ########.fr       */
+/*   Updated: 2023/05/18 10:19:20 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,11 @@ void	mod_env_export(char **cmd)
 	}
 }
 
-void	set_under_noenv()
+void	set_under_noenv(void)
 {
 	char	**cmd;
 	char	*args[2];
-	
+
 	args[0] = ft_strjoin("_=", g_glob.kurva);
 	args[1] = NULL;
 	cmd = ft_split(" ", 32);
