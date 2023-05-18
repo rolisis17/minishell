@@ -6,7 +6,7 @@
 /*   By: mstiedl <mstiedl@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 14:42:30 by dcella-d          #+#    #+#             */
-/*   Updated: 2023/05/18 14:10:21 by mstiedl          ###   ########.fr       */
+/*   Updated: 2023/05/18 14:10:52 by mstiedl          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,24 +55,11 @@ void	set_path_env(char **envp, char *av1)
 		g_glob.kurva = NULL;
 }
 
-void	mod_env_export(char **cmd)
-{
-	int	f;
-
-	f = 0;
-	while (cmd[++f])
-	{
-		if (export_check_equal(cmd[f]) == 1 && export_check_args(cmd[f], \
-		cmd + f))
-			export_varmod(cmd[f], 0);
-	}
-}
-
 void	set_under_noenv()
 {
 	char	**cmd;
 	char	*args[2];
-
+	
 	args[0] = ft_strjoin("_=", g_glob.kurva);
 	args[1] = NULL;
 	cmd = ft_split(" ", 32);
