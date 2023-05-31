@@ -2,7 +2,7 @@
 # Minishell
 
 Aim of this project is to write a shell, with reference to how bash works.
-This was my first group project, in collaberation with dcella-d [![portfolio](https://img.shields.io/badge/link-Marcell%20Profile-purple)](https://github.com/MarSti97)
+This was my first group project, in collaberation with mstiedl [![portfolio](https://img.shields.io/badge/link-Marcell%20Profile-purple)](https://github.com/MarSti97)
 
 
 ## Features
